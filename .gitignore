@@ -25,8 +25,11 @@ yarn-error.log*
 # local env files
 .env
 .env.local
+.env.dev.local
 .env.development.local
 .env.test.local
+.env.prod
+.env.production
 .env.production.local
 
 # turbo
