@@ -1,13 +1,16 @@
-import { Body, Controller, Post } from '@nestjs/common'
+import { Body, Controller, Post, UseGuards } from '@nestjs/common'
 
 import { APIService } from './services/api.service'
-import { ReqUser } from 'src/common/decorators'
-import { User } from 'src/entities/user.entity'
+import { ReqUser, Roles } from 'src/common/decorators'
+import { User, UserRole } from 'src/entities/user.entity'
 
 import { ConnectionsService } from 'src/base/connections/connections.service'
 import { CreateConnectionDTO } from './dto/create-connection.dto'
+import { RolesGuard } from 'src/auth/guards'
 
 @Controller('ufsm')
+@UseGuards(RolesGuard)
+@Roles(UserRole.USER)
 export class UFSMController {
   constructor(
     private api: APIService,
