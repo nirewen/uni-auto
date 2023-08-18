@@ -14,38 +14,42 @@ export class ModulesService {
     private readonly moduleRepository: Repository<Module>,
     @InjectRepository(ModuleSettings)
     private readonly moduleSettingsRepository: Repository<ModuleSettings>,
-    private connectionsService: ConnectionsService
+    private connections: ConnectionsService
   ) {}
 
-  async enable(data: EnableModuleDTO) {
-    const module = await this.findModuleBySlug(data.module)
-    const connection = await this.connectionsService.findConnection(
-      data.connection
-    )
+  async enable(slug: string, data: EnableModuleDTO) {
+    const module = await this.findModuleBySlug(slug)
+    const connection = await this.connections.findConnection(data.connection)
 
     if (!module.providers.includes(connection.provider)) {
       throw new BadRequestException('Provider not supported for this module')
     }
 
-    let settings = await this.moduleSettingsRepository.findOneBy({
-      module: {
-        id: module.id,
-      },
-      connection: {
-        id: connection.id,
-      },
-    })
+    const settings = await this.findModuleSettings(module.id, connection.id)
 
-    if (settings) {
+    if (settings.enabled) {
       throw new BadRequestException('Module already enabled')
     }
-
-    settings = new ModuleSettings()
 
     settings.module = module
     settings.connection = connection
     settings.enabled = true
-    settings.settings = {}
+    settings.settings = settings.settings || {}
+
+    return this.moduleSettingsRepository.save(settings)
+  }
+
+  async disable(slug: string, data: EnableModuleDTO) {
+    const module = await this.findModuleBySlug(slug)
+    const connection = await this.connections.findConnection(data.connection)
+
+    const settings = await this.findModuleSettings(module.id, connection.id)
+
+    if (!settings.enabled) {
+      throw new BadRequestException('Module already disabled')
+    }
+
+    settings.enabled = false
 
     return this.moduleSettingsRepository.save(settings)
   }
@@ -57,6 +61,27 @@ export class ModulesService {
       throw new BadRequestException('Module not found')
     }
 
+    if (!module.enabled) {
+      throw new BadRequestException('Module is temporarily disabled')
+    }
+
     return module
+  }
+
+  async findModuleSettings(module: number, connection: string) {
+    const settings = await this.moduleSettingsRepository.findOneBy({
+      module: {
+        id: module,
+      },
+      connection: {
+        id: connection,
+      },
+    })
+
+    if (!settings) {
+      return new ModuleSettings()
+    }
+
+    return settings
   }
 }

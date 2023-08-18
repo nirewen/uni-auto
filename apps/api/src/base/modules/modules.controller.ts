@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Param, Post } from '@nestjs/common'
 import { EnableModuleDTO } from './dto/enable-module.dto'
 import { ModulesService } from './modules.service'
 
@@ -6,8 +6,13 @@ import { ModulesService } from './modules.service'
 export class ModulesController {
   constructor(private readonly modulesService: ModulesService) {}
 
-  @Post('enable')
-  public enable(@Body() body: EnableModuleDTO) {
-    return this.modulesService.enable(body)
+  @Post(':slug')
+  public enable(@Param('slug') slug: string, @Body() body: EnableModuleDTO) {
+    return this.modulesService.enable(slug, body)
+  }
+
+  @Delete(':slug')
+  public disable(@Param('slug') slug: string, @Body() body: EnableModuleDTO) {
+    return this.modulesService.disable(slug, body)
   }
 }
