@@ -22,6 +22,9 @@ export class Module {
   @OneToMany(() => ModuleSettings, settings => settings.module)
   settings: ModuleSettings[]
 
+  @Column('text', { array: true, nullable: true, default: [] })
+  providers: string[]
+
   @Column()
   enabled: boolean
 }

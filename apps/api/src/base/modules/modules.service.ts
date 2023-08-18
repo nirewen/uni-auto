@@ -23,7 +23,24 @@ export class ModulesService {
       data.connection
     )
 
-    const settings = new ModuleSettings()
+    if (!module.providers.includes(connection.provider)) {
+      throw new BadRequestException('Provider not supported for this module')
+    }
+
+    let settings = await this.moduleSettingsRepository.findOneBy({
+      module: {
+        id: module.id,
+      },
+      connection: {
+        id: connection.id,
+      },
+    })
+
+    if (settings) {
+      throw new BadRequestException('Module already enabled')
+    }
+
+    settings = new ModuleSettings()
 
     settings.module = module
     settings.connection = connection
