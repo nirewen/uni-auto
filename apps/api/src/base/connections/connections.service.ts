@@ -13,7 +13,16 @@ export class ConnectionsService {
   ) {}
 
   async connect(data: Payload) {
-    const connection = new Connection()
+    let connection = await this.connections.findOne({
+      where: {
+        provider: data.provider,
+        identifier: data.identifier,
+      },
+    })
+
+    if (!connection) {
+      connection = new Connection()
+    }
 
     connection.provider = data.provider
     connection.identifier = data.identifier
