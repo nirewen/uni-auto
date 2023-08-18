@@ -7,9 +7,6 @@ import { AuthModule } from './auth/auth.module'
 import { BaseModule } from './base/base.module'
 import { CommonModule } from './common/common.module'
 
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
-
 import { configuration } from './config/configuration'
 
 @Module({
@@ -29,7 +26,5 @@ import { configuration } from './config/configuration'
       inject: [ConfigService],
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
