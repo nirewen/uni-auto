@@ -10,5 +10,6 @@ import { ModuleSettings } from 'src/entities/module-settings.entity'
   imports: [TypeOrmModule.forFeature([ModuleEntity, ModuleSettings])],
   controllers: [ModulesController],
   providers: [ModulesService],
+  exports: [ModulesService],
 })
 export class ModulesModule {}

@@ -1,4 +1,4 @@
 export interface Credentials {
-  deviceId: string
-  accessToken: string
+  identifier: string
+  token: string
 }

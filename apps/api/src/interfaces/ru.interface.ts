@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common'
 
 export interface ScheduleOptions<Credentials> {
   day: string
-  meals: { item: number }[]
+  meals: number[]
   restaurant: number
   credentials: Credentials
 }

@@ -17,6 +17,18 @@ export class ModulesService {
     private connections: ConnectionsService
   ) {}
 
+  public async findEnabledByProvider(provider: string) {
+    return this.moduleSettingsRepository.find({
+      where: {
+        enabled: true,
+        connection: {
+          provider,
+        },
+      },
+      relations: ['connection'],
+    })
+  }
+
   async enable(slug: string, data: EnableModuleDTO) {
     const module = await this.findModuleBySlug(slug)
     const connection = await this.connections.findConnection(data.connection)

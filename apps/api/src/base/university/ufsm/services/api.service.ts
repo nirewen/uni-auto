@@ -42,8 +42,8 @@ export class APIService {
   getHeaders(credentials: Credentials, mime: string = 'application/json') {
     return {
       'Content-Type': mime,
-      'x-ufsm-access-token': credentials.accessToken,
-      'x-ufsm-device-id': credentials.deviceId,
+      'x-ufsm-access-token': credentials.token,
+      'x-ufsm-device-id': this.getDeviceId(credentials.identifier),
     }
   }
 
@@ -69,8 +69,8 @@ export class APIService {
     }
 
     return data.map(beneficio => ({
-      idRefeicao: beneficio.idRefeicao,
-      descRefeicao: beneficio.descRefeicao,
+      id: beneficio.idRefeicao,
+      desc: beneficio.descRefeicao,
     }))
   }
 

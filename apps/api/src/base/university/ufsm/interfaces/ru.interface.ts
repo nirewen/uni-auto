@@ -13,3 +13,11 @@ export type TokenResponse = APIResponse<{
   id: number
   token: string
 }>
+
+export type UserSettings = {
+  days: {
+    restaurant: number
+    weekday: number
+    meals: number[]
+  }[]
+}

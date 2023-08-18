@@ -8,16 +8,38 @@ import {
 import * as dayjs from 'dayjs'
 import { Credentials } from '../interfaces/credentials.interface'
 import { APIService } from './api.service'
+import { ModulesService } from 'src/base/modules/modules.service'
+import { UserSettings } from '../interfaces/ru.interface'
+import { Connection } from 'src/entities/connection.entity'
 
 export class RUService extends RestaurantInterface<Credentials> {
   private logger = new Logger(RUService.name)
 
-  constructor(private api: APIService) {
+  constructor(private api: APIService, private modulesService: ModulesService) {
     super()
   }
 
-  async handleCron(): Promise<void> {
-    const currentDay = dayjs('2023-08-20')
+  async handleCron() {
+    const modules = await this.modulesService.findEnabledByProvider('ufsm')
+
+    await Promise.all(
+      modules.map(async module => {
+        const settings = module.settings as UserSettings
+
+        if (!module.connection || !settings) {
+          return
+        }
+
+        return this.handleUser(module.connection, settings)
+      })
+    )
+  }
+
+  async handleUser(
+    connection: Connection,
+    settings: UserSettings
+  ): Promise<void> {
+    const currentDay = dayjs()
     const weekday = currentDay.day()
     const days = [1, 2, 3].map(n => {
       const day = currentDay.add(n + (weekday === 0 ? 0 : 1), 'day')
@@ -27,30 +49,8 @@ export class RUService extends RestaurantInterface<Credentials> {
         day: day.day(),
       }
     })
-    const selectedDays = [
-      {
-        restaurant: 2,
-        weekday: 1,
-        meals: [1],
-      },
-      {
-        restaurant: 1,
-        weekday: 1,
-        meals: [2],
-      },
-      {
-        restaurant: 1,
-        weekday: 2,
-        meals: [1, 2],
-      },
-      {
-        restaurant: 1,
-        weekday: 4,
-        meals: [2],
-      },
-    ]
 
-    const schedules = selectedDays
+    const schedules = settings.days
       .filter(selectedDay => days.some(day => day.day === selectedDay.weekday))
       .map(async selectedDay => {
         const day = days.find(day => day.day === selectedDay.weekday)
@@ -59,20 +59,20 @@ export class RUService extends RestaurantInterface<Credentials> {
           day: day.date.format('DD/MM/YYYY'),
           restaurant: selectedDay.restaurant,
           credentials: {
-            deviceId: '',
-            accessToken: '',
+            identifier: connection.identifier,
+            token: connection.token,
           },
         }).then(meals =>
-          meals.filter(meal => selectedDay.meals.includes(meal.idRefeicao))
+          meals.filter(meal => selectedDay.meals.includes(meal.id))
         )
 
         return this.schedule({
           day: day.date.format('YYYY-MM-DD HH:mm:ss'),
           restaurant: selectedDay.restaurant,
-          meals: meals.map(meal => ({ item: meal.idRefeicao })),
+          meals: meals.map(meal => meal.id),
           credentials: {
-            deviceId: '',
-            accessToken: '',
+            identifier: connection.identifier,
+            token: connection.token,
           },
         })
       })
@@ -91,6 +91,7 @@ export class RUService extends RestaurantInterface<Credentials> {
 
 export const RestaurantService = {
   provide: RestaurantInterface,
-  useFactory: (api: APIService) => new RUService(api),
-  inject: [APIService],
+  useFactory: (api: APIService, modulesService: ModulesService) =>
+    new RUService(api, modulesService),
+  inject: [APIService, ModulesService],
 }
