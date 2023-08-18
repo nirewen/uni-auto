@@ -5,6 +5,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 
 import { Credentials } from '../interfaces/credentials.interface'
 import { CreateConnectionDTO } from '../dto/create-connection.dto'
+import { MenuOptions, ScheduleOptions } from 'src/interfaces/ru.interface'
 
 @Injectable()
 export class APIService {
@@ -45,25 +46,27 @@ export class APIService {
     }
   }
 
-  async getBeneficios(day: string, credentials: Credentials): Promise<any> {
+  async getBeneficios(options: MenuOptions<Credentials>) {
     const { data } = await firstValueFrom(
       this.http.post('/ru/getBeneficios', {
-        headers: this.getHeaders(credentials),
+        headers: this.getHeaders(
+          options.credentials,
+          'application/x-www-form-urlencoded'
+        ),
         data: {
-          // todo: Send form data
+          idRestaurante: options.restaurant,
+          dataStr: options.day,
         },
       })
     )
 
-    return data as number[]
+    return data as {
+      idRefeicao: number
+      descRefeicao: string
+    }[]
   }
 
-  async agendarRefeicao(options: {
-    day: string
-    meals: { item: number }[]
-    restaurant: number
-    credentials: Credentials
-  }): Promise<any> {
+  async agendarRefeicao(options: ScheduleOptions<Credentials>): Promise<any> {
     const { data } = await firstValueFrom(
       this.http.post('/ru/agendarRefeicao', {
         headers: this.getHeaders(options.credentials),

@@ -17,40 +17,47 @@ export class RUService extends RestaurantInterface<Credentials> {
   }
 
   async handleCron(): Promise<void> {
-    const currentDay = dayjs()
+    const currentDay = dayjs('2023-08-20')
     const weekday = currentDay.day()
     const days = [1, 2, 3].map(n => {
       const day = currentDay.add(n + (weekday === 0 ? 0 : 1), 'day')
 
       return {
-        date: day.format('YYYY-MM-DD HH:mm:ss'),
+        date: day,
         day: day.day(),
       }
     })
     const selectedDays = [
       {
+        restaurant: 2,
+        weekday: 1,
+        meals: [1],
+      },
+      {
+        restaurant: 1,
         weekday: 1,
         meals: [2],
       },
       {
+        restaurant: 1,
         weekday: 2,
         meals: [1, 2],
       },
       {
+        restaurant: 1,
         weekday: 4,
         meals: [2],
       },
     ]
 
-    const schedules = days
-      .filter(day =>
-        selectedDays.some(selectedDay => selectedDay.weekday === day.day)
-      )
-      .map(async day => {
-        const selectedDay = selectedDays.find(d => d.weekday === day.day)
+    const schedules = selectedDays
+      .filter(selectedDay => days.some(day => day.day === selectedDay.weekday))
+      .map(async selectedDay => {
+        const day = days.find(day => day.day === selectedDay.weekday)
 
         const meals = await this.menu({
-          day: day.date,
+          day: day.date.format('DD/MM/YYYY'),
+          restaurant: selectedDay.restaurant,
           credentials: {
             deviceId: '',
             accessToken: '',
@@ -59,28 +66,26 @@ export class RUService extends RestaurantInterface<Credentials> {
           meals.filter(meal => selectedDay.meals.includes(meal.idRefeicao))
         )
 
-        return this.schedule({
-          day: day.date,
-          meals: meals.map(meal => meal.idRefeicao),
-          restaurant: 1,
+        return {
+          day: day.date.format('YYYY-MM-DD HH:mm:ss'),
+          restaurant: selectedDay.restaurant,
+          meals,
           credentials: {
             deviceId: '',
             accessToken: '',
           },
-        })
+        }
       })
 
     await Promise.all(schedules)
   }
 
-  async schedule(options: ScheduleOptions<Credentials>): Promise<any> {
+  async schedule(options: ScheduleOptions<Credentials>) {
     return true
   }
 
-  async menu(
-    options: MenuOptions<Credentials>
-  ): Promise<{ idRefeicao: number }[]> {
-    return this.api.getBeneficios(options.day, options.credentials)
+  async menu(options: MenuOptions<Credentials>) {
+    return this.api.getBeneficios(options)
   }
 }
 
