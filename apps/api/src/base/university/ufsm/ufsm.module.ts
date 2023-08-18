@@ -1,3 +1,4 @@
+import { UFSMController } from './ufsm.controller'
 import { Module } from '@nestjs/common'
 import { SchedulingService } from 'src/common/providers/scheduling.service'
 import { RestaurantService } from './services/ru.service'
@@ -16,7 +17,7 @@ import { ConfigService } from '@nestjs/config'
       inject: [ConfigService],
     }),
   ],
-  controllers: [],
+  controllers: [UFSMController],
   providers: [
     APIService,
     SchedulingService,
