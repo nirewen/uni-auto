@@ -1,5 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm'
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm'
 import { User } from './user.entity'
+import { Module } from './module.entity'
+import { ModuleSettings } from './module-settings.entity'
 
 @Entity()
 export class Connection {
@@ -17,4 +25,7 @@ export class Connection {
 
   @Column()
   token: string
+
+  @OneToMany(() => ModuleSettings, settings => settings.connection)
+  modules: ModuleSettings[]
 }
