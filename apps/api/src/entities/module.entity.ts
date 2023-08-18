@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  Index,
+} from 'typeorm'
 import { ModuleSettings } from './module-settings.entity'
 
 @Entity({ name: 'modules' })
@@ -10,6 +16,7 @@ export class Module {
   name: string
 
   @Column()
+  @Index({ unique: true })
   slug: string
 
   @OneToMany(() => ModuleSettings, settings => settings.module)

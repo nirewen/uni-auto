@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
@@ -32,5 +32,15 @@ export class ConnectionsService {
     connection.user.id = data.userId
 
     return this.connections.save(connection)
+  }
+
+  async findConnection(id: string) {
+    const connection = await this.connections.findOneBy({ id })
+
+    if (!connection) {
+      throw new BadRequestException('Connection not found')
+    }
+
+    return connection
   }
 }
