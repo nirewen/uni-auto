@@ -9,8 +9,8 @@ import * as dayjs from 'dayjs'
 import { Credentials } from '../interfaces/credentials.interface'
 import { APIService } from './api.service'
 
-export class RestaurantService extends RestaurantInterface<Credentials> {
-  private logger = new Logger(RestaurantService.name)
+export class RUService extends RestaurantInterface<Credentials> {
+  private logger = new Logger(RUService.name)
 
   constructor(private api: APIService) {
     super()
@@ -82,4 +82,10 @@ export class RestaurantService extends RestaurantInterface<Credentials> {
   ): Promise<{ idRefeicao: number }[]> {
     return this.api.getBeneficios(options.day, options.credentials)
   }
+}
+
+export const RestaurantService = {
+  provide: RestaurantInterface,
+  useFactory: (api: APIService) => new RUService(api),
+  inject: [APIService],
 }
