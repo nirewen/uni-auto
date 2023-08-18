@@ -74,19 +74,22 @@ export class APIService {
     }))
   }
 
-  async agendarRefeicao(options: ScheduleOptions<Credentials>): Promise<any> {
+  async agendarRefeicao(options: ScheduleOptions<Credentials>) {
     const { data } = await firstValueFrom(
       this.http.post(
-        '/ru/agendarRefeicao',
+        '/ru/agendaRefeicoes',
         {
-          // todo: Send form data
+          idRestaurante: options.restaurant,
+          dataInicio: options.day,
+          dataFim: options.day,
+          tiposRefeicoes: options.meals.map(m => ({
+            item: m,
+          })),
         },
         {
           headers: this.getHeaders(options.credentials),
         }
       )
     )
-
-    return data as number[]
   }
 }

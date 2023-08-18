@@ -81,7 +81,7 @@ export class RUService extends RestaurantInterface<Credentials> {
   }
 
   async schedule(options: ScheduleOptions<Credentials>) {
-    return true
+    return this.api.agendarRefeicao(options)
   }
 
   async menu(options: MenuOptions<Credentials>) {
