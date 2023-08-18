@@ -6,11 +6,15 @@ import { NameService } from './providers/name.service'
 import { CronService } from './providers/cron.service'
 import { APIService } from './services/api.service'
 import { RestaurantInterface } from 'src/interfaces/ru.interface'
+import { ConfigService } from '@nestjs/config'
 
 @Module({
   imports: [
-    HttpModule.register({
-      baseURL: process.env.UFSM_API_URL,
+    HttpModule.registerAsync({
+      useFactory: (config: ConfigService) => ({
+        baseURL: config.get('UFSM_API_URL'),
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [],
