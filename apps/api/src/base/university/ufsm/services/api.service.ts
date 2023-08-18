@@ -6,6 +6,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { Credentials } from '../interfaces/credentials.interface'
 import { CreateConnectionDTO } from '../dto/create-connection.dto'
 import { MenuOptions, ScheduleOptions } from 'src/interfaces/ru.interface'
+import { BeneficioResponse, TokenResponse } from '../interfaces/ru.interface'
 
 @Injectable()
 export class APIService {
@@ -19,7 +20,7 @@ export class APIService {
 
   async authorize(payload: CreateConnectionDTO) {
     const { data } = await firstValueFrom(
-      this.http.post('/generateToken', {
+      this.http.post<TokenResponse>('/generateToken', {
         login: payload.login,
         senha: payload.senha,
         appName: 'UFSMDigital',
@@ -29,7 +30,7 @@ export class APIService {
     )
 
     if (data.error) {
-      throw new UnauthorizedException(data)
+      throw new UnauthorizedException('Invalid credentials')
     }
 
     return data as {
@@ -48,32 +49,42 @@ export class APIService {
 
   async getBeneficios(options: MenuOptions<Credentials>) {
     const { data } = await firstValueFrom(
-      this.http.post('/ru/getBeneficios', {
-        headers: this.getHeaders(
-          options.credentials,
-          'application/x-www-form-urlencoded'
-        ),
-        data: {
+      this.http.post<BeneficioResponse[]>(
+        '/ru/getBeneficios',
+        {
           idRestaurante: options.restaurant,
           dataStr: options.day,
         },
-      })
+        {
+          headers: this.getHeaders(
+            options.credentials,
+            'application/x-www-form-urlencoded'
+          ),
+        }
+      )
     )
 
-    return data as {
-      idRefeicao: number
-      descRefeicao: string
-    }[]
+    if (data.some(b => b.error)) {
+      throw new UnauthorizedException('Invalid credentials')
+    }
+
+    return data.map(beneficio => ({
+      idRefeicao: beneficio.idRefeicao,
+      descRefeicao: beneficio.descRefeicao,
+    }))
   }
 
   async agendarRefeicao(options: ScheduleOptions<Credentials>): Promise<any> {
     const { data } = await firstValueFrom(
-      this.http.post('/ru/agendarRefeicao', {
-        headers: this.getHeaders(options.credentials),
-        data: {
+      this.http.post(
+        '/ru/agendarRefeicao',
+        {
           // todo: Send form data
         },
-      })
+        {
+          headers: this.getHeaders(options.credentials),
+        }
+      )
     )
 
     return data as number[]

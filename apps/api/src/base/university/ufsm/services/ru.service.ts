@@ -66,15 +66,15 @@ export class RUService extends RestaurantInterface<Credentials> {
           meals.filter(meal => selectedDay.meals.includes(meal.idRefeicao))
         )
 
-        return {
+        return this.schedule({
           day: day.date.format('YYYY-MM-DD HH:mm:ss'),
           restaurant: selectedDay.restaurant,
-          meals,
+          meals: meals.map(meal => ({ item: meal.idRefeicao })),
           credentials: {
             deviceId: '',
             accessToken: '',
           },
-        }
+        })
       })
 
     await Promise.all(schedules)
