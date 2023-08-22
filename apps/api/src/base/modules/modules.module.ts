@@ -1,10 +1,10 @@
-import { ModulesService } from './modules.service'
+import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ModulesController } from './modules.controller'
-import { Module } from '@nestjs/common'
+import { ModulesService } from './modules.service'
 
-import { Module as ModuleEntity } from 'src/entities/module.entity'
 import { ModuleSettings } from 'src/entities/module-settings.entity'
+import { Module as ModuleEntity } from 'src/entities/module.entity'
 
 @Module({
   imports: [TypeOrmModule.forFeature([ModuleEntity, ModuleSettings])],

@@ -1,11 +1,17 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Optional,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ModuleSettings } from 'src/entities/module-settings.entity'
 
 import { Module } from 'src/entities/module.entity'
 import { Repository } from 'typeorm'
-import { EnableModuleDTO } from './dto/enable-module.dto'
 import { ConnectionsService } from '../connections/connections.service'
+import { PROVIDER } from '../providers/ufsm/providers/provider.service'
+import { EnableModuleDTO } from './dto/enable-module.dto'
 
 @Injectable()
 export class ModulesService {
@@ -14,15 +20,20 @@ export class ModulesService {
     private readonly moduleRepository: Repository<Module>,
     @InjectRepository(ModuleSettings)
     private readonly moduleSettingsRepository: Repository<ModuleSettings>,
-    private connections: ConnectionsService
+    private connections: ConnectionsService,
+    @Inject(PROVIDER) @Optional() private readonly provider: string,
+    @Inject('MODULE_NAME') @Optional() private readonly name: string
   ) {}
 
-  public async findEnabledByProvider(provider: string) {
+  public async findEnabled() {
     return this.moduleSettingsRepository.find({
       where: {
         enabled: true,
         connection: {
-          provider,
+          provider: this.provider,
+        },
+        module: {
+          name: this.name,
         },
       },
       relations: ['connection'],
