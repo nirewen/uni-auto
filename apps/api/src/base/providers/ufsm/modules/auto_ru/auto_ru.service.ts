@@ -1,26 +1,24 @@
-import dayjs from 'dayjs'
+import * as dayjs from 'dayjs'
 
-import { Provider } from '@nestjs/common'
+import { Logger, Provider } from '@nestjs/common'
+import { ModulesService } from 'src/base/modules/modules.service'
 import { Connection } from 'src/entities/connection.entity'
 import { ModuleInterface } from 'src/interfaces/module.interface'
 import { UserSettings } from '../../interfaces/ru.interface'
 import { RUService } from '../../services/ru.service'
 
-export const AutoRUService = {
-  provide: ModuleInterface,
-  useFactory: (ruService: RUService) => new AutoRU(ruService),
-  inject: [RUService],
-} satisfies Provider
+export class AutoRU implements ModuleInterface {
+  logger = new Logger(AutoRU.name)
 
-export class AutoRU extends ModuleInterface {
-  static provider = 'auto_ru'
-
-  constructor(private readonly restaurantService: RUService) {
-    super()
-  }
+  constructor(
+    protected readonly modulesService: ModulesService,
+    private readonly restaurantService: RUService
+  ) {}
 
   async trigger() {
-    const modules = await this.modulesService.findEnabled()
+    this.logger.verbose('Triggering AutoRU')
+
+    const modules = await this.modulesService.findEnabled('AutoRU')
 
     await Promise.all(
       modules.map(async module => {
@@ -36,16 +34,22 @@ export class AutoRU extends ModuleInterface {
   }
 
   private async handleUser(connection: Connection, settings: UserSettings) {
+    this.logger.verbose(`Handling user ${connection.identifier}`)
+
     const currentDay = dayjs()
     const weekday = currentDay.day()
-    const days = [1, 2, 3].map(n => {
-      const day = currentDay.add(n + (weekday === 0 ? 0 : 1), 'day')
+    const days = Array(6)
+      .fill(1)
+      .slice(weekday, weekday + 3)
+      .map((n, i) => {
+        const day = currentDay.add(n + i + (weekday === 0 ? 0 : 1), 'day')
 
-      return {
-        date: day,
-        day: day.day(),
-      }
-    })
+        return {
+          date: day,
+          day: day.day(),
+        }
+      })
+      .filter(day => day.day !== 0)
 
     const schedules = settings.days
       .filter(selectedDay => days.some(day => day.day === selectedDay.weekday))
@@ -79,3 +83,10 @@ export class AutoRU extends ModuleInterface {
     await Promise.all(schedules)
   }
 }
+
+export const AutoRUService = {
+  provide: ModuleInterface,
+  useFactory: (modulesService: ModulesService, restaurantService: RUService) =>
+    new AutoRU(modulesService, restaurantService),
+  inject: [ModulesService, RUService],
+} satisfies Provider

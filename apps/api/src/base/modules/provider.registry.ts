@@ -1,4 +1,4 @@
-import { Inject, Logger } from '@nestjs/common'
+import { BadRequestException, Inject, Logger } from '@nestjs/common'
 import { ModuleInterface } from 'src/interfaces/module.interface'
 import {
   PROVIDER,
@@ -38,5 +38,13 @@ export class ProviderRegistry {
     this.logger.debug(`Removed provider: ${provider}`)
 
     this.providers.delete(provider.name)
+  }
+
+  getModules(provider: string) {
+    if (!this.providers.has(provider)) {
+      throw new BadRequestException(`Provider ${provider} not found`)
+    }
+
+    return this.providers.get(provider)
   }
 }
