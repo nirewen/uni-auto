@@ -26,7 +26,7 @@ export function MealCard({ name, icon, ...props }: Meal) {
       onClick={() => setActive(a => !a)}
     >
       <Image src={icon} width='56' height='56' alt={name} />
-      <span className='text-xs text-center'>
+      <span className='text-xs text-center whitespace-pre-wrap'>
         <Balancer>{name}</Balancer>
       </span>
     </div>

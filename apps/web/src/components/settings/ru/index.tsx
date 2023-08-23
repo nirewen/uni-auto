@@ -1,14 +1,23 @@
+'use client'
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
-import { ArrowLeftToLine } from 'lucide-react'
+import { ArrowLeftToLine, ArrowRightToLine } from 'lucide-react'
+import { useState } from 'react'
 import { MealCard } from './components/meal-card'
 
 const weekdays = [
-  'Segunda-feira',
-  'Terça-feira',
-  'Quarta-feira',
-  'Quinta-feira',
-  'Sexta-feira',
-  'Sábado',
+  { long: 'Segunda-feira', short: 'S' },
+  { long: 'Terça-feira', short: 'T' },
+  { long: 'Quarta-feira', short: 'Q' },
+  { long: 'Quinta-feira', short: 'Q' },
+  { long: 'Sexta-feira', short: 'S' },
+  { long: 'Sábado', short: 'S' },
 ]
 
 const meals = [
@@ -30,57 +39,90 @@ const meals = [
   },
   {
     id: 4,
-    name: 'Marmitex almoço',
+    name: 'Marmitex\nalmoço',
     icon: 'https://img.icons8.com/fluency/56/plastic-food-container.png',
   },
   {
     id: 5,
-    name: 'Marmitex jantar',
+    name: 'Marmitex\njantar',
     icon: 'https://img.icons8.com/fluency/56/plastic-food-container.png',
   },
   {
     id: 6,
-    name: 'Kit distribuição café',
+    name: 'Kit distribuição\ncafé',
     icon: 'https://img.icons8.com/fluency/56/cafe.png',
   },
   {
     id: 7,
-    name: 'Kit distribuição almoço',
+    name: 'Kit distribuição\nalmoço',
     icon: 'https://img.icons8.com/fluency/56/food.png',
   },
   {
     id: 8,
-    name: 'Kit distribuição jantar',
+    name: 'Kit distribuição\njantar',
     icon: 'https://img.icons8.com/fluency/56/cutlery.png',
   },
   {
     id: 9,
-    name: 'Kit distribuição (C + A + J)',
+    name: 'Kit distribuição\n(C + A + J)',
     icon: 'https://img.icons8.com/fluency/56/halal-food.png',
   },
   {
     id: 9,
-    name: 'Kit distribuição (Almoço + Jantar)',
+    name: 'Kit distribuição\n(Almoço + Jantar)',
     icon: 'https://img.icons8.com/fluency/56/halal-food.png',
   },
 ]
 
 function RUSettings() {
+  const [expanded, setExpanded] = useState(true)
+
   return (
     <div className='flex gap-2 border border-solid rounded-lg bg-neutral-800 border-neutral-700'>
-      <div className='flex flex-col gap-2 p-2 border-r border-solid rounded-l-lg bg-neutral-900 border-neutral-700'>
-        <div className='flex items-center gap-2 p-2'>
-          <ArrowLeftToLine className='w-4 h-4' />
-          Diminuir
+      <div
+        className={cn(
+          'flex flex-col gap-2 p-2 border-r border-solid rounded-l-lg bg-neutral-900 border-neutral-700 select-none w-16 transition-[width]',
+          {
+            'w-56': expanded,
+          }
+        )}
+      >
+        <div
+          className={cn(
+            'flex items-center justify-end h-10 gap-2 p-2 whitespace-nowrap',
+            {
+              'justify-center': !expanded,
+            }
+          )}
+          onClick={() => setExpanded(value => !value)}
+        >
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                {expanded ? (
+                  <ArrowLeftToLine className='w-5 h-5' />
+                ) : (
+                  <ArrowRightToLine className='w-5 h-5' />
+                )}
+              </TooltipTrigger>
+              <TooltipContent side='right'>
+                <p>{expanded ? 'Fechar' : 'Abrir'}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
         {weekdays.map((weekday, index) => (
           <div
             key={index}
-            className={cn('flex gap-2 p-2 rounded-md w-44 cursor-pointer', {
-              'bg-neutral-800': index === 0,
-            })}
+            className={cn(
+              'flex gap-2 p-2 rounded-md cursor-pointer whitespace-nowrap transition-[padding-left,padding-right]',
+              {
+                'bg-neutral-800': index === 0,
+                'px-4': !expanded,
+              }
+            )}
           >
-            {weekday}
+            {expanded ? weekday.long : weekday.short}
           </div>
         ))}
       </div>
