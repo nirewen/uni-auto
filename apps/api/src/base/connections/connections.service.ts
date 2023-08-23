@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { Connection } from 'src/entities/connection.entity'
-import { Payload } from './interfaces/payload.interface'
 import { User } from 'src/entities/user.entity'
+import { Payload } from './interfaces/payload.interface'
 
 @Injectable()
 export class ConnectionsService {
