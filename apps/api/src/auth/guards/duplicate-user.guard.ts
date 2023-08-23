@@ -13,11 +13,11 @@ export class DuplicateUserGuard implements CanActivate {
   public async canActivate(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest<Request>()
 
-    const user = await this.users.findOne(req.body.email).catch(() => null)
+    const user = await this.users.findOne(req.body.username).catch(() => null)
 
     if (user) {
       throw new BadRequestException(
-        'There is already an user with this email registered'
+        'There is already an user with this username registered'
       )
     }
 
