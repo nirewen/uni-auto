@@ -16,16 +16,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang='en'>
-      <body
-        className={cn(
-          'flex flex-col w-full h-full gap-2 py-24 dark:text-white max-w-7xl mx-auto',
-          inter.className
-        )}
-      >
-        <ThemeProvider attribute='class' defaultTheme='dark' enableSystem>
-          <Navbar />
-          {children}
-        </ThemeProvider>
+      <body className={cn('h-full', inter.className)}>
+        <main className='flex flex-col w-full h-full gap-2 py-24 mx-auto dark:text-white max-w-7xl'>
+          <ThemeProvider attribute='class' defaultTheme='dark' enableSystem>
+            <Navbar />
+            {children}
+          </ThemeProvider>
+        </main>
       </body>
     </html>
   )

@@ -1,7 +1,6 @@
 import { cn } from '@/lib/utils'
 import { ArrowLeftToLine } from 'lucide-react'
-import Image from 'next/image'
-import { Balancer } from 'react-wrap-balancer'
+import { MealCard } from './components/meal-card'
 
 const weekdays = [
   'Segunda-feira',
@@ -17,6 +16,7 @@ const meals = [
     id: 1,
     name: 'Café',
     icon: 'https://img.icons8.com/fluency/56/breakfast.png',
+    active: true,
   },
   {
     id: 2,
@@ -65,17 +65,6 @@ const meals = [
   },
 ]
 
-function MealCard({ name, icon }: (typeof meals)[number]) {
-  return (
-    <div className='grid gap-2 p-2 border border-solid rounded-md place-items-center bg-neutral-700 border-neutral-600'>
-      <Image src={icon} width='56' height='56' alt={name} />
-      <span className='text-xs text-center'>
-        <Balancer>{name}</Balancer>
-      </span>
-    </div>
-  )
-}
-
 function RUSettings() {
   return (
     <div className='flex gap-2 border border-solid rounded-lg bg-neutral-800 border-neutral-700'>
@@ -95,7 +84,7 @@ function RUSettings() {
           </div>
         ))}
       </div>
-      <div className='flex flex-col w-full gap-2 p-2'>
+      <div className='flex flex-col w-full gap-2 p-2 pl-0'>
         <div className='flex items-center gap-2'>
           <div className='flex gap-2 p-2 text-sm rounded-md bg-neutral-700'>
             Restaurante 1
