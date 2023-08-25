@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 
 const frameworks = [
   {
@@ -42,7 +42,7 @@ const frameworks = [
   },
 ]
 
-export function Connections() {
+export function ModulesCombobox() {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState('')
 
@@ -53,7 +53,7 @@ export function Connections() {
           variant='outline'
           role='combobox'
           aria-expanded={open}
-          className='justify-between pl-2 pr-2 md:flex-1 bg-neutral-900 border-neutral-800 text-ellipsis'
+          className='flex justify-between flex-1 pl-2 overflow-hidden bg-neutral-900 border-neutral-800 md:hidden text-ellipsis'
         >
           {value ? (
             frameworks.find(framework => framework.value === value)?.label
@@ -63,15 +63,15 @@ export function Connections() {
                 <AvatarImage src='https://github.com/nirewen.png' />
                 <AvatarFallback>NW</AvatarFallback>
               </Avatar>
-              <div className='hidden md:inline'>Selecione a conexão...</div>
+              Selecione o módulo...
             </div>
           )}
-          <ChevronsUpDown className='hidden w-4 h-4 ml-2 opacity-50 shrink-0 md:inline' />
+          <ChevronsUpDown className='w-4 h-4 ml-2 opacity-50 shrink-0' />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='p-0 w-[300px]'>
         <Command>
-          <CommandInput placeholder='Selecione a conexão...' />
+          <CommandInput placeholder='Selecione o módulo...' />
           <CommandEmpty>No framework found.</CommandEmpty>
           <CommandGroup>
             {frameworks.map(framework => (

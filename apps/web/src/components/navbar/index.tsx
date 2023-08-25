@@ -1,6 +1,5 @@
 import { MenuIcon } from 'lucide-react'
-import Link from 'next/link'
-import { Input } from '../ui/input'
+import Image from 'next/image'
 import { LoggedInUser } from './user'
 
 export function Navbar() {
@@ -10,14 +9,15 @@ export function Navbar() {
         <button className='flex p-2 border border-solid rounded-md bg-neutral-800 border-neutral-700'>
           <MenuIcon className='w-6 h-6 text-neutral-300' />
         </button>
-        <Link href='/'>Home</Link>
       </div>
-      <div className='flex items-center gap-2'>
-        <Input
-          className='bg-neutral-900 border-neutral-700'
-          placeholder='Search'
-          type='search'
-        />
+      <Image
+        src='./Logo.svg'
+        width={32}
+        height={32}
+        alt='Logo'
+        className='opacity-80'
+      />
+      <div className='flex items-center justify-end flex-1 gap-2'>
         <LoggedInUser />
       </div>
     </div>

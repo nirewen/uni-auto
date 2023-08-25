@@ -32,9 +32,9 @@ const cards = [
 export default function Home() {
   return (
     <main className='flex flex-col w-full h-full gap-2 dark:text-white'>
-      <div className='grid grid-cols-[28%_auto] h-full gap-2'>
+      <div className='grid md:grid-cols-[28%_auto] gap-2'>
         <Sidebar />
-        <div className='flex flex-col w-full h-full gap-2 overflow-auto'>
+        <div className='flex flex-col w-full gap-2 overflow-auto'>
           <ModuleSection>
             <ModuleSection.Header>
               <ModuleSection.Title>Status</ModuleSection.Title>

@@ -1,38 +1,38 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
   DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuPortal,
+  DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
 import {
+  ChevronDown,
+  Cloud,
   CreditCard,
-  Settings,
+  Github,
   Keyboard,
-  Users,
-  UserPlus,
+  LifeBuoy,
+  LogOut,
   Mail,
   MessageSquare,
-  PlusCircle,
   Plus,
-  Github,
-  LifeBuoy,
-  Cloud,
-  LogOut,
+  PlusCircle,
+  Settings,
   User,
-  ChevronDown,
+  UserPlus,
+  Users,
 } from 'lucide-react'
-import { DropdownMenuShortcut } from '../ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { DropdownMenuShortcut } from '../ui/dropdown-menu'
 
 export function LoggedInUser() {
   return (
@@ -46,8 +46,10 @@ export function LoggedInUser() {
             <AvatarImage src='https://github.com/nirewen.png' />
             <AvatarFallback>NW</AvatarFallback>
           </Avatar>
-          nirewen
-          <ChevronDown className='w-4 h-4' />
+          <div className='items-center hidden gap-2 md:flex'>
+            nirewen
+            <ChevronDown className='w-4 h-4' />
+          </div>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56' align='end'>

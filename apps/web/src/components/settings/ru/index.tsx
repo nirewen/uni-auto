@@ -78,8 +78,8 @@ const meals = [
 
 function RUSettings() {
   return (
-    <div className='flex border border-solid rounded-lg bg-neutral-800 border-neutral-700 max-h-80'>
-      <div className='flex flex-col gap-2 p-2 border-r border-solid rounded-l-lg select-none bg-neutral-900 border-neutral-700'>
+    <div className='flex border border-solid rounded-lg bg-neutral-800 border-neutral-700 max-h-72 md:max-h-80'>
+      <div className='flex flex-col gap-2 p-1 border-r border-solid rounded-l-lg select-none md:p-2 bg-neutral-900 border-neutral-700'>
         <div className='flex items-center justify-end gap-2 p-2 whitespace-nowrap'>
           <CalendarDays className='w-4 h-4' />
         </div>
@@ -97,8 +97,8 @@ function RUSettings() {
           </div>
         ))}
       </div>
-      <div className='flex flex-col w-full gap-2 p-2'>
-        <div className='flex items-center gap-2'>
+      <div className='flex flex-col w-full gap-2 p-2 overflow-hidden'>
+        <div className='flex items-center h-8 gap-2 overflow-hidden overflow-x-auto shrink-0'>
           {restaurantes.map((restaurante, index) => (
             <div
               className={cn(
