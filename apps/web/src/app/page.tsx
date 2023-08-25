@@ -32,7 +32,7 @@ const cards = [
 export default function Home() {
   return (
     <main className='flex flex-col w-full h-full gap-2 dark:text-white'>
-      <div className='grid grid-cols-[30%_auto] h-full gap-2'>
+      <div className='grid grid-cols-[28%_auto] h-full gap-2'>
         <Sidebar />
         <div className='flex flex-col w-full h-full gap-2 overflow-auto'>
           <ModuleSection>
@@ -41,11 +41,6 @@ export default function Home() {
               <ModuleSection.Subtitle>
                 Estatísticas sobre esse módulo
               </ModuleSection.Subtitle>
-              <ModuleSection.Options>
-                <div className='px-2 py-1 text-sm bg-green-800 border border-green-700 border-solid rounded-sm select-none'>
-                  Módulo ativo
-                </div>
-              </ModuleSection.Options>
             </ModuleSection.Header>
             <ModuleSection.Body>
               <ModuleSection.Card.Row>

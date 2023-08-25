@@ -28,7 +28,7 @@ function ModuleSection(props: PropsWithChildren) {
 
 function Card(props: PropsWithChildren) {
   return (
-    <div className='flex flex-col flex-1 gap-2 p-3 border border-solid rounded-lg bg-neutral-900 border-neutral-800'>
+    <div className='flex flex-col gap-2 p-3 border border-solid rounded-lg select-none min-w-[17rem] flex-1 bg-neutral-900 border-neutral-800'>
       {props.children}
     </div>
   )
@@ -65,7 +65,9 @@ function Body(props: PropsWithChildren) {
 }
 
 function CardRow(props: PropsWithChildren) {
-  return <div className='flex flex-row gap-2'>{props.children}</div>
+  return (
+    <div className='flex flex-row gap-2 overflow-auto'>{props.children}</div>
+  )
 }
 
 ModuleSection.Header = Header

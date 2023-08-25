@@ -1,14 +1,5 @@
-'use client'
-
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
-import { ArrowLeftToLine, ArrowRightToLine } from 'lucide-react'
-import { useState } from 'react'
+import { CalendarDays } from 'lucide-react'
 import { MealCard } from './components/meal-card'
 
 const weekdays = [
@@ -18,6 +9,17 @@ const weekdays = [
   { long: 'Quinta-feira', short: 'Q' },
   { long: 'Sexta-feira', short: 'S' },
   { long: 'Sábado', short: 'S' },
+]
+
+const restaurantes = [
+  {
+    id: 1,
+    name: 'Restaurante 1',
+  },
+  {
+    id: 41,
+    name: 'Restaurante 2',
+  },
 ]
 
 const meals = [
@@ -75,80 +77,45 @@ const meals = [
 ]
 
 function RUSettings() {
-  const [expanded, setExpanded] = useState(true)
-
   return (
-    <div className='flex gap-2 border border-solid rounded-lg bg-neutral-800 border-neutral-700'>
-      <div
-        className={cn(
-          'flex flex-col gap-2 p-2 border-r border-solid rounded-l-lg bg-neutral-900 border-neutral-700 select-none w-16 transition-[width]',
-          {
-            'w-56': expanded,
-          }
-        )}
-      >
-        <div
-          className={cn(
-            'flex items-center justify-end h-10 gap-2 p-2 whitespace-nowrap',
-            {
-              'justify-center': !expanded,
-            }
-          )}
-          onClick={() => setExpanded(value => !value)}
-        >
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                {expanded ? (
-                  <ArrowLeftToLine className='w-5 h-5' />
-                ) : (
-                  <ArrowRightToLine className='w-5 h-5' />
-                )}
-              </TooltipTrigger>
-              <TooltipContent side='right'>
-                <p>{expanded ? 'Fechar' : 'Abrir'}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+    <div className='flex border border-solid rounded-lg bg-neutral-800 border-neutral-700 max-h-80'>
+      <div className='flex flex-col gap-2 p-2 border-r border-solid rounded-l-lg select-none bg-neutral-900 border-neutral-700'>
+        <div className='flex items-center justify-end gap-2 p-2 whitespace-nowrap'>
+          <CalendarDays className='w-4 h-4' />
         </div>
         {weekdays.map((weekday, index) => (
           <div
             key={index}
             className={cn(
-              'flex gap-2 p-2 rounded-md cursor-pointer whitespace-nowrap transition-[padding-left,padding-right]',
+              'flex gap-2 p-2 rounded-md cursor-pointer whitespace-nowrap h-8 leading-none justify-center font-bold',
               {
                 'bg-neutral-800': index === 0,
-                'px-4': !expanded,
               }
             )}
           >
-            {expanded ? weekday.long : weekday.short}
+            {weekday.short}
           </div>
         ))}
       </div>
-      <div className='flex flex-col w-full gap-2 p-2 pl-0'>
+      <div className='flex flex-col w-full gap-2 p-2'>
         <div className='flex items-center gap-2'>
-          <div className='flex gap-2 p-2 text-sm rounded-md bg-neutral-700'>
-            Restaurante 1
-          </div>
-          <div className='flex gap-2 p-2 text-sm rounded-md blur-[1px]'>
-            Restaurante 2
-          </div>
-          <span className='text-sm text-muted-foreground'>
-            Refeições sujeitas a benefício do usuário
-          </span>
+          {restaurantes.map((restaurante, index) => (
+            <div
+              className={cn(
+                'flex gap-2 px-2 py-1 text-sm rounded-md bg-neutral-800 border-neutral-700 border border-solid cursor-pointer whitespace-nowrap hover:bg-neutral-600 hover:border-neutral-500 hover:text-neutral-100 transition-colors',
+                {
+                  'bg-neutral-700 border-neutral-600': index === 0,
+                }
+              )}
+            >
+              {restaurante.name}
+            </div>
+          ))}
         </div>
-        <div className='grid h-full grid-rows-2 gap-2'>
-          <div className='grid grid-cols-5 gap-2'>
-            {meals.slice(0, 5).map((meal, index) => (
-              <MealCard key={index} {...meal} />
-            ))}
-          </div>
-          <div className='grid grid-cols-5 gap-2'>
-            {meals.slice(5).map((meal, index) => (
-              <MealCard key={index} {...meal} />
-            ))}
-          </div>
+        <div className='grid h-full grid-cols-2 gap-2 overflow-auto md:grid-cols-3 lg:grid-cols-5'>
+          {meals.map((meal, index) => (
+            <MealCard key={index} {...meal} />
+          ))}
         </div>
       </div>
     </div>
