@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { ModuleSettings } from 'src/entities/module-settings.entity'
+import { ConnectionModule } from 'src/entities/connection-module.entity'
 
 import { Module } from 'src/entities/module.entity'
 import { Repository } from 'typeorm'
@@ -16,8 +16,8 @@ export class ModulesService {
   constructor(
     @InjectRepository(Module)
     private readonly moduleRepository: Repository<Module>,
-    @InjectRepository(ModuleSettings)
-    private readonly moduleSettingsRepository: Repository<ModuleSettings>,
+    @InjectRepository(ConnectionModule)
+    private readonly moduleSettingsRepository: Repository<ConnectionModule>,
     private connections: ConnectionsService,
     @Inject(PROVIDER) private readonly provider: ProviderInterface
   ) {}
@@ -27,7 +27,9 @@ export class ModulesService {
       where: {
         enabled: true,
         connection: {
-          provider: this.provider.slug,
+          provider: {
+            slug: this.provider.slug,
+          },
         },
         module: {
           slug: module,
@@ -41,7 +43,7 @@ export class ModulesService {
     const module = await this.findModuleBySlug(slug)
     const connection = await this.connections.findConnection(data.connection)
 
-    if (!module.providers.includes(connection.provider)) {
+    if (!module.providers.find(p => p.provider.id === connection.provider.id)) {
       throw new BadRequestException('Provider not supported for this module')
     }
 
@@ -63,7 +65,7 @@ export class ModulesService {
     const module = await this.findModuleBySlug(slug)
     const connection = await this.connections.findConnection(data.connection)
 
-    const settings = await this.findModuleSettings(module.id, connection.id)
+    const settings = await this.findModuleSettings(module.slug, connection.id)
 
     if (!settings.enabled) {
       throw new BadRequestException('Module already disabled')
@@ -88,10 +90,10 @@ export class ModulesService {
     return module
   }
 
-  async findModuleSettings(module: number, connection: string) {
+  async findModuleSettings(module: string, connection: string) {
     const settings = await this.moduleSettingsRepository.findOneBy({
       module: {
-        id: module,
+        slug: module,
       },
       connection: {
         id: connection,
@@ -99,7 +101,7 @@ export class ModulesService {
     })
 
     if (!settings) {
-      return new ModuleSettings()
+      return new ConnectionModule()
     }
 
     return settings

@@ -3,12 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { ModulesController } from './modules.controller'
 import { ModulesService } from './modules.service'
 
-import { ModuleSettings } from 'src/entities/module-settings.entity'
+import { ConnectionModule } from 'src/entities/connection-module.entity'
 import { Module as ModuleEntity } from 'src/entities/module.entity'
 
 @Global()
 @Module({
-  imports: [TypeOrmModule.forFeature([ModuleEntity, ModuleSettings])],
+  imports: [TypeOrmModule.forFeature([ModuleEntity, ConnectionModule])],
   controllers: [ModulesController],
   providers: [ModulesService],
   exports: [ModulesService],

@@ -1,21 +1,22 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
+  Entity,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm'
+import { ConnectionModule } from './connection-module.entity'
+import { Provider } from './provider.entity'
+import { Queue } from './queue.entity'
 import { User } from './user.entity'
-import { Module } from './module.entity'
-import { ModuleSettings } from './module-settings.entity'
 
-@Entity()
+@Entity({ name: 'connections' })
 export class Connection {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column()
-  provider: string
+  @ManyToOne(() => Provider, provider => provider.connections)
+  provider: Provider
 
   @ManyToOne(() => User, user => user.connections)
   user: User
@@ -26,6 +27,9 @@ export class Connection {
   @Column()
   token: string
 
-  @OneToMany(() => ModuleSettings, settings => settings.connection)
-  modules: ModuleSettings[]
+  @OneToMany(() => ConnectionModule, settings => settings.connection)
+  modules: ConnectionModule[]
+
+  @OneToMany(() => Queue, queue => queue.connection)
+  queues: Queue[]
 }
