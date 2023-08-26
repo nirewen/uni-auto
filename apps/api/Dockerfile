@@ -15,7 +15,7 @@ RUN npm prune --omit=dev
 FROM ${IMAGE} AS prod
 COPY --chown=node:node --from=prod-build /app/dist /app/dist
 COPY --chown=node:node --from=prod-build /app/node_modules /app/node_modules
-COPY --chown=node:node --from=prod-build /app/.env /app/dist/.env
+COPY --chown=node:node --from=prod-build /app/.env /app/dist/.env.prod
 
 ENV NODE_ENV=production
 WORKDIR /app/dist

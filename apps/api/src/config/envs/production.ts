@@ -8,6 +8,7 @@ export const config = {
     username: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASSWORD || '1234',
     database: process.env.DB_NAME || 'ufsm-ru',
+    schema: process.env.DB_SCHEMA || 'public',
 
     synchronize: false,
     logging: false,
