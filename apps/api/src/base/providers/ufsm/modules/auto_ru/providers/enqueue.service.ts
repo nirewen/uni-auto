@@ -102,7 +102,7 @@ export class EnqueueService extends ModuleService {
           const day = days.find(day => day.day === selectedDay.weekday)
 
           const meals = await this.ruService
-            .menu(
+            .meals(
               {
                 day: day.date.format('DD/MM/YYYY'),
                 restaurant: selectedDay.restaurant,

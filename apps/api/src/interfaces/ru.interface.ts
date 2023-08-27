@@ -4,9 +4,14 @@ export interface ScheduleOptions {
   restaurant: number
 }
 
-export interface MenuOptions {
+export interface AllowancesOptions {
   day: string
   restaurant: number
+}
+
+export interface MenuOptions {
+  dateStart: string
+  dateEnd: string
 }
 
 export interface GroupedMeal {

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 
 import {
+  AllowancesOptions,
   GroupedMeal,
   MenuOptions,
   ScheduleOptions,
@@ -18,8 +19,12 @@ export class RUService {
     return this.api.agendarRefeicao(options, credentials)
   }
 
-  async menu(options: MenuOptions, credentials: Credentials) {
+  async meals(options: AllowancesOptions, credentials: Credentials) {
     return this.api.getBeneficios(options, credentials)
+  }
+
+  async menu(options: MenuOptions, credentials: Credentials) {
+    return this.api.getCardapio(options, credentials)
   }
 
   groupMeals(meals: ScheduleOptions[]) {

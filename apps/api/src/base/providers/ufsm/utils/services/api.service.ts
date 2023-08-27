@@ -3,7 +3,12 @@ import { firstValueFrom } from 'rxjs'
 import { HttpService } from '@nestjs/axios'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 
-import { GroupedMeal, MenuOptions } from 'src/interfaces/ru.interface'
+import * as dayjs from 'dayjs'
+import {
+  AllowancesOptions,
+  GroupedMeal,
+  MenuOptions,
+} from 'src/interfaces/ru.interface'
 import { CreateConnectionDTO } from '../../dto/create-connection.dto'
 import { Credentials } from '../../interfaces/credentials.interface'
 import { BeneficioResponse, TokenResponse } from '../../interfaces/ru.interface'
@@ -48,7 +53,7 @@ export class APIService {
     }
   }
 
-  async getBeneficios(options: MenuOptions, credentials: Credentials) {
+  async getBeneficios(options: AllowancesOptions, credentials: Credentials) {
     const { data } = await firstValueFrom(
       this.http.post<BeneficioResponse[]>(
         '/ru/getBeneficios',
@@ -90,6 +95,24 @@ export class APIService {
           })),
         },
         {
+          headers: this.getHeaders(credentials),
+        }
+      )
+    )
+
+    return data
+  }
+
+  async getCardapio(options: MenuOptions, credentials: Credentials) {
+    const { data } = await firstValueFrom(
+      this.http.post(
+        '/ru/cardapio',
+        {},
+        {
+          params: {
+            dataInicioStr: dayjs(options.dateStart).format('DD/MM/YYYY'),
+            dataFimStr: dayjs(options.dateEnd).format('DD/MM/YYYY'),
+          },
           headers: this.getHeaders(credentials),
         }
       )
