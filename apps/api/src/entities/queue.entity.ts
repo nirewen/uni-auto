@@ -15,7 +15,7 @@ export enum QueueStatus {
 
 @Entity()
 export class Queue {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number
 
   @Column({ type: 'enum', enum: QueueStatus, default: QueueStatus.PENDING })

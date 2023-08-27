@@ -13,7 +13,6 @@ import { Connection } from './connection.entity'
 export enum UserRole {
   ADMIN = 'ADMIN',
   USER = 'USER',
-  CRON = 'CRON',
 }
 
 @Entity({ name: 'users' })
