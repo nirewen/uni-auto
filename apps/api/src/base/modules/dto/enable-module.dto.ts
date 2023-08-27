@@ -1,6 +1,11 @@
-import { IsString } from 'class-validator'
+import { IsBoolean, IsOptional, IsUUID } from 'class-validator'
 
 export class EnableModuleDTO {
-  @IsString()
+  @IsUUID()
+  @IsOptional()
   connection: string
+
+  @IsBoolean()
+  @IsOptional()
+  enabled: boolean
 }

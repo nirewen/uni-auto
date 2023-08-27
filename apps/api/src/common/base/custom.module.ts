@@ -32,11 +32,13 @@ export abstract class CustomModule implements OnModuleInit {
 
     const module = await this.modulesService.findModuleBySlug(moduleName)
 
-    const providers = Reflect.getMetadata('providers', this.constructor)
+    const injectables = ['imports', 'controllers', 'providers'].map(
+      key => Reflect.getMetadata(key, this.constructor) ?? []
+    )
 
-    for (const service of providers) {
-      Reflect.defineMetadata('module', module, service)
-      Reflect.defineMetadata('provider', provider, service)
+    for (const injectable of injectables.flat()) {
+      Reflect.defineMetadata('module', module, injectable)
+      Reflect.defineMetadata('provider', provider, injectable)
     }
 
     this.logger.debug(

@@ -37,52 +37,55 @@ export class ModulesService {
     })
   }
 
-  async enable(slug: string, data: EnableModuleDTO) {
-    const module = await this.findModuleBySlug(slug)
+  async toggle(slug: string, data: EnableModuleDTO) {
     const connection = await this.connections.findConnection(data.connection)
 
-    if (!module.settings.find(s => s.provider.id === connection.provider.id)) {
-      throw new BadRequestException('Provider not supported for this module')
+    const moduleSettings = await this.findModuleSettings(
+      slug,
+      connection.provider.slug
+    )
+
+    if (!moduleSettings.enabled) {
+      throw new BadRequestException('Module is temporarily disabled')
     }
 
-    const settings = await this.findConnectionModule(module.id, connection.id)
+    const settings = await this.findConnectionModule(
+      moduleSettings.module.id,
+      connection.id
+    )
 
     if (settings.enabled) {
       throw new BadRequestException('Module already enabled')
     }
 
-    settings.module = module
+    settings.module = moduleSettings.module
     settings.connection = connection
-    settings.enabled = true
+    settings.enabled = data.enabled
     settings.settings = settings.settings || {}
 
     return this.connectionModuleRepository.save(settings)
   }
 
-  async disable(slug: string, data: EnableModuleDTO) {
+  async toggleModule(slug: string, data: EnableModuleDTO) {
     const module = await this.findModuleBySlug(slug)
-    const connection = await this.connections.findConnection(data.connection)
 
-    const settings = await this.findConnectionModule(module.slug, connection.id)
-
-    if (!settings.enabled) {
-      throw new BadRequestException('Module already disabled')
+    if (module.enabled === data.enabled) {
+      throw new BadRequestException('Module already enabled')
     }
 
-    settings.enabled = false
+    module.enabled = data.enabled
 
-    return this.connectionModuleRepository.save(settings)
+    return this.moduleRepository.save(module)
   }
 
   async findModuleBySlug(slug: string) {
-    const module = await this.moduleRepository.findOneBy({ slug })
+    const module = await this.moduleRepository.findOne({
+      where: { slug },
+      relations: ['settings'],
+    })
 
     if (!module) {
       throw new BadRequestException('Module not found')
-    }
-
-    if (!module.enabled) {
-      throw new BadRequestException('Module is temporarily disabled')
     }
 
     return module
@@ -91,7 +94,7 @@ export class ModulesService {
   async findConnectionModule(module: string, connection: string) {
     const settings = await this.connectionModuleRepository.findOneBy({
       module: {
-        slug: module,
+        id: module,
       },
       connection: {
         id: connection,
@@ -108,9 +111,7 @@ export class ModulesService {
   async findModuleByName(name: string) {
     const module = await this.moduleRepository.findOne({
       where: { name },
-      relations: {
-        settings: true,
-      },
+      relations: ['settings'],
     })
 
     if (!module) {
@@ -134,29 +135,8 @@ export class ModulesService {
           slug: provider,
         },
       },
-      relations: {
-        provider: true,
-        module: true,
-      },
+      relations: ['module', 'provider'],
     })
-
-    if (!settings) {
-      throw new BadRequestException('Settings not found')
-    }
-
-    if (!settings.module.enabled) {
-      throw new BadRequestException('Module is temporarily disabled')
-    }
-
-    if (!settings.provider.enabled) {
-      throw new BadRequestException('Provider is temporarily disabled')
-    }
-
-    if (!settings.enabled) {
-      throw new BadRequestException(
-        'Module is temporarily disabled for this provider'
-      )
-    }
 
     return settings
   }

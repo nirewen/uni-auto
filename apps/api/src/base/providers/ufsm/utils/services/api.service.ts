@@ -18,13 +18,13 @@ export class APIService {
     return `ufsmbot-${base64}`
   }
 
-  async authorize(payload: CreateConnectionDTO) {
+  async authorize(payload: CreateConnectionDTO, deviceId?: string) {
     const { data } = await firstValueFrom(
       this.http.post<TokenResponse>('/generateToken', {
         login: payload.login,
         senha: payload.senha,
         appName: 'UFSMDigital',
-        deviceId: this.getDeviceId(payload.login),
+        deviceId: deviceId ?? this.getDeviceId(payload.login),
         deviceInfo: '',
       })
     )
@@ -43,7 +43,8 @@ export class APIService {
     return {
       'Content-Type': mime,
       'x-ufsm-access-token': credentials.token,
-      'x-ufsm-device-id': this.getDeviceId(credentials.identifier),
+      'x-ufsm-device-id':
+        credentials.deviceId ?? this.getDeviceId(credentials.identifier),
     }
   }
 
@@ -93,5 +94,7 @@ export class APIService {
         }
       )
     )
+
+    return data
   }
 }

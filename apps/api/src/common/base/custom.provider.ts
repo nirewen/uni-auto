@@ -16,16 +16,14 @@ export class CustomProvider {
   async loadProvider() {
     const providerName = this.constructor.name.replace('Provider', '')
 
-    const modules = Reflect.getMetadata('imports', this.constructor)
-    const controllers = Reflect.getMetadata('controllers', this.constructor)
+    const injectables = ['imports', 'controllers', 'providers'].map(
+      key => Reflect.getMetadata(key, this.constructor) ?? []
+    )
 
     const provider = await this.providersService.findOne(slugify(providerName))
 
-    for (const module of modules) {
-      Reflect.defineMetadata('provider', provider, module)
-    }
-    for (const controller of controllers) {
-      Reflect.defineMetadata('provider', provider, controller)
+    for (const injectable of injectables.flat()) {
+      Reflect.defineMetadata('provider', provider, injectable)
     }
 
     this.logger.debug(`Registered provider: ${provider.name}`)

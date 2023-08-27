@@ -37,10 +37,13 @@ export class ConnectionsService {
   }
 
   async findConnection(id: string) {
-    const connection = await this.connections.findOneBy({ id })
+    const connection = await this.connections.findOne({
+      where: { id },
+      relations: ['provider', 'user'],
+    })
 
     if (!connection) {
-      throw new BadRequestException('Connection not found')
+      throw new BadRequestException('Invalid connection id')
     }
 
     return connection

@@ -37,6 +37,18 @@ export class AuthService {
     return null
   }
 
+  public validateToken(token: string): JwtPayload {
+    if (
+      !this.jwt.verify(token, {
+        secret: this.config.get('jwtSecret'),
+      })
+    ) {
+      return
+    }
+
+    return this.jwt.decode(token) as JwtPayload
+  }
+
   public validateRefreshToken(data: Payload, refreshToken: string): boolean {
     if (
       !this.jwt.verify(refreshToken, {

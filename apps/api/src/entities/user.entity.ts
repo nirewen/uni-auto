@@ -1,10 +1,10 @@
 import { Exclude } from 'class-transformer'
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  OneToMany,
   CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 
@@ -13,6 +13,7 @@ import { Connection } from './connection.entity'
 export enum UserRole {
   ADMIN = 'ADMIN',
   USER = 'USER',
+  CRON = 'CRON',
 }
 
 @Entity({ name: 'users' })
