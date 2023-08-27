@@ -4,9 +4,9 @@ import { HttpService } from '@nestjs/axios'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 
 import { MenuOptions, ScheduleOptions } from 'src/interfaces/ru.interface'
-import { CreateConnectionDTO } from '../dto/create-connection.dto'
-import { Credentials } from '../interfaces/credentials.interface'
-import { BeneficioResponse, TokenResponse } from '../interfaces/ru.interface'
+import { CreateConnectionDTO } from '../../dto/create-connection.dto'
+import { Credentials } from '../../interfaces/credentials.interface'
+import { BeneficioResponse, TokenResponse } from '../../interfaces/ru.interface'
 
 @Injectable()
 export class APIService {

@@ -1,14 +1,11 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ConnectionModule } from 'src/entities/connection-module.entity'
 
+import { ModuleSettings } from 'src/entities/module-settings.entity'
 import { Module } from 'src/entities/module.entity'
 import { Repository } from 'typeorm'
 import { ConnectionsService } from '../connections/connections.service'
-import {
-  PROVIDER,
-  ProviderInterface,
-} from '../providers/ufsm/providers/provider.service'
 import { EnableModuleDTO } from './dto/enable-module.dto'
 
 @Injectable()
@@ -16,20 +13,21 @@ export class ModulesService {
   constructor(
     @InjectRepository(Module)
     private readonly moduleRepository: Repository<Module>,
+    @InjectRepository(ModuleSettings)
+    private readonly moduleSettingsRepository: Repository<ModuleSettings>,
     @InjectRepository(ConnectionModule)
-    private readonly moduleSettingsRepository: Repository<ConnectionModule>,
-    private connections: ConnectionsService,
-    @Inject(PROVIDER) private readonly provider: ProviderInterface
+    private readonly connectionModuleRepository: Repository<ConnectionModule>,
+    private connections: ConnectionsService
   ) {}
 
   public async findEnabled(module: string) {
-    return this.moduleSettingsRepository.find({
+    return this.connectionModuleRepository.find({
       where: {
         enabled: true,
         connection: {
-          provider: {
-            slug: this.provider.slug,
-          },
+          // provider: {
+          //   slug: this.provider.slug,
+          // },
         },
         module: {
           slug: module,
@@ -43,11 +41,11 @@ export class ModulesService {
     const module = await this.findModuleBySlug(slug)
     const connection = await this.connections.findConnection(data.connection)
 
-    if (!module.providers.find(p => p.provider.id === connection.provider.id)) {
+    if (!module.settings.find(s => s.provider.id === connection.provider.id)) {
       throw new BadRequestException('Provider not supported for this module')
     }
 
-    const settings = await this.findModuleSettings(module.id, connection.id)
+    const settings = await this.findConnectionModule(module.id, connection.id)
 
     if (settings.enabled) {
       throw new BadRequestException('Module already enabled')
@@ -58,14 +56,14 @@ export class ModulesService {
     settings.enabled = true
     settings.settings = settings.settings || {}
 
-    return this.moduleSettingsRepository.save(settings)
+    return this.connectionModuleRepository.save(settings)
   }
 
   async disable(slug: string, data: EnableModuleDTO) {
     const module = await this.findModuleBySlug(slug)
     const connection = await this.connections.findConnection(data.connection)
 
-    const settings = await this.findModuleSettings(module.slug, connection.id)
+    const settings = await this.findConnectionModule(module.slug, connection.id)
 
     if (!settings.enabled) {
       throw new BadRequestException('Module already disabled')
@@ -73,7 +71,7 @@ export class ModulesService {
 
     settings.enabled = false
 
-    return this.moduleSettingsRepository.save(settings)
+    return this.connectionModuleRepository.save(settings)
   }
 
   async findModuleBySlug(slug: string) {
@@ -90,8 +88,8 @@ export class ModulesService {
     return module
   }
 
-  async findModuleSettings(module: string, connection: string) {
-    const settings = await this.moduleSettingsRepository.findOneBy({
+  async findConnectionModule(module: string, connection: string) {
+    const settings = await this.connectionModuleRepository.findOneBy({
       module: {
         slug: module,
       },
@@ -102,6 +100,62 @@ export class ModulesService {
 
     if (!settings) {
       return new ConnectionModule()
+    }
+
+    return settings
+  }
+
+  async findModuleByName(name: string) {
+    const module = await this.moduleRepository.findOne({
+      where: { name },
+      relations: {
+        settings: true,
+      },
+    })
+
+    if (!module) {
+      throw new BadRequestException('Module not found')
+    }
+
+    if (!module.enabled) {
+      throw new BadRequestException('Module is temporarily disabled')
+    }
+
+    return module
+  }
+
+  async findModuleSettings(module: string, provider: string) {
+    const settings = await this.moduleSettingsRepository.findOne({
+      where: {
+        module: {
+          slug: module,
+        },
+        provider: {
+          slug: provider,
+        },
+      },
+      relations: {
+        provider: true,
+        module: true,
+      },
+    })
+
+    if (!settings) {
+      throw new BadRequestException('Settings not found')
+    }
+
+    if (!settings.module.enabled) {
+      throw new BadRequestException('Module is temporarily disabled')
+    }
+
+    if (!settings.provider.enabled) {
+      throw new BadRequestException('Provider is temporarily disabled')
+    }
+
+    if (!settings.enabled) {
+      throw new BadRequestException(
+        'Module is temporarily disabled for this provider'
+      )
     }
 
     return settings

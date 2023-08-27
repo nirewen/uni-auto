@@ -7,10 +7,10 @@ export class ModuleSettings {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @ManyToOne(() => Module, module => module.providers)
+  @ManyToOne(() => Module, module => module.settings)
   module: Module
 
-  @ManyToOne(() => Provider, provider => provider.settings)
+  @ManyToOne(() => Provider, provider => provider.modules)
   provider: Provider
 
   @Column('json')

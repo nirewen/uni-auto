@@ -1,13 +1,10 @@
 import { Module } from '@nestjs/common'
 
-import { SchedulingService } from 'src/common/providers/scheduling.service'
-
-import { CustomModule } from 'src/base/modules/custom.module'
-import { RUService } from '../../services/ru.service'
+import { CustomModule } from 'src/common/base/custom.module'
 import { AutoRUService } from './auto_ru.service'
-import { CronService } from './providers/cron.service'
+import { QueueService } from './providers/queue.service'
 
 @Module({
-  providers: [SchedulingService, RUService, AutoRUService, CronService],
+  providers: [AutoRUService, QueueService],
 })
-export class AutoRUModule extends CustomModule {}
+export class AutoRuModule extends CustomModule {}

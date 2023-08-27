@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { Connection } from './connection.entity'
 import { ModuleSettings } from './module-settings.entity'
 
@@ -23,8 +17,8 @@ export class Provider {
   enabled: boolean
 
   @OneToMany(() => ModuleSettings, settings => settings.provider)
-  settings: ModuleSettings[]
+  modules: ModuleSettings[]
 
-  @ManyToOne(() => Connection, connection => connection.provider)
+  @OneToMany(() => Connection, connection => connection.provider)
   connections: Connection[]
 }

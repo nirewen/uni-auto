@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common'
-import { SchedulingService } from './providers/scheduling.service'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { Queue } from 'src/entities/queue.entity'
 
 @Module({
-  imports: [],
+  imports: [TypeOrmModule.forFeature([Queue])],
   controllers: [],
   providers: [],
+  exports: [],
 })
 export class CommonModule {}

@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -12,16 +11,12 @@ import { Roles } from 'src/common/decorators'
 import { UserRole } from 'src/entities/user.entity'
 import { EnableModuleDTO } from './dto/enable-module.dto'
 import { ModulesService } from './modules.service'
-import { ProviderRegistry } from './provider.registry'
 
 @Controller('modules')
 @UseGuards(RolesGuard)
 @Roles(UserRole.USER)
 export class ModulesController {
-  constructor(
-    private readonly modulesService: ModulesService,
-    private providerRegistry: ProviderRegistry
-  ) {}
+  constructor(private readonly modulesService: ModulesService) {}
 
   @Post(':slug')
   public enable(@Param('slug') slug: string, @Body() body: EnableModuleDTO) {
@@ -33,24 +28,24 @@ export class ModulesController {
     return this.modulesService.disable(slug, body)
   }
 
-  @Post(':provider/:slug/trigger')
-  @Roles(UserRole.ADMIN)
-  public async trigger(
-    @Param('provider') provider: string,
-    @Param('slug') slug: string
-  ) {
-    const modules = this.providerRegistry.getModules(provider)
+  // @Post(':provider/:slug/trigger')
+  // @Roles(UserRole.ADMIN)
+  // public async trigger(
+  //   @Param('provider') provider: string,
+  //   @Param('slug') slug: string
+  // ) {
+  //   const modules = this.providerRegistry.getModules(provider)
 
-    if (!modules.has(slug)) {
-      throw new BadRequestException(
-        `Module ${slug} not found for provider ${provider}`
-      )
-    }
+  //   if (!modules.has(slug)) {
+  //     throw new BadRequestException(
+  //       `Module ${slug} not found for provider ${provider}`
+  //     )
+  //   }
 
-    await this.modulesService.findModuleBySlug(slug)
+  //   await this.modulesService.findModuleBySlug(slug)
 
-    const module = modules.get(slug)
+  //   const module = modules.get(slug)
 
-    return module.trigger()
-  }
+  //   return module.trigger()
+  // }
 }

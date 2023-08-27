@@ -24,7 +24,7 @@ export class Module {
   connections: ConnectionModule[]
 
   @OneToMany(() => ModuleSettings, settings => settings.module)
-  providers: ModuleSettings[]
+  settings: ModuleSettings[]
 
   @Column()
   enabled: boolean

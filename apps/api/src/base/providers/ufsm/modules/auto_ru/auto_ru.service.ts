@@ -5,7 +5,7 @@ import { ModulesService } from 'src/base/modules/modules.service'
 import { Connection } from 'src/entities/connection.entity'
 import { ModuleInterface } from 'src/interfaces/module.interface'
 import { UserSettings } from '../../interfaces/ru.interface'
-import { RUService } from '../../services/ru.service'
+import { RUService } from '../../utils/services/ru.service'
 
 export class AutoRU implements ModuleInterface {
   logger = new Logger(AutoRU.name)

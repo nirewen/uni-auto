@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 
 import { MenuOptions, ScheduleOptions } from 'src/interfaces/ru.interface'
 
-import { Credentials } from '../interfaces/credentials.interface'
+import { Credentials } from '../../interfaces/credentials.interface'
 import { APIService } from './api.service'
 
 @Injectable()
