@@ -3,7 +3,7 @@ import { firstValueFrom } from 'rxjs'
 import { HttpService } from '@nestjs/axios'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 
-import { MenuOptions, ScheduleOptions } from 'src/interfaces/ru.interface'
+import { GroupedMeal, MenuOptions } from 'src/interfaces/ru.interface'
 import { CreateConnectionDTO } from '../../dto/create-connection.dto'
 import { Credentials } from '../../interfaces/credentials.interface'
 import { BeneficioResponse, TokenResponse } from '../../interfaces/ru.interface'
@@ -47,7 +47,7 @@ export class APIService {
     }
   }
 
-  async getBeneficios(options: MenuOptions<Credentials>) {
+  async getBeneficios(options: MenuOptions, credentials: Credentials) {
     const { data } = await firstValueFrom(
       this.http.post<BeneficioResponse[]>(
         '/ru/getBeneficios',
@@ -57,7 +57,7 @@ export class APIService {
         },
         {
           headers: this.getHeaders(
-            options.credentials,
+            credentials,
             'application/x-www-form-urlencoded'
           ),
         }
@@ -66,7 +66,7 @@ export class APIService {
 
     if (data.some(b => b.error)) {
       throw new UnauthorizedException(
-        `Invalid credentials for ${options.credentials.identifier}`
+        `Invalid credentials for ${credentials.identifier}`
       )
     }
 
@@ -76,20 +76,20 @@ export class APIService {
     }))
   }
 
-  async agendarRefeicao(options: ScheduleOptions<Credentials>) {
+  async agendarRefeicao(options: GroupedMeal, credentials: Credentials) {
     const { data } = await firstValueFrom(
       this.http.post(
         '/ru/agendaRefeicoes',
         {
           idRestaurante: options.restaurant,
-          dataInicio: options.day,
-          dataFim: options.day,
+          dataInicio: options.dateStart,
+          dataFim: options.dateEnd,
           tiposRefeicoes: options.meals.map(m => ({
             item: m,
           })),
         },
         {
-          headers: this.getHeaders(options.credentials),
+          headers: this.getHeaders(credentials),
         }
       )
     )

@@ -3,7 +3,7 @@ import { Module } from 'src/entities/module.entity'
 import { Provider } from 'src/entities/provider.entity'
 import { sleep } from 'src/utils/sleep'
 
-export abstract class ModuleService {
+export abstract class CustomController {
   protected logger: Logger
   protected module: Module
   protected provider: Provider
@@ -14,9 +14,9 @@ export abstract class ModuleService {
         this.module = module
         this.provider = provider
 
-        this.logger = new Logger(`${provider.name} / ${module.name}`)
-
-        this.onServiceInit()
+        this.logger = new Logger(
+          `${provider.name}${module ? ` / ${module.name}` : ''}`
+        )
       }
     )
   }
@@ -52,6 +52,4 @@ export abstract class ModuleService {
 
     return provider as Provider
   }
-
-  abstract onServiceInit(): void | Promise<void>
 }

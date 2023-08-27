@@ -20,14 +20,14 @@ export class ModulesService {
     private connections: ConnectionsService
   ) {}
 
-  public async findEnabled(module: string) {
+  public async findEnabled(provider: string, module: string) {
     return this.connectionModuleRepository.find({
       where: {
         enabled: true,
         connection: {
-          // provider: {
-          //   slug: this.provider.slug,
-          // },
+          provider: {
+            slug: provider,
+          },
         },
         module: {
           slug: module,

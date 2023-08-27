@@ -6,26 +6,31 @@ import { APIService } from './utils/services/api.service'
 
 import { RolesGuard } from 'src/auth/guards'
 import { ConnectionsService } from 'src/base/connections/connections.service'
+import { CustomController } from 'src/common/base/custom.controller'
 import { CreateConnectionDTO } from './dto/create-connection.dto'
 
 @Controller('ufsm')
 @UseGuards(RolesGuard)
 @Roles(UserRole.USER, UserRole.ADMIN)
-export class UfsmController {
+export class UfsmController extends CustomController {
   constructor(
     private api: APIService,
     private connectionService: ConnectionsService
-  ) {}
+  ) {
+    super()
+  }
 
   @Post('connect')
   async connect(@ReqUser() user: User, @Body() body: CreateConnectionDTO) {
     const credentials = await this.api.authorize(body)
 
-    return this.connectionService.connect({
-      provider: 'ufsm',
-      identifier: body.login,
-      token: credentials.token,
-      userId: user.id,
-    })
+    return this.connectionService.connect(
+      {
+        provider: this.provider.slug,
+        identifier: body.login,
+        token: credentials.token,
+      },
+      user
+    )
   }
 }

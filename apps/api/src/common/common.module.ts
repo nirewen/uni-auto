@@ -1,11 +1,13 @@
-import { Module } from '@nestjs/common'
+import { Global, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Queue } from 'src/entities/queue.entity'
+import { QueueService } from './services/queue.service'
 
+@Global()
 @Module({
   imports: [TypeOrmModule.forFeature([Queue])],
   controllers: [],
-  providers: [],
-  exports: [],
+  providers: [QueueService],
+  exports: [QueueService],
 })
 export class CommonModule {}

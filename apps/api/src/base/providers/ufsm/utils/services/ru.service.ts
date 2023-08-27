@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common'
 
-import { MenuOptions, ScheduleOptions } from 'src/interfaces/ru.interface'
+import {
+  GroupedMeal,
+  MenuOptions,
+  ScheduleOptions,
+} from 'src/interfaces/ru.interface'
 
+import * as dayjs from 'dayjs'
 import { Credentials } from '../../interfaces/credentials.interface'
 import { APIService } from './api.service'
 
@@ -9,11 +14,63 @@ import { APIService } from './api.service'
 export class RUService {
   constructor(private api: APIService) {}
 
-  async schedule(options: ScheduleOptions<Credentials>) {
-    return this.api.agendarRefeicao(options)
+  async schedule(options: GroupedMeal, credentials: Credentials) {
+    return this.api.agendarRefeicao(options, credentials)
   }
 
-  async menu(options: MenuOptions<Credentials>) {
-    return this.api.getBeneficios(options)
+  async menu(options: MenuOptions, credentials: Credentials) {
+    return this.api.getBeneficios(options, credentials)
+  }
+
+  groupMeals(meals: ScheduleOptions[]) {
+    const result: GroupedMeal[] = []
+
+    let group = {
+      meals: [],
+      dateStart: null,
+      dateEnd: null,
+      restaurant: null,
+    }
+
+    for (const day of meals) {
+      const currentDate = dayjs(day.dateStart)
+
+      if (
+        group.meals.length === 0 ||
+        (group.restaurant === day.restaurant &&
+          group.meals.toString() === day.meals.toString() &&
+          currentDate.diff(group.dateEnd, 'day') === 1)
+      ) {
+        if (group.meals.length === 0) {
+          group.dateStart = currentDate
+          group.restaurant = day.restaurant
+          group.meals = day.meals.slice()
+        }
+        group.dateEnd = currentDate
+      } else {
+        result.push({
+          meals: group.meals,
+          dateStart: dayjs(group.dateStart).format('YYYY-MM-DD HH:mm:ss'),
+          dateEnd: dayjs(group.dateEnd).format('YYYY-MM-DD HH:mm:ss'),
+          restaurant: group.restaurant,
+        })
+
+        group.dateStart = currentDate
+        group.dateEnd = currentDate
+        group.restaurant = day.restaurant
+        group.meals = day.meals.slice()
+      }
+    }
+
+    if (group.meals.length > 0) {
+      result.push({
+        meals: group.meals,
+        dateStart: dayjs(group.dateStart).format('YYYY-MM-DD HH:mm:ss'),
+        dateEnd: dayjs(group.dateEnd).format('YYYY-MM-DD HH:mm:ss'),
+        restaurant: group.restaurant,
+      })
+    }
+
+    return result
   }
 }

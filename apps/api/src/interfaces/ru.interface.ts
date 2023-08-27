@@ -1,14 +1,17 @@
-import { Inject } from '@nestjs/common'
-
-export interface ScheduleOptions<Credentials> {
-  day: string
+export interface ScheduleOptions {
+  dateStart: string
   meals: number[]
   restaurant: number
-  credentials: Credentials
 }
 
-export interface MenuOptions<Credentials> {
+export interface MenuOptions {
   day: string
   restaurant: number
-  credentials: Credentials
+}
+
+export interface GroupedMeal {
+  meals: number[]
+  dateStart: string
+  dateEnd: string
+  restaurant: number
 }
