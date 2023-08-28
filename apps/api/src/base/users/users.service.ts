@@ -35,6 +35,8 @@ export class UsersService {
 
     const newUser = this.users.create({ ...user, password })
 
+    await this.ntfy.registerUser(user.username, user.password)
+
     return this.users.save(newUser)
   }
 
@@ -85,11 +87,21 @@ export class UsersService {
       .then(users => users.find(u => u.username === user.username))
 
     if (ntfyUser) {
-      await this.ntfy.deleteUser(user.username)
-      await this.ntfy.registerUser(body.username, body.password)
+      if (body.password && body.password !== user.password) {
+        await this.ntfy.publish(user.username, {
+          title: 'Senha alterada',
+          message:
+            'Sua senha foi alterada, por favor faça login novamente no ' +
+            'Ntfy para continuar recebendo as notificações.',
+          priority: 5,
+        })
 
-      for (const grant of ntfyUser.grants) {
-        await this.ntfy.addTopic(body.username, grant.topic)
+        await this.ntfy.deleteUser(user.username)
+        await this.ntfy.registerUser(user.username, body.password)
+
+        for (const grant of ntfyUser.grants) {
+          await this.ntfy.addTopic(user.username, grant.topic)
+        }
       }
     }
 
