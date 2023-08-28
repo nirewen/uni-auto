@@ -6,6 +6,7 @@ import { APIService } from './utils/services/api.service'
 
 import { RolesGuard } from 'src/auth/guards'
 import { ConnectionsService } from 'src/base/connections/connections.service'
+import { NtfyService } from 'src/base/ntfy/ntfy.service'
 import { CustomController } from 'src/common/base/custom.controller'
 import { CreateConnectionDTO } from './dto/create-connection.dto'
 
@@ -15,7 +16,8 @@ import { CreateConnectionDTO } from './dto/create-connection.dto'
 export class UfsmController extends CustomController {
   constructor(
     private api: APIService,
-    private connectionService: ConnectionsService
+    private connectionService: ConnectionsService,
+    private ntfy: NtfyService
   ) {
     super()
   }
@@ -23,6 +25,8 @@ export class UfsmController extends CustomController {
   @Post('connect')
   async connect(@ReqUser() user: User, @Body() body: CreateConnectionDTO) {
     const credentials = await this.api.authorize(body)
+
+    await this.ntfy.addTopic(user.username, body.login)
 
     return this.connectionService.connect(
       {

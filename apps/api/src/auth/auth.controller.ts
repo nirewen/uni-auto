@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common'
 import { Response } from 'express'
 
+import { NtfyService } from 'src/base/ntfy/ntfy.service'
 import { CreateUserDTO } from 'src/base/users/dto/create-user.dto'
 import { UsersService } from 'src/base/users/users.service'
 import { Public, ReqUser } from 'src/common/decorators'
@@ -19,7 +20,11 @@ import { DuplicateUserGuard, JwtRefreshGuard, LocalAuthGuard } from './guards'
 
 @Controller('/auth')
 export class AuthController {
-  constructor(private auth: AuthService, private users: UsersService) {}
+  constructor(
+    private auth: AuthService,
+    private users: UsersService,
+    private nfty: NtfyService
+  ) {}
 
   @Public()
   @Post('/signin')
@@ -35,6 +40,8 @@ export class AuthController {
   @UseGuards(DuplicateUserGuard)
   public async signup(@Res() res: Response, @Body() newUser: CreateUserDTO) {
     const user = await this.users.create(newUser)
+
+    await this.nfty.registerUser(user.username, user.password)
 
     this.signin(res, user)
   }

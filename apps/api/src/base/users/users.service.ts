@@ -4,12 +4,16 @@ import * as bcrypt from 'bcrypt'
 import { FindOptionsWhere, Repository } from 'typeorm'
 
 import { User, UserRole } from 'src/entities/user.entity'
+import { NtfyService } from '../ntfy/ntfy.service'
 import { CreateUserDTO } from './dto/create-user.dto'
 import { UpdateUserDTO } from './dto/update-user.dto'
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private users: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private users: Repository<User>,
+    private ntfy: NtfyService
+  ) {}
 
   async count() {
     return this.users.count()
@@ -75,6 +79,19 @@ export class UsersService {
 
   async update(id: string, body: UpdateUserDTO) {
     const user = await this.findOneById(id)
+
+    const ntfyUser = await this.ntfy
+      .getUsers()
+      .then(users => users.find(u => u.username === user.username))
+
+    if (ntfyUser) {
+      await this.ntfy.deleteUser(user.username)
+      await this.ntfy.registerUser(body.username, body.password)
+
+      for (const grant of ntfyUser.grants) {
+        await this.ntfy.addTopic(body.username, grant.topic)
+      }
+    }
 
     if (body.password && body.password !== user.password) {
       body.password = await this.hashPassword(body.password)

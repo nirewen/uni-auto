@@ -5,6 +5,9 @@ export const config = {
     migrations: [`${__dirname}/../../migrations/**/*.{js,ts}`],
   },
 
-  API_JWT_TOKEN: process.env.API_JWT_TOKEN,
+  NTFY_INSTANCE_URL: process.env.NTFY_INSTANCE_URL,
+  NTFY_ACCESS_TOKEN: process.env.NTFY_ACCESS_TOKEN,
+
+  API_ACCESS_TOKEN: process.env.API_ACCESS_TOKEN,
   API_BASE_URL: process.env.API_BASE_URL,
 }

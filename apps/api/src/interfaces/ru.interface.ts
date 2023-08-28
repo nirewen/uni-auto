@@ -20,3 +20,14 @@ export interface GroupedMeal {
   dateEnd: string
   restaurant: number
 }
+
+export type ScheduleResponse = {
+  error: boolean
+  codigo: number
+  mensagem: string
+  id: number
+  impedimento: string
+  dataRefAgendada: string
+  tipoRefeicao: string
+  sucesso: boolean
+}

@@ -4,11 +4,17 @@ import { HttpService } from '@nestjs/axios'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 
 import * as dayjs from 'dayjs'
+import 'dayjs/locale/pt-br'
+
+dayjs.locale('pt-br')
+
 import {
   AllowancesOptions,
   GroupedMeal,
   MenuOptions,
+  ScheduleResponse,
 } from 'src/interfaces/ru.interface'
+import { formatList, mealNames, p } from 'src/utils/mappings'
 import { CreateConnectionDTO } from '../../dto/create-connection.dto'
 import { Credentials } from '../../interfaces/credentials.interface'
 import { BeneficioResponse, TokenResponse } from '../../interfaces/ru.interface'
@@ -84,7 +90,7 @@ export class APIService {
 
   async agendarRefeicao(options: GroupedMeal, credentials: Credentials) {
     const { data } = await firstValueFrom(
-      this.http.post(
+      this.http.post<ScheduleResponse[]>(
         '/ru/agendaRefeicoes',
         {
           idRestaurante: options.restaurant,
@@ -100,7 +106,7 @@ export class APIService {
       )
     )
 
-    return data
+    return this.responseToNtfyPayloads(data)
   }
 
   async getCardapio(options: MenuOptions, credentials: Credentials) {
@@ -119,5 +125,89 @@ export class APIService {
     )
 
     return data
+  }
+
+  private responseToNtfyPayloads(response: ScheduleResponse[]) {
+    type Item = {
+      dates: string[]
+      meals: string[]
+      message: string
+      success: boolean
+    }
+
+    const isEqual = (a: string[], b: string[]) =>
+      a.every(item => b.includes(item)) && b.every(item => a.includes(item))
+
+    return response
+      .reduce((acc, item) => {
+        const newItem: Item = {
+          dates: [item.dataRefAgendada],
+          meals: [item.tipoRefeicao],
+          message: item.impedimento,
+          success: item.sucesso,
+        }
+
+        let found = acc.find(
+          i =>
+            i.dates.includes(item.dataRefAgendada) &&
+            i.message === item.impedimento
+        )
+
+        if (found) {
+          found.dates = [...new Set([...found.dates, item.dataRefAgendada])]
+          found.meals = [...new Set([...found.meals, item.tipoRefeicao])]
+
+          return acc
+        }
+
+        return [...acc, newItem]
+      }, [] as Item[])
+      .reduce((acc, item) => {
+        const found = acc.find(
+          i =>
+            isEqual(item.meals, i.meals) &&
+            !isEqual(item.dates, i.dates) &&
+            dayjs(item.dates.at(-1)).diff(i.dates.at(-1), 'days') === 1 &&
+            item.message === i.message
+        )
+
+        if (found) {
+          found.dates.push(...item.dates)
+
+          return acc
+        }
+
+        return [...acc, item]
+      }, [] as Item[])
+      .map(item => {
+        const joining = item.dates.length > 2 ? ' até ' : ' e '
+        let message = ''
+
+        item.meals.sort(
+          (a, b) =>
+            Object.values(mealNames).indexOf(a) -
+            Object.values(mealNames).indexOf(b)
+        )
+        const dates = [item.dates.shift(), item.dates.pop()]
+          .filter(Boolean)
+          .map(d => dayjs(d).format('ddd DD/MM'))
+
+        if (item.success) {
+          message = `${formatList(item.meals)} agendado${p(
+            item.meals.length
+          )} para ${dates.join(joining)}`
+        } else {
+          message = `${formatList(item.meals)} para ${dates.join(joining)}:\n${
+            item.message
+          }`
+        }
+
+        return {
+          title: item.success ? 'RU agendado' : 'Falha ao agendar',
+          message,
+          priority: item.success ? 2 : 5,
+          tags: ['shallow_pan_of_food'],
+        }
+      })
   }
 }

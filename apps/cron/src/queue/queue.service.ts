@@ -1,10 +1,11 @@
 import { HttpService } from '@nestjs/axios'
 import { Injectable, Logger } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { Cron } from '@nestjs/schedule'
 import { InjectRepository } from '@nestjs/typeorm'
 import { firstValueFrom } from 'rxjs'
 import { Queue, QueueStatus } from 'src/entities/queue.entity'
+import { NtfyPayload } from 'src/ntfy/ntfy.interface'
+import { NtfyService } from 'src/ntfy/ntfy.service'
 import { Repository } from 'typeorm'
 
 @Injectable()
@@ -15,7 +16,7 @@ export class QueueService {
     @InjectRepository(Queue)
     private readonly queueRepository: Repository<Queue>,
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService
+    private readonly ntfy: NtfyService
   ) {}
 
   @Cron('0 * * * * *')
@@ -36,32 +37,36 @@ export class QueueService {
         return
       }
 
-      await Promise.all(
-        queue.map(async queue => {
-          const entry = await this.handleEntry(queue)
+      const handled = await Promise.all(
+        queue.map(async entry => {
+          this.logger.verbose(`Handling entry ${entry.id}`)
 
-          return manager.save(entry)
+          const result = await firstValueFrom(
+            this.httpService.post<NtfyPayload[]>(entry.endpoint, entry.data, {
+              headers: {
+                'connection-id': entry.connection.id,
+              },
+            })
+          )
+
+          entry.status = QueueStatus.COMPLETED
+
+          manager.save(entry)
+
+          return {
+            identifier: entry.connection.identifier,
+            notifications: result.data,
+          }
         })
       )
+
+      for (const notification of handled) {
+        await Promise.all(
+          notification.notifications.map(async ntfy =>
+            this.ntfy.publish(notification.identifier, ntfy)
+          )
+        )
+      }
     })
-  }
-
-  private async handleEntry(entry: Queue) {
-    this.logger.verbose(`Handling entry ${entry.id}`)
-
-    await firstValueFrom(
-      this.httpService.post(entry.endpoint, entry.data, {
-        headers: {
-          authorization: `Bearer ${this.configService.get<string>(
-            'API_JWT_TOKEN'
-          )}`,
-          'connection-id': entry.connection.id,
-        },
-      })
-    )
-
-    entry.status = QueueStatus.COMPLETED
-
-    return entry
   }
 }
