@@ -1,5 +1,9 @@
 import { HttpService } from '@nestjs/axios'
-import { Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common'
 import { firstValueFrom } from 'rxjs'
 import { NtfyPayload } from './ntfy.interface'
 
@@ -16,7 +20,15 @@ export class NtfyService {
     )
       .then(res => res.data)
       .catch(e => {
-        console.log(e)
+        switch (e.response.status) {
+          case 400:
+            throw new BadRequestException(e.response.data.error)
+          default:
+            throw new InternalServerErrorException(
+              e.response.data.error,
+              'Failed to publish'
+            )
+        }
       })
 
     return response

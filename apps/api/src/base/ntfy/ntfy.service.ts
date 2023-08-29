@@ -3,6 +3,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  InternalServerErrorException,
 } from '@nestjs/common'
 import { firstValueFrom } from 'rxjs'
 import { NtfyPayload } from './ntfy.interface'
@@ -24,7 +25,7 @@ export class NtfyService {
           case 409:
             throw new ConflictException('User already exists')
           default:
-            throw new BadRequestException(e, 'Failed to register user')
+            throw new InternalServerErrorException(e, 'Failed to register user')
         }
       })
 
@@ -41,7 +42,15 @@ export class NtfyService {
     )
       .then(res => res.data)
       .catch(e => {
-        console.log(e)
+        switch (e.response.status) {
+          case 400:
+            throw new BadRequestException(e.response.data.error)
+          default:
+            throw new InternalServerErrorException(
+              e.response.data.error,
+              'Failed to add topic'
+            )
+        }
       })
 
     return response
@@ -57,7 +66,15 @@ export class NtfyService {
     )
       .then(res => res.data)
       .catch(e => {
-        console.log(e)
+        switch (e.response.status) {
+          case 400:
+            throw new BadRequestException(e.response.data.error)
+          default:
+            throw new InternalServerErrorException(
+              e.response.data.error,
+              'Failed to delete user'
+            )
+        }
       })
 
     return response
@@ -72,7 +89,15 @@ export class NtfyService {
     )
       .then(res => res.data)
       .catch(e => {
-        console.log(e)
+        switch (e.response.status) {
+          case 400:
+            throw new BadRequestException(e.response.data.error)
+          default:
+            throw new InternalServerErrorException(
+              e.response.data.error,
+              'Failed to publish'
+            )
+        }
       })
 
     return response
@@ -82,7 +107,15 @@ export class NtfyService {
     const response = await firstValueFrom(this.httpService.get('/v1/users'))
       .then(res => res.data.filter(u => u.role === 'user'))
       .catch(e => {
-        console.log(e)
+        switch (e.response.status) {
+          case 400:
+            throw new BadRequestException(e.response.data.error)
+          default:
+            throw new InternalServerErrorException(
+              e.response.data.error,
+              'Failed to get users'
+            )
+        }
       })
 
     return response
