@@ -35,6 +35,7 @@ services:
       dockerfile: Dockerfile
       target: prod
     working_dir: /app/dist
+    restart: always
     ports:
       - 8765:3001
     networks:
@@ -45,6 +46,7 @@ services:
       dockerfile: Dockerfile
       target: prod
     working_dir: /app/dist
+    restart: always
     deploy:
       replicas: 3
     networks:
