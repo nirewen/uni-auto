@@ -26,11 +26,11 @@ export const mealNames = {
 export type MealName = (typeof mealNames)[keyof typeof mealNames]
 
 export const formatList = (list: string[]) => {
-  const last = list.pop()
+  const last = list.at(-1)
 
-  if (list.length === 0) return last
+  if (list.length === 1) return last
 
-  const result = list.join(', ') + ' e ' + last
+  const result = list.slice(0, -1).join(', ') + ' e ' + last
 
   return result
 }

@@ -4,8 +4,6 @@ import { Cron } from '@nestjs/schedule'
 import { InjectRepository } from '@nestjs/typeorm'
 import { firstValueFrom } from 'rxjs'
 import { Queue, QueueStatus } from 'src/entities/queue.entity'
-import { NtfyPayload } from 'src/ntfy/ntfy.interface'
-import { NtfyService } from 'src/ntfy/ntfy.service'
 import { Repository } from 'typeorm'
 
 @Injectable()
@@ -15,11 +13,10 @@ export class QueueService {
   constructor(
     @InjectRepository(Queue)
     private readonly queueRepository: Repository<Queue>,
-    private readonly httpService: HttpService,
-    private readonly ntfy: NtfyService
+    private readonly httpService: HttpService
   ) {}
 
-  @Cron('0 * * * * *')
+  @Cron('0/5 * * * *')
   handleQueue() {
     this.queueRepository.manager.transaction(async manager => {
       const queue = await manager
@@ -42,7 +39,7 @@ export class QueueService {
           this.logger.verbose(`Handling entry ${entry.id}`)
 
           const result = await firstValueFrom(
-            this.httpService.post<NtfyPayload[]>(entry.endpoint, entry.data, {
+            this.httpService.post(entry.endpoint, entry.data, {
               headers: {
                 'connection-id': entry.connection.id,
               },
@@ -52,11 +49,6 @@ export class QueueService {
             .catch(async e => {
               this.logger.error(e.message, e.stack)
 
-              await this.ntfy.publish('nirewen', {
-                title: 'Erro!',
-                message: `Ocorreu um erro ao enviar notificações para ${entry.connection.identifier}\n\n${e.message}`,
-                priority: 5,
-              })
               return []
             })
 
@@ -70,14 +62,6 @@ export class QueueService {
           }
         })
       )
-
-      for (const notification of handled) {
-        await Promise.all(
-          notification.notifications.map(async ntfy =>
-            this.ntfy.publish(notification.identifier, ntfy)
-          )
-        )
-      }
     })
   }
 }

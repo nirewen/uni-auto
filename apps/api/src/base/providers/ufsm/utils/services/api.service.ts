@@ -1,13 +1,18 @@
 import { firstValueFrom } from 'rxjs'
 
 import { HttpService } from '@nestjs/axios'
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common'
 
 import * as dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
 
 dayjs.locale('pt-br')
 
+import { NtfyService } from 'src/base/ntfy/ntfy.service'
 import {
   AllowancesOptions,
   GroupedMeal,
@@ -21,7 +26,7 @@ import { BeneficioResponse, TokenResponse } from '../../interfaces/ru.interface'
 
 @Injectable()
 export class APIService {
-  constructor(private http: HttpService) {}
+  constructor(private http: HttpService, private ntfy: NtfyService) {}
 
   private getDeviceId(login: string) {
     const base64 = Buffer.from(login).toString('base64')
@@ -89,7 +94,7 @@ export class APIService {
   }
 
   async agendarRefeicao(options: GroupedMeal, credentials: Credentials) {
-    const { data } = await firstValueFrom(
+    const data = await firstValueFrom(
       this.http.post<ScheduleResponse[]>(
         '/ru/agendaRefeicoes',
         {
@@ -105,8 +110,28 @@ export class APIService {
         }
       )
     )
+      .then(r => r.data)
+      .then(r => {
+        if (r.some(i => i.error)) {
+          throw new BadRequestException(
+            r
+              .filter(i => i.error)
+              .map(i => i.mensagem)
+              .join('\n')
+          )
+        }
+        return r
+      })
 
-    return this.responseToNtfyPayloads(data)
+    const notifications = this.responseToNtfyPayloads(data)
+
+    await Promise.all(
+      notifications.map(async notification =>
+        this.ntfy.publish(credentials.identifier, notification)
+      )
+    )
+
+    return data
   }
 
   async getCardapio(options: MenuOptions, credentials: Credentials) {
@@ -206,7 +231,7 @@ export class APIService {
           title: item.success ? 'RU agendado' : 'Falha ao agendar',
           message,
           priority: item.success ? 2 : 5,
-          tags: ['shallow_pan_of_food'],
+          tags: [item.success ? 'shallow_pan_of_food' : 'warning'],
         }
       })
   }

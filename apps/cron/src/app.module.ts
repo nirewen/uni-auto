@@ -3,14 +3,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ScheduleModule } from '@nestjs/schedule'
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 
-import { NtfyModule } from './ntfy/ntfy.module'
 import { QueueModule } from './queue/queue.module'
 
 import { configuration } from './config/configuration'
 
 @Module({
   imports: [
-    NtfyModule,
     QueueModule,
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({
