@@ -48,6 +48,17 @@ export class QueueService {
               },
             })
           )
+            .then(r => r.data)
+            .catch(async e => {
+              this.logger.error(e.message, e.stack)
+
+              await this.ntfy.publish('nirewen', {
+                title: 'Erro!',
+                message: `Ocorreu um erro ao enviar notificações para ${entry.connection.identifier}\n\n${e.message}`,
+                priority: 5,
+              })
+              return []
+            })
 
           entry.status = QueueStatus.COMPLETED
 
@@ -55,7 +66,7 @@ export class QueueService {
 
           return {
             identifier: entry.connection.identifier,
-            notifications: result.data,
+            notifications: result,
           }
         })
       )
