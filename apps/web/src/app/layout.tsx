@@ -21,7 +21,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <main className='flex flex-col w-full gap-2 p-2 m-auto dark:text-white max-w-7xl'>
           <ThemeProvider attribute='class' defaultTheme='dark' enableSystem>
             <Navbar />
-            {children}
+            <main className='flex flex-col w-full h-full gap-2 dark:text-white'>{children}</main>
           </ThemeProvider>
         </main>
       </body>
