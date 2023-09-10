@@ -1,7 +1,7 @@
 import { ModuleSection } from '@/components/module-section'
 import { RUSettings } from '@/components/settings/ru'
-import { Sidebar } from '@/components/sidebar'
 import { Button } from '@/components/ui/button'
+import { Sidebar } from '@/routes/(protected)/home/components/sidebar'
 import { Calendar, DollarSign, RotateCw, Save } from 'lucide-react'
 
 const cards = [
@@ -29,15 +29,17 @@ const cards = [
   },
 ]
 
-export default function Home() {
+export function Home() {
   return (
-    <div className='grid md:grid-cols-[28%_auto] gap-2'>
+    <div className='grid md:grid-cols-[28%_auto] gap-2 md:overflow-hidden flex-1'>
       <Sidebar />
       <div className='flex flex-col w-full gap-2 overflow-auto'>
         <ModuleSection>
           <ModuleSection.Header>
             <ModuleSection.Title>Status</ModuleSection.Title>
-            <ModuleSection.Subtitle>Estatísticas sobre esse módulo</ModuleSection.Subtitle>
+            <ModuleSection.Subtitle>
+              Estatísticas sobre esse módulo
+            </ModuleSection.Subtitle>
           </ModuleSection.Header>
           <ModuleSection.Body>
             <ModuleSection.Card.Row>
@@ -45,10 +47,16 @@ export default function Home() {
                 <ModuleSection.Card key={index}>
                   <ModuleSection.Card.Title>
                     {card.title}
-                    <ModuleSection.Card.Icon>{card.icon}</ModuleSection.Card.Icon>
+                    <ModuleSection.Card.Icon>
+                      {card.icon}
+                    </ModuleSection.Card.Icon>
                   </ModuleSection.Card.Title>
-                  <ModuleSection.Card.Value>{card.value}</ModuleSection.Card.Value>
-                  <ModuleSection.Card.Subtitle>{card.subtitle}</ModuleSection.Card.Subtitle>
+                  <ModuleSection.Card.Value>
+                    {card.value}
+                  </ModuleSection.Card.Value>
+                  <ModuleSection.Card.Subtitle>
+                    {card.subtitle}
+                  </ModuleSection.Card.Subtitle>
                 </ModuleSection.Card>
               ))}
             </ModuleSection.Card.Row>
@@ -57,9 +65,15 @@ export default function Home() {
         <ModuleSection>
           <ModuleSection.Header>
             <ModuleSection.Title>Configurações</ModuleSection.Title>
-            <ModuleSection.Subtitle>Configurações para esse módulo</ModuleSection.Subtitle>
+            <ModuleSection.Subtitle>
+              Configurações para esse módulo
+            </ModuleSection.Subtitle>
             <ModuleSection.Options>
-              <Button className='bg-neutral-800 border-neutral-700' variant='outline' size='icon'>
+              <Button
+                className='bg-neutral-800 border-neutral-700'
+                variant='outline'
+                size='icon'
+              >
                 <Save className='w-4 h-4' />
                 <span className='sr-only'>Salvar</span>
               </Button>
@@ -73,7 +87,9 @@ export default function Home() {
           <ModuleSection.Body>
             <div className='flex justify-between gap-2'>
               <div className='flex flex-col gap-1'>
-                <h4 className='text-lg font-bold text-white'>Desativar módulo</h4>
+                <h4 className='text-lg font-bold text-white'>
+                  Desativar módulo
+                </h4>
                 <span className='text-sm text-muted-foreground'>
                   Ao desativar esse módulo, ele não será mais executado
                 </span>
@@ -86,8 +102,8 @@ export default function Home() {
               <div className='flex flex-col gap-1'>
                 <h4 className='text-lg font-bold text-white'>Excluir módulo</h4>
                 <span className='text-sm text-muted-foreground'>
-                  Ao excluir esse módulo, ele será desassociado de sua conexão e todas as
-                  configurações serão apagadas
+                  Ao excluir esse módulo, ele será desassociado de sua conexão e
+                  todas as configurações serão apagadas
                 </span>
               </div>
               <Button className='bg-red-600 hover:bg-red-700' variant='ghost'>

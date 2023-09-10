@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Headers,
   Post,
   Res,
   UnauthorizedException,
@@ -9,7 +8,6 @@ import {
 } from '@nestjs/common'
 import { Response } from 'express'
 
-import { NtfyService } from 'src/base/ntfy/ntfy.service'
 import { CreateUserDTO } from 'src/base/users/dto/create-user.dto'
 import { UsersService } from 'src/base/users/users.service'
 import { Public, ReqUser } from 'src/common/decorators'
@@ -20,11 +18,7 @@ import { DuplicateUserGuard, JwtRefreshGuard, LocalAuthGuard } from './guards'
 
 @Controller('/auth')
 export class AuthController {
-  constructor(
-    private auth: AuthService,
-    private users: UsersService,
-    private nfty: NtfyService
-  ) {}
+  constructor(private auth: AuthService, private users: UsersService) {}
 
   @Public()
   @Post('/signin')
@@ -32,7 +26,7 @@ export class AuthController {
   public signin(@Res() res: Response, @ReqUser() user: User) {
     const tokens = this.auth.jwtSign(user)
 
-    res.json(tokens)
+    res.json({ user, tokens })
   }
 
   @Public()
@@ -40,8 +34,6 @@ export class AuthController {
   @UseGuards(DuplicateUserGuard)
   public async signup(@Res() res: Response, @Body() newUser: CreateUserDTO) {
     const user = await this.users.create(newUser)
-
-    await this.nfty.registerUser(user.username, user.password)
 
     this.signin(res, user)
   }
@@ -52,7 +44,7 @@ export class AuthController {
   public async refreshToken(
     @Res() res: Response,
     @ReqUser() payload: Payload,
-    @Headers('refresh_token') token: string
+    @Body('refresh_token') token: string
   ) {
     if (!token || !this.auth.validateRefreshToken(payload, token)) {
       throw new UnauthorizedException('InvalidRefreshToken')

@@ -74,7 +74,29 @@
     @apply bg-background text-foreground;
   }
 
-  html {
+  html,
+  body {
     @apply h-full;
+
+    font-family: Inter, sans-serif;
   }
+
+  #root {
+    @apply h-full flex flex-col;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1f1f1f;
+  border: 2px solid #0a0a0a;
+  border-radius: 10px;
 }

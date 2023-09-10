@@ -1,7 +1,9 @@
 import { ChevronRight, Plus } from 'lucide-react'
+
+import { ModulesCombobox } from '@/components/modules-combobox'
+import { Button } from '@/components/ui/button'
+
 import { Connections } from '../connections'
-import { ModulesCombobox } from '../modules-combobox'
-import { Button } from '../ui/button'
 
 export function Sidebar() {
   return (

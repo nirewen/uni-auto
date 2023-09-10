@@ -1,7 +1,6 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import Image from 'next/image'
 import { useState } from 'react'
 import { Balancer } from 'react-wrap-balancer'
 
@@ -25,7 +24,7 @@ export function MealCard({ name, icon, ...props }: Meal) {
       )}
       onClick={() => setActive(a => !a)}
     >
-      <Image src={icon} width='56' height='56' alt={name} />
+      <img src={icon} width='56' height='56' alt={name} />
       <span className='text-xs text-center whitespace-pre-wrap'>
         <Balancer>{name}</Balancer>
       </span>

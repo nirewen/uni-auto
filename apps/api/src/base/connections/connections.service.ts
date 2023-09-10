@@ -6,6 +6,7 @@ import { Connection } from 'src/entities/connection.entity'
 import { User } from 'src/entities/user.entity'
 import { ProvidersService } from '../providers/providers.service'
 import { Payload } from './interfaces/payload.interface'
+import { UpdateSettingsDTO } from './interfaces/update-settings.dto'
 
 @Injectable()
 export class ConnectionsService {
@@ -47,5 +48,58 @@ export class ConnectionsService {
     }
 
     return connection
+  }
+
+  async findConnectionByUser(id: string, user: User) {
+    const connection = await this.connections.findOne({
+      where: {
+        id,
+        user: {
+          id: user.id,
+        },
+      },
+      relations: {
+        provider: true,
+        user: true,
+        modules: {
+          module: true,
+        },
+      },
+    })
+
+    if (!connection) {
+      throw new BadRequestException('Invalid connection id')
+    }
+
+    return connection
+  }
+
+  async getAllConnections(user: User) {
+    return this.connections.find({
+      where: { user },
+      relations: ['provider'],
+    })
+  }
+
+  async updateSettings(
+    slug: string,
+    user: User,
+    { connectionId, settings }: UpdateSettingsDTO
+  ) {
+    const connection = await this.findConnectionByUser(connectionId, user)
+
+    const module = connection.modules.find(
+      module => module.module.slug === slug
+    )
+
+    if (!module) {
+      throw new BadRequestException('Invalid module')
+    }
+
+    module.settings = settings
+
+    await this.connections.save(connection)
+
+    return module
   }
 }

@@ -13,4 +13,8 @@ export class ProvidersService {
   async findOne(slug: string) {
     return this.providersRepository.findOneBy({ slug })
   }
+
+  async findAll() {
+    return this.providersRepository.find()
+  }
 }

@@ -101,6 +101,7 @@ function RUSettings() {
         <div className='flex items-center h-8 gap-2 overflow-hidden overflow-x-auto shrink-0'>
           {restaurantes.map((restaurante, index) => (
             <div
+              key={index}
               className={cn(
                 'flex gap-2 px-2 py-1 text-sm rounded-md bg-neutral-800 border-neutral-700 border border-solid cursor-pointer whitespace-nowrap hover:bg-neutral-600 hover:border-neutral-500 hover:text-neutral-100 transition-colors',
                 {
