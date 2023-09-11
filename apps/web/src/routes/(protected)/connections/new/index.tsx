@@ -11,9 +11,9 @@ export const NewConnection = () => {
   const Wrapper = ({ children }: PropsWithChildren) => {
     return (
       <div className='flex flex-col flex-1 gap-2 p-2 border border-solid rounded-md bg-neutral-900 border-neutral-800'>
-        <Helmet>
-          <title>Nova conexão - {provider?.toUpperCase()} | UniAuto</title>
-        </Helmet>
+        <Helmet
+          title={`UniAuto \u007C Nova conexão - ${provider?.toUpperCase()}`}
+        />
         <div className='flex items-center gap-2'>
           <Button
             className='gap-2 pl-2'

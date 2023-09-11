@@ -10,9 +10,7 @@ export const Connections: React.FC = () => {
 
   return (
     <div className='grid md:grid-cols-[28%_auto] grid-rows-[auto_1fr] md:grid-rows-1 gap-2 md:overflow-hidden flex-1 relative'>
-      <Helmet>
-        <title>Conexões | UniAuto</title>
-      </Helmet>
+      <Helmet title={`UniAuto \u007C Conexões`} />
       {isLoading && (
         <div className='absolute inset-0 z-50 flex items-center justify-center overflow-hidden border border-solid rounded-md border-neutral-800 backdrop-blur-sm'>
           <Loader2 className='w-12 h-12 animate-spin' />
