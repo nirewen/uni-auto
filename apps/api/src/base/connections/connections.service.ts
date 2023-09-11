@@ -83,6 +83,11 @@ export class ConnectionsService {
         connection: { id, user: { id: user.id } },
         module: { slug },
       },
+      relations: {
+        connection: {
+          user: true,
+        },
+      },
     })
 
     if (!settings) {
