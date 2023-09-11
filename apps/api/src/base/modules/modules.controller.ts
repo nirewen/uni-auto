@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   Param,
   Post,
   UseGuards,
@@ -18,6 +19,11 @@ import { ModulesService } from './modules.service'
 export class ModulesController {
   constructor(private readonly modulesService: ModulesService) {}
 
+  @Get(':provider')
+  public getModules(@Param('provider') provider: string) {
+    return this.modulesService.getModules(provider)
+  }
+
   @Post(':slug/toggle')
   public enable(
     @Param('slug') slug: string,
@@ -33,5 +39,17 @@ export class ModulesController {
     }
 
     return this.modulesService.toggle(slug, body)
+  }
+
+  @Post(':slug/delete')
+  public deleteModule(
+    @Param('slug') slug: string,
+    @Body() body: EnableModuleDTO
+  ) {
+    if (!body.connection) {
+      throw new BadRequestException('Connection is required')
+    }
+
+    return this.modulesService.deleteModule(slug, body)
   }
 }

@@ -19,10 +19,10 @@ import { Connections } from './routes/(protected)/connections'
 import { ConnectionHome } from './routes/(protected)/connections/:id'
 import { ModuleSettings } from './routes/(protected)/connections/:id/:module_slug'
 import { SelectModule } from './routes/(protected)/connections/:id/none-selected'
-import { NewConnection } from './routes/(protected)/connections/new-connection'
+import { NewConnection } from './routes/(protected)/connections/new'
 import { SelectConnection } from './routes/(protected)/connections/none-selected'
-import { Home } from './routes/(protected)/home'
 import { Layout } from './routes/(protected)/layout'
+import { Profile } from './routes/(protected)/profile'
 
 const queryClient = new QueryClient()
 
@@ -44,9 +44,9 @@ export const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
-        <AuthProvider>
-          <main className='flex flex-col max-h-[90vh] h-full w-full gap-2 p-2 md:m-auto dark:text-white max-w-7xl'>
-            <BrowserRouter>
+        <main className='flex flex-col md:max-h-[90vh] flex-1 w-full gap-2 p-2 md:m-auto dark:text-white max-w-7xl'>
+          <BrowserRouter>
+            <AuthProvider>
               <Routes>
                 <Route
                   element={
@@ -55,7 +55,8 @@ export const App = () => {
                     </PrivateRoute>
                   }
                 >
-                  <Route path={'/'} element={<Home />} />
+                  <Route path={'/'} element={<Navigate to='/connections' />} />
+                  <Route path={'/profile'} element={<Profile />} />
                   <Route path={'/connections'} element={<Connections />}>
                     <Route
                       path={'/connections'}
@@ -64,7 +65,12 @@ export const App = () => {
                     <Route
                       path={'/connections/new'}
                       element={<NewConnection />}
-                    />
+                    >
+                      <Route
+                        path={'/connections/new/:provider'}
+                        element={<NewConnection />}
+                      />
+                    </Route>
                   </Route>
                   <Route path={'/connections/:id'} element={<ConnectionHome />}>
                     <Route
@@ -80,9 +86,9 @@ export const App = () => {
                 <Route path={'/login'} element={<Login />} />
                 <Route path={'/register'} element={<Register />} />
               </Routes>
-            </BrowserRouter>
-          </main>
-        </AuthProvider>
+            </AuthProvider>
+          </BrowserRouter>
+        </main>
       </ThemeProvider>
     </QueryClientProvider>
   )

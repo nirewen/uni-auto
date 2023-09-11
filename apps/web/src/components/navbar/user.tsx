@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/context/auth-provider'
-import { ChevronDown, LogOut } from 'lucide-react'
+import { ChevronDown, LogOut, User } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button'
 
@@ -39,6 +39,12 @@ export function LoggedInUser() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56' align='end'>
         <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
+        <DropdownMenuItem asChild>
+          <Link to='/profile'>
+            <User className='w-4 h-4 mr-2' />
+            Perfil
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={signOut}>
           <LogOut className='w-4 h-4 mr-2' />

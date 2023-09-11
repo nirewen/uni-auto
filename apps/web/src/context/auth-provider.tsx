@@ -1,12 +1,13 @@
 import React, { PropsWithChildren } from 'react'
 
+import { useUser } from '@/hooks/useUser'
 import { User, api } from '@/lib/api'
 import {
   QueryObserverResult,
   RefetchOptions,
   RefetchQueryFilters,
-  useQuery,
 } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 
 type Credentials = {
   username: string
@@ -27,15 +28,8 @@ interface AuthContextProps {
 export const AuthContext = React.createContext<AuthContextProps>(null!)
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const {
-    data: user,
-    refetch,
-    isLoading,
-  } = useQuery({
-    queryKey: ['user'],
-    queryFn: () => api.get<User>('/users/@me').then(res => res.data),
-    enabled: !!localStorage.getItem('access_token'),
-  })
+  const { data: user, refetch, isLoading } = useUser()
+  const navigate = useNavigate()
 
   async function signIn({ username, password }: Credentials) {
     const res = await api.post('/auth/signin', { username, password })
@@ -50,6 +44,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   async function signOut() {
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
+
+    navigate('/login')
   }
 
   async function signUp({ username, password }: Credentials) {

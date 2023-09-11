@@ -4,6 +4,23 @@ import { useState } from 'react'
 import { Balancer } from 'react-wrap-balancer'
 import { Settings } from '../../../:module_slug/modules/auto-ru'
 
+import {
+  iconBreakfast,
+  iconCafe,
+  iconCutlery,
+  iconDinner,
+  iconFood,
+  iconHalalFood,
+  iconLunch,
+  iconPlasticFoodContainer,
+} from '@/assets/icons'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+
 interface RUSettingsProps {
   settings: Settings
   onSave: (settings: Settings) => void
@@ -33,52 +50,52 @@ const meals = [
   {
     id: 1,
     name: 'Café',
-    icon: 'https://img.icons8.com/fluency/56/breakfast.png',
+    icon: iconBreakfast,
   },
   {
     id: 2,
     name: 'Almoço',
-    icon: 'https://img.icons8.com/fluency/56/lunch.png',
+    icon: iconLunch,
   },
   {
     id: 3,
     name: 'Jantar',
-    icon: 'https://img.icons8.com/fluency/56/dinner.png',
+    icon: iconDinner,
   },
   {
     id: 4,
     name: 'Marmitex\nalmoço',
-    icon: 'https://img.icons8.com/fluency/56/plastic-food-container.png',
+    icon: iconPlasticFoodContainer,
   },
   {
     id: 5,
     name: 'Marmitex\njantar',
-    icon: 'https://img.icons8.com/fluency/56/plastic-food-container.png',
+    icon: iconPlasticFoodContainer,
   },
   {
     id: 6,
     name: 'Kit distribuição\ncafé',
-    icon: 'https://img.icons8.com/fluency/56/cafe.png',
+    icon: iconCafe,
   },
   {
     id: 7,
     name: 'Kit distribuição\nalmoço',
-    icon: 'https://img.icons8.com/fluency/56/food.png',
+    icon: iconFood,
   },
   {
     id: 8,
     name: 'Kit distribuição\njantar',
-    icon: 'https://img.icons8.com/fluency/56/cutlery.png',
+    icon: iconCutlery,
   },
   {
     id: 9,
     name: 'Kit distribuição\n(C + A + J)',
-    icon: 'https://img.icons8.com/fluency/56/halal-food.png',
+    icon: iconHalalFood,
   },
   {
     id: 9,
     name: 'Kit distribuição\n(Almoço + Jantar)',
-    icon: 'https://img.icons8.com/fluency/56/halal-food.png',
+    icon: iconHalalFood,
   },
 ]
 
@@ -95,20 +112,28 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
         <div className='flex items-center justify-end gap-2 p-2 whitespace-nowrap'>
           <CalendarDays className='w-4 h-4' />
         </div>
-        {weekdays.map((day, index) => (
-          <div
-            key={index}
-            className={cn(
-              'flex gap-2 p-2 rounded-md cursor-pointer whitespace-nowrap h-8 leading-none justify-center font-bold',
-              {
-                'bg-neutral-800': day.weekday === weekday,
-              }
-            )}
-            onClick={() => setWeekday(day.weekday)}
-          >
-            {day.short}
-          </div>
-        ))}
+        <TooltipProvider>
+          {weekdays.map((day, index) => (
+            <Tooltip delayDuration={50} key={index}>
+              <TooltipTrigger asChild>
+                <div
+                  className={cn(
+                    'flex gap-2 p-2 rounded-md cursor-pointer whitespace-nowrap h-8 leading-none justify-center font-bold',
+                    {
+                      'bg-neutral-800': day.weekday === weekday,
+                    }
+                  )}
+                  onClick={() => setWeekday(day.weekday)}
+                >
+                  {day.short}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side='right'>
+                <p>{day.long}</p>
+              </TooltipContent>
+            </Tooltip>
+          ))}
+        </TooltipProvider>
       </div>
       <div className='flex flex-col w-full gap-2 p-2 overflow-hidden'>
         <div className='flex items-center h-8 gap-2 overflow-hidden overflow-x-auto shrink-0'>
@@ -145,6 +170,19 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
                   }
                 )}
                 onClick={() => {
+                  const otherRestaurantDay = settings.days.find(
+                    day =>
+                      day.meals.includes(meal.id) &&
+                      day.restaurant !== restaurant &&
+                      day.weekday === weekday
+                  )
+
+                  if (otherRestaurantDay) {
+                    otherRestaurantDay?.meals.splice(
+                      otherRestaurantDay?.meals.indexOf(meal.id)!,
+                      1
+                    )
+                  }
                   if (
                     !settings.days.find(
                       day =>

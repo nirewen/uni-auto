@@ -37,6 +37,26 @@ export class ModulesService {
     })
   }
 
+  async deleteModule(slug: string, data: EnableModuleDTO) {
+    const connection = await this.connections.findConnection(data.connection)
+
+    const moduleSettings = await this.findModuleSettings(
+      slug,
+      connection.provider.slug
+    )
+
+    if (!moduleSettings.enabled) {
+      throw new BadRequestException('Module is temporarily disabled')
+    }
+
+    const settings = await this.findConnectionModule(
+      moduleSettings.module.id,
+      connection.id
+    )
+
+    return this.connectionModuleRepository.remove(settings)
+  }
+
   async toggle(slug: string, data: EnableModuleDTO) {
     const connection = await this.connections.findConnection(data.connection)
 
@@ -54,13 +74,9 @@ export class ModulesService {
       connection.id
     )
 
-    if (settings.enabled) {
-      throw new BadRequestException('Module already enabled')
-    }
-
     settings.module = moduleSettings.module
     settings.connection = connection
-    settings.enabled = data.enabled
+    settings.enabled = data.enabled ?? true
     settings.settings = settings.settings || {}
 
     return this.connectionModuleRepository.save(settings)
@@ -139,5 +155,19 @@ export class ModulesService {
     })
 
     return settings
+  }
+
+  async getModules(provider: string) {
+    return this.moduleSettingsRepository
+      .find({
+        where: {
+          enabled: true,
+          provider: {
+            slug: provider,
+          },
+        },
+        relations: ['module'],
+      })
+      .then(settings => settings.map(setting => setting.module))
   }
 }

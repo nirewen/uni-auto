@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common'
 import { ReqUser } from 'src/common/decorators'
 import { User } from 'src/entities/user.entity'
 import { ConnectionsService } from './connections.service'
@@ -18,12 +18,26 @@ export class ConnectionsController {
     return this.connectionsService.findConnectionByUser(id, user)
   }
 
-  @Patch(':slug')
-  public updateSettings(
-    @Param('slug') slug: string,
+  @Get('/:id/:slug/settings')
+  getConnectionSettings(
     @ReqUser() user: User,
+    @Param('id') id: string,
+    @Param('slug') slug: string
+  ) {
+    return this.connectionsService.findConnectionSettings(user, id, slug)
+  }
+
+  @Patch(':slug/settings')
+  public updateSettings(
+    @ReqUser() user: User,
+    @Param('slug') slug: string,
     @Body() body: UpdateSettingsDTO
   ) {
-    return this.connectionsService.updateSettings(slug, user, body)
+    return this.connectionsService.updateSettings(user, slug, body)
+  }
+
+  @Delete(':id')
+  public deleteConnection(@ReqUser() user: User, @Param('id') id: string) {
+    return this.connectionsService.deleteConnection(user, id)
   }
 }

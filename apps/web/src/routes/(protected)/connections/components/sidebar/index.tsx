@@ -1,17 +1,12 @@
 import { ChevronRight } from 'lucide-react'
 
-import { useQuery } from '@tanstack/react-query'
-
-import ufsmLogo from '@/assets/ufsm-logo.png'
-import { Connection, api } from '@/lib/api'
+import { useConnections } from '@/hooks/useConnections'
 import { Link } from 'react-router-dom'
+import { AddConnection } from '../add-connection'
+import { ConnectionsPopover } from './connections-popover'
 
 export function Sidebar() {
-  const { data: connections, isLoading } = useQuery({
-    queryKey: ['connections'],
-    queryFn: () =>
-      api.get<Connection[]>('/connections/@me').then(res => res.data),
-  })
+  const { data: connections, isLoading } = useConnections()
 
   if (isLoading)
     return (
@@ -32,24 +27,22 @@ export function Sidebar() {
     )
 
   return (
-    <aside className='flex flex-col flex-1 gap-2 p-2 border border-solid rounded-md bg-neutral-900 border-neutral-800'>
-      {connections.length > 0 ? (
-        <span className='text-sm text-muted-foreground'>Suas conexões</span>
-      ) : (
-        <span className='text-sm text-muted-foreground'>
-          Você não possui conexões
-        </span>
-      )}
+    <aside className='flex flex-1 gap-2 p-2 border border-solid rounded-md md:flex-col bg-neutral-900 border-neutral-800'>
       {connections.map(connection => (
-        <Link key={connection.id} to={`/connections/${connection.id}`}>
-          <div className='flex-col hidden gap-2 p-2 border border-solid rounded-md bg-neutral-800 border-neutral-700 md:flex'>
+        <Link
+          className='-mr-2 md:mr-0'
+          key={connection.id}
+          to={`/connections/${connection.id}`}
+        >
+          <div className='flex-col justify-center hidden h-10 gap-2 p-2 border border-solid rounded-md bg-neutral-800 border-neutral-700 md:flex'>
             <div className='flex flex-row items-center justify-between'>
-              <div className='flex items-center gap-2 text-sm text-neutral-100'>
-                <img
-                  src={ufsmLogo}
-                  alt='Logo da UFSM'
-                  className='w-6 h-6 rounded-full bg-neutral-200'
-                />
+              <div className='flex items-center gap-2 text-sm font-medium text-neutral-100'>
+                <span className='grid w-6 h-6 bg-white rounded-sm place-items-center'>
+                  <img
+                    src={`/icons/${connection.provider.slug}.ico`}
+                    alt={`Logo da ${connection.provider.name}`}
+                  />
+                </span>
                 {connection.provider.name} - {connection.identifier}
               </div>
               <ChevronRight className='w-6 h-6 text-neutral-300' />
@@ -57,6 +50,10 @@ export function Sidebar() {
           </div>
         </Link>
       ))}
+      <ConnectionsPopover list={connections} />
+      <div className='flex'>
+        <AddConnection />
+      </div>
     </aside>
   )
 }
