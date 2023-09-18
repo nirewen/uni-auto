@@ -23,6 +23,7 @@ import { NewConnection } from './routes/(protected)/connections/new'
 import { SelectConnection } from './routes/(protected)/connections/none-selected'
 import { Layout } from './routes/(protected)/layout'
 import { Profile } from './routes/(protected)/profile'
+import { InformacoesBasicas } from './routes/(protected)/profile/sections/informacoes-basicas'
 
 const queryClient = new QueryClient()
 
@@ -56,7 +57,9 @@ export const App = () => {
                   }
                 >
                   <Route path={'/'} element={<Navigate to='/connections' />} />
-                  <Route path={'/profile'} element={<Profile />} />
+                  <Route path={'/profile'} element={<Profile />}>
+                    <Route path={'/profile'} element={<InformacoesBasicas />} />
+                  </Route>
                   <Route path={'/connections'} element={<Connections />}>
                     <Route
                       path={'/connections'}
