@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 import { useAuth } from '@/context/auth-provider'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 const schema = z.object({
@@ -51,12 +51,11 @@ export function Form() {
   }
 
   return (
-    <div className='flex flex-col items-center self-center flex-1 gap-2 px-12'>
-      <h1 className='text-4xl font-bold'>Acessar conta</h1>
+    <div className='flex flex-col items-center flex-1 gap-2 px-4 mt-12 md:mt-0 md:self-center md:px-12'>
+      <h1 className='text-4xl font-bold text-center'>Acessar conta</h1>
       <h4 className='text-center text-muted-foreground'>
         Insira seu usuário e senha abaixo
-        <br />
-        para acessar sua conta
+        <wbr /> para acessar sua conta
       </h4>
       <hr />
       <form
@@ -86,6 +85,10 @@ export function Form() {
         </Button>
         {invalid && <p className='h-0 -mt-2 text-red-400'>{invalid}</p>}
       </form>
+      <span className='mt-4 text-muted-foreground'>Não possui uma conta?</span>
+      <Button variant='outline' asChild className='self-stretch bg-transparent'>
+        <Link to='/register'>Criar conta</Link>
+      </Button>
     </div>
   )
 }

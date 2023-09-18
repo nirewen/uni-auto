@@ -25,7 +25,6 @@
     "cmdk": "^0.2.0",
     "lucide-react": "^0.274.0",
     "react": "^18.2.0",
-    "react-auth-kit": "^2.12.6",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.46.1",
