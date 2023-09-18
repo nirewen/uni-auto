@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils'
 import { CalendarDays } from 'lucide-react'
 import { useState } from 'react'
 import { Balancer } from 'react-wrap-balancer'
-import { Settings } from '../../../:module_slug/modules/auto-ru'
+import { Settings } from '../../../../../../routes/(protected)/connections/:id/:module_slug/modules/auto-ru'
 
 import {
   iconBreakfast,

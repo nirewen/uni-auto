@@ -1,8 +1,9 @@
-import { useUser } from '@/hooks/useUser'
 import { Loader2 } from 'lucide-react'
 import { Helmet } from 'react-helmet'
 import { Outlet } from 'react-router-dom'
-import { Sidebar } from './components/sidebar'
+
+import { Sidebar } from '@/features/profile/components/sidebar'
+import { useUser } from '@/hooks/useUser'
 
 export const Profile: React.FC = () => {
   const { isLoading } = useUser()

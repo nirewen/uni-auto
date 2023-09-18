@@ -1,3 +1,7 @@
+import { useEffect, useState } from 'react'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Balancer } from 'react-wrap-balancer'
+
 import { Calendar, DollarSign, Loader2, RotateCw, Save } from 'lucide-react'
 
 import {
@@ -19,6 +23,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { ModuleSection } from '@/features/connections/components/:id/module-section'
+import { RUSettings } from '@/features/connections/components/:id/settings/ru'
 import useAutosave from '@/hooks/useAutosave'
 import {
   useConnectionSettings,
@@ -26,11 +32,6 @@ import {
 } from '@/hooks/useConnections'
 import { useDeleteModule, useToggleModule } from '@/hooks/useModules'
 import { Connection } from '@/lib/api'
-import { useEffect, useState } from 'react'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { Balancer } from 'react-wrap-balancer'
-import { ModuleSection } from '../../components/module-section'
-import { RUSettings } from '../../components/settings/ru'
 
 export type ConnectionModule = {
   id: string

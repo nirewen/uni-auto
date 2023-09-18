@@ -1,9 +1,11 @@
-import { useConnections } from '@/hooks/useConnections'
-import { Loader2 } from 'lucide-react'
 import React from 'react'
+
+import { Loader2 } from 'lucide-react'
 import { Helmet } from 'react-helmet'
 import { Outlet } from 'react-router-dom'
-import { Sidebar } from './components/sidebar'
+
+import { Sidebar } from '@/features/connections/components/sidebar'
+import { useConnections } from '@/hooks/useConnections'
 
 export const Connections: React.FC = () => {
   const { isLoading } = useConnections()
