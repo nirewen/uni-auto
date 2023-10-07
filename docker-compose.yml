@@ -51,6 +51,15 @@ services:
       replicas: 3
     networks:
       - uni-auto
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8764:3000
+    networks:
+      - uni-auto
 
 networks:
   uni-auto:
