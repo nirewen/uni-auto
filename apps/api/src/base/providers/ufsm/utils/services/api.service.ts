@@ -12,6 +12,7 @@ import 'dayjs/locale/pt-br'
 
 dayjs.locale('pt-br')
 
+import { ConfigService } from '@nestjs/config'
 import { NtfyService } from 'src/base/ntfy/ntfy.service'
 import {
   AllowancesOptions,
@@ -26,12 +27,15 @@ import { BeneficioResponse, TokenResponse } from '../../interfaces/ru.interface'
 
 @Injectable()
 export class APIService {
-  constructor(private http: HttpService, private ntfy: NtfyService) {}
+  private deviceIdPrefix: string;
+  constructor(private http: HttpService, private ntfy: NtfyService, config: ConfigService) {
+    this.deviceIdPrefix = config.get<string>('UFSM_DEVICE_ID_PREFIX')
+  }
 
   private getDeviceId(login: string) {
     const base64 = Buffer.from(login).toString('base64')
 
-    return `ufsmbot-${base64}`
+    return `${this.deviceIdPrefix}${base64}`
   }
 
   async authorize(payload: CreateConnectionDTO, deviceId?: string) {
