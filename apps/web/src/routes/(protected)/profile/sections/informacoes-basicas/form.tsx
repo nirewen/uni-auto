@@ -43,7 +43,7 @@ export const Form = () => {
       <label className='flex flex-col gap-1'>
         <span>Nome</span>
         <Input disabled value={data.username} />
-        <small className='h-4'>
+        <small>
           Alterar nome de usuário está desativado no momento. Contate um
           administrador
         </small>
@@ -56,7 +56,7 @@ export const Form = () => {
           placeholder='Não alterada'
           {...register('password')}
         />
-        <small className='h-4 text-red-400'>{errors.password?.message}</small>
+        <small className='text-red-400'>{errors.password?.message}</small>
       </label>
       <Button className='w-full mt-4' type='submit'>
         Atualizar conta
