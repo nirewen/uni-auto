@@ -1,0 +1,8 @@
+{
+    "conventionalCommits.scopes": [
+        "web",
+        "api",
+        "cron",
+        "infra"
+    ]
+}
