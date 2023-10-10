@@ -11,9 +11,9 @@ import { QueueService } from './queue.service'
     TypeOrmModule.forFeature([Queue]),
     HttpModule.registerAsync({
       useFactory: (config: ConfigService) => ({
-        baseURL: config.get('API_BASE_URL'),
+        baseURL: config.get('api.baseUrl'),
         headers: {
-          Authorization: `Bearer ${config.get('API_ACCESS_TOKEN')}`,
+          Authorization: `Bearer ${config.get('api.accessToken')}`,
         },
       }),
       inject: [ConfigService],

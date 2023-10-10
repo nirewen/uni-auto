@@ -10,9 +10,9 @@ import { NtfyService } from './ntfy.service'
   imports: [
     HttpModule.registerAsync({
       useFactory: (config: ConfigService) => ({
-        baseURL: config.get('NTFY_INSTANCE_URL'),
+        baseURL: config.get('ntfy.instanceUrl'),
         headers: {
-          Authorization: `Bearer ${config.get('NTFY_ACCESS_TOKEN')}`,
+          Authorization: `Bearer ${config.get('ntfy.accessToken')}`,
         },
       }),
       inject: [ConfigService],

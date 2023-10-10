@@ -40,7 +40,7 @@ export class AuthService {
   public validateToken(token: string): JwtPayload {
     if (
       !this.jwt.verify(token, {
-        secret: this.config.get('jwtSecret'),
+        secret: this.config.get('jwt.secret'),
       })
     ) {
       return
@@ -52,7 +52,7 @@ export class AuthService {
   public validateRefreshToken(data: Payload, refreshToken: string): boolean {
     if (
       !this.jwt.verify(refreshToken, {
-        secret: this.config.get('jwtRefreshSecret'),
+        secret: this.config.get('jwt.refreshSecret'),
       })
     ) {
       return false
@@ -79,7 +79,7 @@ export class AuthService {
     return this.jwt.sign(
       { sub },
       {
-        secret: this.config.get('jwtRefreshSecret'),
+        secret: this.config.get('jwt.refreshSecret'),
         expiresIn: '7d', // must be > access_token.expiresIn
       }
     )

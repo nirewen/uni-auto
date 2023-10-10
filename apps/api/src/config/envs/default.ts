@@ -4,12 +4,19 @@ export const config = {
     subscribers: [`${__dirname}/../../subscribers/**/*.{js,ts}`],
     migrations: [`${__dirname}/../../migrations/**/*.{js,ts}`],
   },
-  jwtSecret: process.env.JWT_SECRET,
-  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,
-
-  NTFY_INSTANCE_URL: process.env.NTFY_INSTANCE_URL,
-  NTFY_ACCESS_TOKEN: process.env.NTFY_ACCESS_TOKEN,
-
-  UFSM_API_URL: process.env.UFSM_API_URL,
-  UFSM_DEVICE_ID_PREFIX: process.env.UFSM_DEVICE_ID_PREFIX,
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    refreshSecret: process.env.JWT_REFRESH_SECRET,
+  },
+  ntfy: {
+    instanceUrl: process.env.NTFY_INSTANCE_URL,
+    accessToken: process.env.NTFY_ACCESS_TOKEN,
+  },
+  ufsm: {
+    apiUrl: process.env.UFSM_API_URL,
+    deviceIdPrefix: process.env.UFSM_DEVICE_ID_PREFIX,
+  },
+  loki: {
+    host: process.env.LOKI_HOST,
+  }
 }

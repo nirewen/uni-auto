@@ -29,7 +29,7 @@ import { BeneficioResponse, TokenResponse } from '../../interfaces/ru.interface'
 export class APIService {
   private deviceIdPrefix: string;
   constructor(private http: HttpService, private ntfy: NtfyService, config: ConfigService) {
-    this.deviceIdPrefix = config.get<string>('UFSM_DEVICE_ID_PREFIX')
+    this.deviceIdPrefix = config.get<string>('ufsm.deviceIdPrefix')
   }
 
   private getDeviceId(login: string) {

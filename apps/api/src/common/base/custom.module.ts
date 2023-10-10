@@ -1,4 +1,5 @@
-import { Inject, Logger, OnModuleInit, forwardRef } from '@nestjs/common'
+import { Inject, LoggerService, OnModuleInit, forwardRef } from '@nestjs/common'
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston'
 
 import { ModulesService } from 'src/base/modules/modules.service'
 import { Provider } from 'src/entities/provider.entity'
@@ -7,11 +8,10 @@ import { sleep } from 'src/utils/sleep'
 import { slugify } from 'src/utils/slugify'
 
 export abstract class CustomModule implements OnModuleInit {
-  private logger = new Logger(this.constructor.name)
-
   constructor(
     @Inject(forwardRef(() => ModulesService))
-    private modulesService: ModulesService
+    private modulesService: ModulesService,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER) private readonly logger: LoggerService
   ) {}
 
   async getProvider() {
@@ -41,9 +41,9 @@ export abstract class CustomModule implements OnModuleInit {
       Reflect.defineMetadata('provider', provider, injectable)
     }
 
-    this.logger.debug(
-      `Registered module: ${module.name}`,
-      `     for provider: ${provider.name}`
+    this.logger.log(
+      `Registered module: ${module.name}\n     for provider: ${provider.name}`,
+      this.constructor.name
     )
   }
 }

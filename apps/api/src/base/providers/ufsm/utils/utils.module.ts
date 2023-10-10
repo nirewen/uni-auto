@@ -10,7 +10,7 @@ import { RUService } from './services/ru.service'
   imports: [
     HttpModule.registerAsync({
       useFactory: (config: ConfigService) => ({
-        baseURL: config.get('UFSM_API_URL'),
+        baseURL: config.get('ufsm.apiUrl'),
       }),
       inject: [ConfigService],
     }),
