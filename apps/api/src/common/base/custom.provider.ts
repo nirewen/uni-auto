@@ -26,6 +26,9 @@ export class CustomProvider {
       Reflect.defineMetadata('provider', provider, injectable)
     }
 
-    this.logger.debug(`Registered provider: ${provider.name}`)
+    this.logger.log({
+      message: `Registered provider: ${provider.name}`,
+      labels: { provider: provider.name },
+    })
   }
 }

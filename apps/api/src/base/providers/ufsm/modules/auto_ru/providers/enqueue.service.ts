@@ -37,7 +37,13 @@ export class EnqueueService extends ModuleService {
 
     this.schedulerRegistry.addCronJob(moduleSettings.module.slug, this.job)
 
-    this.logger.debug(`Registered cron job: ${moduleSettings.settings.cron}`)
+    this.logger.log({
+      message: `Registered cron job: ${moduleSettings.settings.cron}`,
+      labels: {
+        module: moduleSettings.module.name,
+        provider: moduleSettings.provider.name,
+      },
+    })
   }
 
   async getSettings() {
