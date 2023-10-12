@@ -1,15 +1,17 @@
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { useAuth } from '@/context/auth-provider'
-import { useMutateUser, useUser } from '@/hooks/useUser'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useAuth } from "@/context/auth-provider"
+import { useMutateUser, useUser } from "@/hooks/useUser"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { EyeIcon, EyeOffIcon } from "lucide-react"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
 const schema = z.object({
   password: z
     .string()
-    .min(6, { message: 'Senha deve ter no mínimo 6 caracteres' }),
+    .min(6, { message: "Senha deve ter no mínimo 6 caracteres" }),
 })
 
 type FormValues = z.infer<typeof schema>
@@ -24,6 +26,7 @@ export const Form = () => {
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
   })
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
   const { mutateAsync } = useMutateUser()
 
@@ -37,10 +40,10 @@ export const Form = () => {
 
   return (
     <form
-      className='flex flex-col w-full gap-2'
+      className="flex flex-col w-full gap-2"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <label className='flex flex-col gap-1'>
+      <label className="flex flex-col gap-1">
         <span>Nome</span>
         <Input disabled value={data.username} />
         <small>
@@ -49,16 +52,26 @@ export const Form = () => {
         </small>
       </label>
 
-      <label className='flex flex-col gap-1'>
+      <label className="flex flex-col gap-1">
         <span>Senha</span>
         <Input
-          type='password'
-          placeholder='Não alterada'
-          {...register('password')}
+          type={isPasswordVisible ? "text" : "password"}
+          placeholder="Não alterada"
+          suffixComponent={
+            <Button
+              type='button'
+              variant="link"
+              className="p-0 h-auto w-auto opacity-60"
+              onClick={() => setIsPasswordVisible((prev) => !prev)}
+            >
+              {isPasswordVisible ? <EyeOffIcon /> : <EyeIcon />}
+            </Button>
+          }
+          {...register("password")}
         />
-        <small className='text-red-400'>{errors.password?.message}</small>
+        <small className="text-red-400">{errors.password?.message}</small>
       </label>
-      <Button className='w-full mt-4' type='submit'>
+      <Button className="w-full mt-4" type="submit">
         Atualizar conta
       </Button>
     </form>

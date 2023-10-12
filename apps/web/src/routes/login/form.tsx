@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 import { useAuth } from '@/context/auth-provider'
+import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
@@ -32,6 +33,7 @@ export function Form() {
   })
   const { signIn } = useAuth()
   const [invalid, setInvalid] = useState<string | null>(null)
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
   const navigate = useNavigate()
 
   async function onSubmit(formData: FormValues) {
@@ -74,9 +76,19 @@ export function Form() {
         <label className='flex flex-col gap-1'>
           <span className='text-sm'>Senha</span>
           <Input
-            type='password'
+            type={isPasswordVisible ? 'text' : 'password'}
             className='bg-neutral-900'
             {...register('password')}
+            suffixComponent={
+              <Button
+                type='button'
+                variant='link'
+                className='p-0 h-auto w-auto opacity-60'
+                onClick={() => setIsPasswordVisible((prev) => !prev)}
+              >
+                {isPasswordVisible ? <EyeOffIcon /> : <EyeIcon />}
+              </Button>
+            }
           />
           <small className='h-4 text-red-400'>{errors.password?.message}</small>
         </label>
