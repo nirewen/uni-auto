@@ -8,8 +8,6 @@ import { SelectModule } from './connections/:id/none-selected'
 import { SelectConnection } from './connections/empty'
 import { NewConnection } from './connections/new'
 import { Layout } from './layout'
-import { Profile } from './profile'
-import { InformacoesBasicas } from './profile/sections/informacoes-basicas'
 
 const PrivateRoute = ({
   children,
@@ -36,9 +34,6 @@ export const ProtectedRoutes = () => {
         }
       >
         <Route path={'/'} element={<Navigate to='/connections' />} />
-        <Route path={'/profile'} element={<Profile />}>
-          <Route path={'/profile'} element={<InformacoesBasicas />} />
-        </Route>
         <Route path={'/connections'} element={<Connections />}>
           <Route path={'/connections'} element={<SelectConnection />} />
           <Route path={'/connections/new'} element={<NewConnection />}>
