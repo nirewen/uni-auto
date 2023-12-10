@@ -7,7 +7,9 @@ export interface TokenPair {
 
 export interface User {
   id: string
-  username: string
+  email: string
+  displayName: string
+  avatarUrl: string
   role: string
   createdAt: string
   updatedAt: string
@@ -52,23 +54,23 @@ export const api = axios.create({
 })
 
 api.interceptors.request.use(
-  config => {
+  (config) => {
     config.headers.Authorization = `Bearer ${localStorage.getItem(
       'access_token'
     )}`
 
     return config
   },
-  error => Promise.reject(error)
+  (error) => Promise.reject(error)
 )
 
 api.interceptors.response.use(
-  response => response,
-  async error => {
+  (response) => response,
+  async (error) => {
     if (
       error.response.status === 401 &&
-      !error.config.url?.includes('/signin') &&
-      window.location.pathname !== '/login'
+      !error.config.url?.includes('/login') &&
+      window.location.pathname !== '/auth/login'
     ) {
       try {
         const {
@@ -96,7 +98,7 @@ api.interceptors.response.use(
             localStorage.removeItem('access_token')
             localStorage.removeItem('refresh_token')
 
-            window.location.href = '/login'
+            window.location.href = '/auth/login'
           } else {
             Promise.reject(error)
           }

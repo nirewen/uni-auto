@@ -30,7 +30,7 @@ export const ProtectedRoutes = () => {
     <Routes>
       <Route
         element={
-          <PrivateRoute loginPath={'/login'}>
+          <PrivateRoute loginPath={'/auth/login'}>
             <Layout />
           </PrivateRoute>
         }

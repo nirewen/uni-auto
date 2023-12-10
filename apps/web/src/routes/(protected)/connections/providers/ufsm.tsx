@@ -70,6 +70,7 @@ export function UFSM() {
           <Input
             type='text'
             className='bg-neutral-900 bg-opacity-60'
+            inputClassName='bg-transparent'
             {...register('login')}
           />
           <small className='h-4 text-red-400'>{errors.login?.message}</small>
@@ -79,6 +80,7 @@ export function UFSM() {
           <Input
             type='password'
             className='bg-neutral-900 bg-opacity-60'
+            inputClassName='bg-transparent'
             {...register('senha')}
           />
           <small className='h-4 text-red-400'>{errors.senha?.message}</small>

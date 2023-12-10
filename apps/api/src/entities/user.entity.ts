@@ -1,4 +1,3 @@
-import { Exclude } from 'class-transformer'
 import {
   Column,
   CreateDateColumn,
@@ -21,13 +20,18 @@ export class User {
   id: string
 
   @Column({ unique: true })
-  username: string
+  email: string
 
-  @Column()
-  @Exclude({ toPlainOnly: true })
-  password: string
+  @Column({ unique: true })
+  displayName: string
 
-  @OneToMany(() => Connection, connection => connection.user)
+  @Column({ nullable: true })
+  provider: string
+
+  @Column({ nullable: true })
+  avatarUrl: string
+
+  @OneToMany(() => Connection, (connection) => connection.user)
   connections: Connection[]
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })

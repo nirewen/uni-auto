@@ -26,8 +26,6 @@ export class UfsmController extends CustomController {
   async connect(@ReqUser() user: User, @Body() body: CreateConnectionDTO) {
     const credentials = await this.api.authorize(body)
 
-    await this.ntfy.addTopic(user.username, body.login)
-
     return this.connectionService.connect(
       {
         provider: this.provider.slug,

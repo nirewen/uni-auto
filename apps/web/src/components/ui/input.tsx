@@ -6,10 +6,11 @@ export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   prefixComponent?: React.ReactNode
   suffixComponent?: React.ReactNode
+  inputClassName?: string
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, prefixComponent, suffixComponent, ...props }, ref) => {
+  ({ className, type, prefixComponent, suffixComponent, inputClassName, ...props }, ref) => {
     return (
       <div
         className={cn(
@@ -23,7 +24,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           className={cn(
             'flex-1 bg-background ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none',
-            className
+            inputClassName
           )}
           {...props}
         />

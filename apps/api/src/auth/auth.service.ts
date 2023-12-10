@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
-import * as bcrypt from 'bcrypt'
 
 import { JwtPayload, JwtSign, Payload } from './auth.interface'
 
@@ -17,24 +16,15 @@ export class AuthService {
   ) {}
 
   public async validateUser(
-    username: string,
-    password: string
+    details: Pick<User, 'email' | 'displayName' | 'provider' | 'avatarUrl'>
   ): Promise<Partial<User> | null> {
-    const user = await this.users.findOne(username)
+    const user = await this.users.findOne(details.email)
 
-    if (!user) {
-      return null
-    }
+    user.provider = details.provider
+    user.displayName = details.displayName
+    user.avatarUrl = details.avatarUrl
 
-    const checkPassword = await bcrypt.compare(password, user.password)
-
-    if (checkPassword) {
-      const { password, ...result } = user
-
-      return result
-    }
-
-    return null
+    return this.users.update(user)
   }
 
   public validateToken(token: string): JwtPayload {
@@ -65,7 +55,7 @@ export class AuthService {
   public jwtSign(data: Payload): JwtSign {
     const payload: JwtPayload = {
       sub: data.id,
-      username: data.username,
+      email: data.email,
       role: data.role,
     }
 

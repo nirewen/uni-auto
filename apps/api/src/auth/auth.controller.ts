@@ -1,41 +1,45 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   Res,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common'
-import { Response } from 'express'
 
-import { CreateUserDTO } from 'src/base/users/dto/create-user.dto'
+import { Response } from 'express'
 import { UsersService } from 'src/base/users/users.service'
 import { Public, ReqUser } from 'src/common/decorators'
 import { User } from 'src/entities/user.entity'
 import { Payload } from './auth.interface'
 import { AuthService } from './auth.service'
-import { DuplicateUserGuard, JwtRefreshGuard, LocalAuthGuard } from './guards'
+import { JwtRefreshGuard } from './guards'
+import { GoogleAuthGuard } from './guards/google-auth.guard'
 
 @Controller('/auth')
 export class AuthController {
   constructor(private auth: AuthService, private users: UsersService) {}
 
   @Public()
-  @Post('/signin')
-  @UseGuards(LocalAuthGuard)
-  public signin(@Res() res: Response, @ReqUser() user: User) {
-    const tokens = this.auth.jwtSign(user)
-
-    res.json({ user, tokens })
-  }
+  @Get('/google/login')
+  @UseGuards(GoogleAuthGuard)
+  public handleGoogleLogin() {}
 
   @Public()
-  @Post('/signup')
-  @UseGuards(DuplicateUserGuard)
-  public async signup(@Res() res: Response, @Body() newUser: CreateUserDTO) {
-    const user = await this.users.create(newUser)
+  @Get('/google/redirect')
+  @UseGuards(GoogleAuthGuard)
+  public handleGoogleRedirect(@Res() res: Response, @ReqUser() user: User) {
+    const tokens = this.auth.jwtSign(user)
 
-    this.signin(res, user)
+    const url = new URL(process.env.FRONTEND_URL)
+    url.pathname = '/auth/callback'
+    url.search = new URLSearchParams({
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+    }).toString()
+
+    res.redirect(url.toString())
   }
 
   @Public()
@@ -52,6 +56,8 @@ export class AuthController {
 
     const user = await this.users.findOneById(payload.id)
 
-    this.signin(res, user)
+    const tokens = this.auth.jwtSign(user)
+
+    res.json({ user, tokens })
   }
 }
