@@ -4,14 +4,17 @@ export class UpdateUserEntity1702227322030 implements MigrationInterface {
     name = 'UpdateUserEntity1702227322030'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "username"`);
         await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "password"`);
-        await queryRunner.query(`ALTER TABLE "users" ADD "email" character varying NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "email" character varying`);
         await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email")`);
-        await queryRunner.query(`ALTER TABLE "users" ADD "displayName" character varying NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "displayName" character varying`);
         await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "UQ_31daa51074a24fcfcee3c4f08b2" UNIQUE ("displayName")`);
         await queryRunner.query(`ALTER TABLE "users" ADD "provider" character varying`);
         await queryRunner.query(`ALTER TABLE "users" ADD "avatarUrl" character varying`);
+        await queryRunner.query(`UPDATE "users" SET "email" = COALESCE("email", "username"), "displayName" = COALESCE("username") WHERE true;`);
+        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "email" SET NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "displayName" SET NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "username"`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

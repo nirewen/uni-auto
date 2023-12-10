@@ -94,14 +94,12 @@ api.interceptors.response.use(
         return api(error.config)
       } catch (error: unknown) {
         if (error instanceof AxiosError) {
-          if (error.response?.status === 401) {
-            localStorage.removeItem('access_token')
-            localStorage.removeItem('refresh_token')
+          localStorage.removeItem('access_token')
+          localStorage.removeItem('refresh_token')
 
-            window.location.href = '/auth/login'
-          } else {
-            Promise.reject(error)
-          }
+          window.location.href = '/auth/login'
+        } else {
+          Promise.reject(error)
         }
       }
     }
