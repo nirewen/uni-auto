@@ -1,6 +1,5 @@
-import { useIsAuthenticated } from '@/context/auth-provider'
-import { PropsWithChildren } from 'react'
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { PrivateRoute } from '@/components/private-route'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { Connections } from './connections'
 import { ConnectionHome } from './connections/:id'
 import { ModuleSettings } from './connections/:id/:module_slug'
@@ -9,26 +8,12 @@ import { SelectConnection } from './connections/empty'
 import { NewConnection } from './connections/new'
 import { Layout } from './layout'
 
-const PrivateRoute = ({
-  children,
-  loginPath,
-}: PropsWithChildren<{ loginPath: string }>) => {
-  const isAuthenticated = useIsAuthenticated()
-  const location = useLocation()
-
-  if (isAuthenticated) {
-    return children
-  }
-
-  return <Navigate to={loginPath} state={{ from: location }} replace />
-}
-
 export const ProtectedRoutes = () => {
   return (
     <Routes>
       <Route
         element={
-          <PrivateRoute loginPath={'/auth/login'}>
+          <PrivateRoute loginRoute={'/auth/login'}>
             <Layout />
           </PrivateRoute>
         }

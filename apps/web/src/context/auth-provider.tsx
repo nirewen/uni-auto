@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom'
 interface AuthContextProps {
   user?: User
   isLoading: boolean
+  isAuthenticated: boolean
   signIn: (tokens: TokenPair) => Promise<void>
   signOut: () => Promise<void>
   updateUser?: <TPageData>(
@@ -39,6 +40,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     navigate('/auth/login')
   }
 
+  const isAuthenticated = localStorage.getItem('access_token') !== null
+
   return (
     <AuthContext.Provider
       value={{
@@ -47,6 +50,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         user,
         updateUser: refetch,
         isLoading,
+        isAuthenticated,
       }}
     >
       {children}
@@ -56,8 +60,4 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
 export const useAuth = () => {
   return React.useContext(AuthContext)
-}
-
-export const useIsAuthenticated = () => {
-  return localStorage.getItem('access_token') !== null
 }
