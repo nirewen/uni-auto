@@ -46,6 +46,13 @@ export interface Provider {
   enabled: boolean
 }
 
+export interface ProviderProfile {
+  provider: string
+  identifier: string
+  displayName: string
+  avatarUrl: string
+}
+
 export const api = axios.create({
   baseURL: '/api',
   headers: {
