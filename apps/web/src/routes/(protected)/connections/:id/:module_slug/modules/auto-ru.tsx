@@ -173,9 +173,9 @@ export const AutoRU = () => {
   }
 
   return (
-    <div className='relative flex flex-col w-full gap-2 overflow-auto'>
+    <div className='relative flex flex-col w-full gap-2'>
       {!data?.enabled && (
-        <div className='absolute inset-0 z-10 flex flex-col items-center justify-center overflow-hidden border border-solid rounded-md bg-neutral-950 bg-opacity-70 backdrop-blur-md border-neutral-800'>
+        <div className='absolute inset-0 flex flex-col items-center justify-center overflow-hidden border border-solid rounded-md bg-neutral-950 bg-opacity-70 backdrop-blur-md border-neutral-800 z-[51]'>
           <h1 className='text-2xl font-bold'>Módulo desativado</h1>
           <div className='flex flex-col max-w-sm gap-8 mt-4'>
             <Balancer className='text-center'>
@@ -281,7 +281,7 @@ export const AutoRU = () => {
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => {
-                      toggle({ slug: 'auto-ru', enabled: false })
+                      toggle({ slug: 'auto-ru', enabled: !data.enabled })
                     }}
                   >
                     Desativar
@@ -317,6 +317,8 @@ export const AutoRU = () => {
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => {
+                      if (!data.enabled) return
+
                       deleteModule({ slug: 'auto-ru' })
 
                       navigate(`/connections/${id}`)
