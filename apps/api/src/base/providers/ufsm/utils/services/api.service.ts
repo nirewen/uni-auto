@@ -112,6 +112,7 @@ export class APIService {
           tiposRefeicoes: options.meals.map((m) => ({
             item: m,
           })),
+          opcaoVegetariana: options.vegan,
         },
         {
           headers: this.getHeaders(credentials),

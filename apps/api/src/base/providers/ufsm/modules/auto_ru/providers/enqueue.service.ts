@@ -118,6 +118,11 @@ export class EnqueueService extends ModuleService {
             .then(meals =>
               meals.filter(meal => selectedDay.meals.includes(meal.id))
             )
+            .catch(() => [])
+
+          if (meals.length === 0) {
+            return
+          }
 
           return {
             dateStart: day.date.format('YYYY-MM-DD HH:mm:ss'),
@@ -127,7 +132,13 @@ export class EnqueueService extends ModuleService {
         })
     )
 
-    const meals = this.ruService.groupMeals(schedules)
+    const meals = this.ruService.groupMeals(schedules.filter(Boolean))
+
+    if (settings.vegan) {
+      meals.forEach(meal => {
+        meal.vegan = true;
+      })
+    }
 
     await Promise.all(
       meals.map(meal =>

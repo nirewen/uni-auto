@@ -44,6 +44,7 @@ export type ConnectionModule = {
 
 export type Settings = {
   days: Day[]
+  vegan: boolean
 }
 
 export type Day = {

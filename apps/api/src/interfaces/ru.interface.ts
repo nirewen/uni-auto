@@ -19,6 +19,7 @@ export interface GroupedMeal {
   dateStart: string
   dateEnd: string
   restaurant: number
+  vegan: boolean
 }
 
 export type ScheduleResponse = {

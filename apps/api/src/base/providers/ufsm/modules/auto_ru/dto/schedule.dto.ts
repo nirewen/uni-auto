@@ -1,4 +1,4 @@
-import { IsArray, IsDateString, IsNumber, Matches } from 'class-validator'
+import { IsArray, IsBoolean, IsDateString, IsNumber, Matches } from 'class-validator'
 import { GroupedMeal } from 'src/interfaces/ru.interface'
 
 const dateRegex = /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/
@@ -18,4 +18,7 @@ export class ScheduleDTO implements GroupedMeal {
 
   @IsNumber()
   restaurant: number
+
+  @IsBoolean()
+  vegan: boolean
 }

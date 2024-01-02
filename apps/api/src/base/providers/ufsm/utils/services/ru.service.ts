@@ -35,6 +35,7 @@ export class RUService {
       dateStart: null,
       dateEnd: null,
       restaurant: null,
+      vegan: false,
     }
 
     for (const day of meals) {
@@ -58,6 +59,7 @@ export class RUService {
           dateStart: dayjs(group.dateStart).format('YYYY-MM-DD HH:mm:ss'),
           dateEnd: dayjs(group.dateEnd).format('YYYY-MM-DD HH:mm:ss'),
           restaurant: group.restaurant,
+          vegan: group.vegan,
         })
 
         group.dateStart = currentDate
@@ -73,6 +75,7 @@ export class RUService {
         dateStart: dayjs(group.dateStart).format('YYYY-MM-DD HH:mm:ss'),
         dateEnd: dayjs(group.dateEnd).format('YYYY-MM-DD HH:mm:ss'),
         restaurant: group.restaurant,
+        vegan: group.vegan,
       })
     }
 

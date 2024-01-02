@@ -20,4 +20,5 @@ export type UserSettings = {
     weekday: number
     meals: number[]
   }[]
+  vegan: boolean
 }

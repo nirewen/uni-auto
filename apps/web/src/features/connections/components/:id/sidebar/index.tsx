@@ -36,7 +36,7 @@ export function Sidebar() {
     )
 
   return (
-    <aside className='flex flex-1 gap-1 p-2 overflow-hidden overflow-y-auto border border-solid rounded-md md:flex-col md:gap-2 bg-neutral-900 border-neutral-800'>
+    <aside className='flex flex-1 gap-1 p-2 overflow-hidden overflow-y-auto border border-solid rounded-md flex-col md:gap-2 bg-neutral-900 border-neutral-800'>
       {connections.data!.length > 0 && (
         <div className='flex flex-1 gap-2 md:flex-grow-0'>
           <Connections current={connection.data} />
@@ -52,10 +52,11 @@ export function Sidebar() {
           key={settings.id}
           to={`/connections/${id}/${settings.module.slug}`}
           state={{ settings: settings, connectionId: id }}
+          className='hidden md:block'
         >
           <div
             className={cn(
-              'flex-col hidden gap-2 p-2 border border-solid rounded-md bg-neutral-800 border-neutral-700 md:flex hover:bg-neutral-700',
+              'flex-col gap-2 p-2 border border-solid rounded-md bg-neutral-800 border-neutral-700 hover:bg-neutral-700',
               {
                 'bg-neutral-700': module_slug === settings.module.slug,
               }
