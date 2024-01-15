@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         signOut,
         user,
         updateUser: refetch,
-        isLoading,
+        isLoading: isLoading && isAuthenticated,
         isAuthenticated,
       }}
     >
