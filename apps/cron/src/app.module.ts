@@ -1,26 +1,10 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ScheduleModule } from '@nestjs/schedule'
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
+import { SharedConfigModule } from '@uni-auto/shared/config/shared-config.module'
 
 import { QueueModule } from './queue/queue.module'
 
-import { configuration } from './config/configuration'
-
 @Module({
-  imports: [
-    QueueModule,
-    ScheduleModule.forRoot(),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [configuration],
-    }),
-    TypeOrmModule.forRootAsync({
-      useFactory: (config: ConfigService) => ({
-        ...config.get<TypeOrmModuleOptions>('db'),
-      }),
-      inject: [ConfigService],
-    }),
-  ],
+  imports: [QueueModule, ScheduleModule.forRoot(), SharedConfigModule],
 })
 export class AppModule {}

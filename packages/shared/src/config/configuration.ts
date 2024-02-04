@@ -24,9 +24,9 @@ const util = {
 export const configuration = async (): Promise<Config> => {
   const config = DefaultConfig
   const environment =
-    process.env.NODE_ENV === 'production' ? ProductionConfig : DevelopmentConfig
-
-  console.log('config', config)
+    process.env['NODE_ENV'] === 'production'
+      ? ProductionConfig
+      : DevelopmentConfig
 
   // object deep merge
   return util.merge(config, environment)
