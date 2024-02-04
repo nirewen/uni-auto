@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common'
+import { User } from '@uni-auto/shared/entities/user.entity'
 import { ReqUser } from 'src/common/decorators'
-import { User } from 'src/entities/user.entity'
 import { ConnectionsService } from './connections.service'
 import { UpdateSettingsDTO } from './interfaces/update-settings.dto'
 

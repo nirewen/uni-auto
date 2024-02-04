@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Connection } from 'src/entities/connection.entity'
-import { Queue } from 'src/entities/queue.entity'
+import { Connection } from '@uni-auto/shared/entities/connection.entity'
+import { Queue } from '@uni-auto/shared/entities/queue.entity'
 import { Repository } from 'typeorm'
 
 @Injectable()

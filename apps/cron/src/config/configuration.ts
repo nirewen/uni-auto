@@ -1,4 +1,8 @@
-import type { Config, Default, Objectype, Production } from './config.interface'
+import type { Config, Objectype } from './config.interface'
+
+import { config as DefaultConfig } from './envs/default'
+import { config as DevelopmentConfig } from './envs/development'
+import { config as ProductionConfig } from './envs/production'
 
 const util = {
   isObject<T>(value: T): value is T & Objectype {
@@ -18,12 +22,9 @@ const util = {
 }
 
 export const configuration = async (): Promise<Config> => {
-  const { config } = <{ config: Default }>(
-    await import(`${__dirname}/envs/default`)
-  )
-  const { config: environment } = <{ config: Production }>(
-    await import(`${__dirname}/envs/${process.env.NODE_ENV || 'development'}`)
-  )
+  const config = DefaultConfig
+  const environment =
+    process.env.NODE_ENV === 'production' ? ProductionConfig : DevelopmentConfig
 
   // object deep merge
   return util.merge(config, environment)

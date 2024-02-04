@@ -7,11 +7,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 
-import * as dayjs from 'dayjs'
-import 'dayjs/locale/pt-br'
-
-dayjs.locale('pt-br')
-
 import { ConfigService } from '@nestjs/config'
 import { NtfyService } from 'src/base/ntfy/ntfy.service'
 import {
@@ -24,6 +19,8 @@ import { formatList, mealNames, p } from 'src/utils/mappings'
 import { CreateConnectionDTO } from '../../dto/create-connection.dto'
 import { Credentials } from '../../interfaces/credentials.interface'
 import { BeneficioResponse, TokenResponse } from '../../interfaces/ru.interface'
+
+import { format, parseISO, differenceInDays } from 'date-fns'
 
 @Injectable()
 export class APIService {
@@ -150,8 +147,8 @@ export class APIService {
         {},
         {
           params: {
-            dataInicioStr: dayjs(options.dateStart).format('DD/MM/YYYY'),
-            dataFimStr: dayjs(options.dateEnd).format('DD/MM/YYYY'),
+            dataInicioStr: format(parseISO(options.dateStart), 'DD/MM/YYYY'),
+            dataFimStr: format(parseISO(options.dateEnd), 'DD/MM/YYYY'),
           },
           headers: this.getHeaders(credentials),
         }
@@ -223,7 +220,7 @@ export class APIService {
           (i) =>
             isEqual(item.meals, i.meals) &&
             !isEqual(item.dates, i.dates) &&
-            dayjs(item.dates.at(-1)).diff(i.dates.at(-1), 'days') === 1 &&
+            differenceInDays(parseISO(item.dates.at(-1)), parseISO(i.dates.at(-1))) === 1 &&
             item.message === i.message
         )
 
@@ -246,7 +243,7 @@ export class APIService {
         )
         const dates = [item.dates.shift(), item.dates.pop()]
           .filter(Boolean)
-          .map((d) => dayjs(d).format('ddd DD/MM'))
+          .map((d) => format(parseISO(d), 'ddd DD/MM'))
 
         if (item.success) {
           message = `${formatList(item.meals)} agendado${p(

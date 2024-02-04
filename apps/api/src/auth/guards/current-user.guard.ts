@@ -1,6 +1,6 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common'
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
+import { User } from '@uni-auto/shared/entities/user.entity'
 import { Request } from 'express'
-import { User } from 'src/entities/user.entity'
 
 @Injectable()
 export class CurrentUserGuard implements CanActivate {

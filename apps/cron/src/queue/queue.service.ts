@@ -1,10 +1,11 @@
+import { firstValueFrom } from 'rxjs'
+import { Repository } from 'typeorm'
+
 import { HttpService } from '@nestjs/axios'
 import { Injectable, Logger } from '@nestjs/common'
 import { Cron } from '@nestjs/schedule'
 import { InjectRepository } from '@nestjs/typeorm'
-import { firstValueFrom } from 'rxjs'
-import { Queue, QueueStatus } from 'src/entities/queue.entity'
-import { Repository } from 'typeorm'
+import { Queue, QueueStatus } from '@uni-auto/shared/entities/queue.entity'
 
 @Injectable()
 export class QueueService {
@@ -18,7 +19,7 @@ export class QueueService {
 
   @Cron('0/5 * * * *')
   handleQueue() {
-    this.queueRepository.manager.transaction(async manager => {
+    this.queueRepository.manager.transaction(async (manager) => {
       const queue = await manager
         .createQueryBuilder(Queue, 'queue')
         .innerJoinAndSelect('queue.connection', 'connection')
@@ -35,7 +36,7 @@ export class QueueService {
       }
 
       const handled = await Promise.all(
-        queue.map(async entry => {
+        queue.map(async (entry) => {
           this.logger.verbose(`Handling entry ${entry.id}`)
 
           const result = await firstValueFrom(
@@ -45,8 +46,8 @@ export class QueueService {
               },
             })
           )
-            .then(r => r.data)
-            .catch(async e => {
+            .then((r) => r.data)
+            .catch(async (e) => {
               this.logger.error(e.message, e.stack)
 
               return []

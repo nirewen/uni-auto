@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { ConnectionModule } from 'src/entities/connection-module.entity'
-import { Connection } from 'src/entities/connection.entity'
+import { ConnectionModule } from '@uni-auto/shared/entities/connection-module.entity'
+import { Connection } from '@uni-auto/shared/entities/connection.entity'
 import { ConnectionsController } from './connections.controller'
 import { ConnectionsService } from './connections.service'
 

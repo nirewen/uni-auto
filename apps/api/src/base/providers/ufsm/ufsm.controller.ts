@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'
 
+import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { ReqUser, Roles } from 'src/common/decorators'
-import { User, UserRole } from 'src/entities/user.entity'
 import { APIService } from './utils/services/api.service'
 
 import { RolesGuard } from 'src/auth/guards'

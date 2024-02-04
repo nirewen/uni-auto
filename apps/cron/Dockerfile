@@ -1,25 +1,28 @@
-ARG IMAGE=node:20.5.1-alpine
+FROM docker.io/node:lts-alpine as dependencies
 
-FROM ${IMAGE} AS builder
-WORKDIR /app
-COPY . .
-RUN npm i
+RUN apk add --no-cache libc6-compat
+WORKDIR /usr/src/app
 
-FROM builder AS dev
-CMD [""]
+RUN npm install -g pnpm
+COPY .npmrc package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile --prod
 
-FROM builder AS prod-build
-RUN npm run build
-RUN npm prune --omit=dev
 
-FROM ${IMAGE} AS prod
-COPY --chown=node:node --from=prod-build /app/dist /app/dist
-COPY --chown=node:node --from=prod-build /app/node_modules /app/node_modules
-COPY --chown=node:node --from=prod-build /app/.env.prod /app/dist/.env
+FROM docker.io/node:lts-alpine as runner
+RUN apk add --no-cache dumb-init
 
-ENV NODE_ENV=production
-WORKDIR /app/dist
-ENTRYPOINT ["node", "./main.js"]
-CMD [""]
+ENV NODE_ENV production
+ENV PORT 3000
+ENV HOST 0.0.0.0
 
+WORKDIR /usr/src/app
+
+COPY --from=dependencies /usr/src/app/node_modules ./node_modules
+COPY ./dist/apps/cron/main.js ./
+COPY ./.env.production ./.env
+
+RUN chown -R node:node .
 USER node
+EXPOSE 3000
+
+CMD dumb-init node --env-file=.env main.js

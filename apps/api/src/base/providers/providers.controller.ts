@@ -1,6 +1,6 @@
 import { Controller, Get, Param, UnauthorizedException } from '@nestjs/common'
+import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { ReqUser } from 'src/common/decorators'
-import { User, UserRole } from 'src/entities/user.entity'
 import { ConnectionsService } from '../connections/connections.service'
 import { ProvidersService } from './providers.service'
 

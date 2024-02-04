@@ -5,9 +5,9 @@ import {
   Injectable,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
+import { Provider } from '@uni-auto/shared/entities/provider.entity'
+import { UserRole } from '@uni-auto/shared/entities/user.entity'
 import { ConnectionsService } from 'src/base/connections/connections.service'
-import { Provider } from 'src/entities/provider.entity'
-import { UserRole } from 'src/entities/user.entity'
 
 @Injectable()
 export class ConnectionHeaderGuard implements CanActivate {

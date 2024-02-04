@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { User, UserRole } from 'src/entities/user.entity'
+import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 
 @Injectable()
 export class RolesGuard implements CanActivate {

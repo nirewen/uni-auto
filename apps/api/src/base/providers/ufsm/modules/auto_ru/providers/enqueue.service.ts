@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { SchedulerRegistry } from '@nestjs/schedule'
+import { Connection } from '@uni-auto/shared/entities/connection.entity'
 import { CronJob } from 'cron'
-import * as dayjs from 'dayjs'
 import { ModulesService } from 'src/base/modules/modules.service'
 import { ModuleService } from 'src/common/base/module.service'
 import { QueueService } from 'src/common/services/queue.service'
-import { Connection } from 'src/entities/connection.entity'
 import { UserSettings } from '../../../interfaces/ru.interface'
 import { RUService } from '../../../utils/services/ru.service'
+
+import { add, format } from 'date-fns'
 
 export interface AutoRUSettings {
   cron: string
@@ -49,7 +50,7 @@ export class EnqueueService extends ModuleService {
   async getSettings() {
     return this.modulesService
       .findModuleSettings(this.module.slug, this.provider.slug)
-      .then(moduleSettings => {
+      .then((moduleSettings) => {
         const settings = moduleSettings.settings as AutoRUSettings
 
         return { ...moduleSettings, settings }
@@ -69,7 +70,7 @@ export class EnqueueService extends ModuleService {
     )
 
     await Promise.all(
-      modules.map(async moduleSettings => {
+      modules.map(async (moduleSettings) => {
         const settings = moduleSettings.settings as UserSettings
 
         if (!moduleSettings.connection || !settings) {
@@ -84,39 +85,41 @@ export class EnqueueService extends ModuleService {
   private async handleUser(connection: Connection, settings: UserSettings) {
     this.logger.verbose(`Enqueueing user ${connection.identifier}`)
 
-    const currentDay = dayjs()
-    const weekday = currentDay.day()
+    const currentDay = new Date()
+    const weekday = currentDay.getDate()
     const days = Array(6)
       .fill(1)
       .slice(weekday, weekday + 3)
       .map((n, i) => {
-        const day = currentDay.add(n + i + (weekday === 0 ? 0 : 1), 'day')
+        const day = add(currentDay, {
+          days: n + i + (weekday === 0 ? 0 : 1),
+        })
 
         return {
           date: day,
-          day: day.day(),
+          day: day.getDate(),
         }
       })
-      .filter(day => day.day !== 0)
+      .filter((day) => day.day !== 0)
 
     const schedules = await Promise.all(
       settings.days
-        .filter(selectedDay =>
-          days.some(day => day.day === selectedDay.weekday)
+        .filter((selectedDay) =>
+          days.some((day) => day.day === selectedDay.weekday)
         )
-        .map(async selectedDay => {
-          const day = days.find(day => day.day === selectedDay.weekday)
+        .map(async (selectedDay) => {
+          const day = days.find((day) => day.day === selectedDay.weekday)
 
           const meals = await this.ruService
             .meals(
               {
-                day: day.date.format('DD/MM/YYYY'),
+                day: format(day.date, 'DD/MM/YYYY'),
                 restaurant: selectedDay.restaurant,
               },
               connection
             )
-            .then(meals =>
-              meals.filter(meal => selectedDay.meals.includes(meal.id))
+            .then((meals) =>
+              meals.filter((meal) => selectedDay.meals.includes(meal.id))
             )
             .catch(() => [])
 
@@ -125,9 +128,9 @@ export class EnqueueService extends ModuleService {
           }
 
           return {
-            dateStart: day.date.format('YYYY-MM-DD HH:mm:ss'),
+            dateStart: format(day.date, 'YYYY-MM-DD HH:mm:ss'),
             restaurant: selectedDay.restaurant,
-            meals: meals.map(meal => meal.id),
+            meals: meals.map((meal) => meal.id),
           }
         })
     )
@@ -135,13 +138,13 @@ export class EnqueueService extends ModuleService {
     const meals = this.ruService.groupMeals(schedules.filter(Boolean))
 
     if (settings.vegan) {
-      meals.forEach(meal => {
-        meal.vegan = true;
+      meals.forEach((meal) => {
+        meal.vegan = true
       })
     }
 
     await Promise.all(
-      meals.map(meal =>
+      meals.map((meal) =>
         this.queueService.enqueue(meal, connection, '/ufsm/ru/agendar')
       )
     )

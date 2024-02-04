@@ -6,11 +6,11 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common'
+import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { Payload } from 'src/auth/auth.interface'
 import { RolesGuard } from 'src/auth/guards'
 import { ReqUser } from 'src/common/decorators'
 import { Roles } from 'src/common/decorators/roles.decorator'
-import { User, UserRole } from 'src/entities/user.entity'
 import { FindOptionsWhere } from 'typeorm'
 import { UsersService } from './users.service'
 

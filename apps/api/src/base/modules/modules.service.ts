@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { ConnectionModule } from 'src/entities/connection-module.entity'
+import { ConnectionModule } from '@uni-auto/shared/entities/connection-module.entity'
 
-import { ModuleSettings } from 'src/entities/module-settings.entity'
-import { Module } from 'src/entities/module.entity'
+import { ModuleSettings } from '@uni-auto/shared/entities/module-settings.entity'
+import { Module } from '@uni-auto/shared/entities/module.entity'
 import { Repository } from 'typeorm'
 import { ConnectionsService } from '../connections/connections.service'
 import { EnableModuleDTO } from './dto/enable-module.dto'
@@ -168,6 +168,6 @@ export class ModulesService {
         },
         relations: ['module'],
       })
-      .then(settings => settings.map(setting => setting.module))
+      .then((settings) => settings.map((setting) => setting.module))
   }
 }

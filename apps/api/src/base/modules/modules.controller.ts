@@ -7,9 +7,9 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common'
+import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { RolesGuard } from 'src/auth/guards'
 import { ReqUser, Roles } from 'src/common/decorators'
-import { User, UserRole } from 'src/entities/user.entity'
 import { EnableModuleDTO } from './dto/enable-module.dto'
 import { ModulesService } from './modules.service'
 

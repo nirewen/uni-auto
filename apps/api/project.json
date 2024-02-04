@@ -1,0 +1,49 @@
+{
+  "name": "api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/api/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "api:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "api:build:development"
+        },
+        "production": {
+          "buildTarget": "api:build:production"
+        }
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": [
+        "build"
+      ],
+      "defaultConfiguration": "local",
+      "options": {
+        "engine": "docker",
+        "file": "apps/api/Dockerfile"
+      },
+      "configurations": {
+        "local": {
+          "tags": [
+            "api:latest"
+          ],
+          "push": false
+        },
+        "production": {
+          "tags": [
+            "my.image-registry.com/api:latest"
+          ],
+          "push": true
+        }
+      }
+    }
+  },
+  "tags": []
+}

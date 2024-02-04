@@ -8,10 +8,10 @@ import {
   UseGuards,
 } from '@nestjs/common'
 
+import { User } from '@uni-auto/shared/entities/user.entity'
 import { Response } from 'express'
 import { UsersService } from 'src/base/users/users.service'
 import { Public, ReqUser } from 'src/common/decorators'
-import { User } from 'src/entities/user.entity'
 import { Payload } from './auth.interface'
 import { AuthService } from './auth.service'
 import { JwtRefreshGuard } from './guards'

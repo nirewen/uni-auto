@@ -1,0 +1,49 @@
+{
+  "name": "cron",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/cron/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "cron:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "cron:build:development"
+        },
+        "production": {
+          "buildTarget": "cron:build:production"
+        }
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": [
+        "build"
+      ],
+      "defaultConfiguration": "local",
+      "options": {
+        "engine": "docker",
+        "file": "apps/cron/Dockerfile"
+      },
+      "configurations": {
+        "local": {
+          "tags": [
+            "cron:latest"
+          ],
+          "push": false
+        },
+        "production": {
+          "tags": [
+            "my.image-registry.com/cron:latest"
+          ],
+          "push": true
+        }
+      }
+    }
+  },
+  "tags": []
+}

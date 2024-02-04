@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { Queue } from 'src/entities/queue.entity'
+import { Queue } from '@uni-auto/shared/entities/queue.entity'
 import { QueueService } from './queue.service'
 
 @Module({

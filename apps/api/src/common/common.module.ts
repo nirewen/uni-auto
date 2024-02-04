@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { Queue } from 'src/entities/queue.entity'
+import { Queue } from '@uni-auto/shared/entities/queue.entity'
 import { QueueService } from './services/queue.service'
 
 @Global()

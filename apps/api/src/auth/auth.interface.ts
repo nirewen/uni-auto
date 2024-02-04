@@ -1,4 +1,4 @@
-import { UserRole } from 'src/entities/user.entity'
+import { UserRole } from '@uni-auto/shared/entities/user.entity'
 
 export interface UserDetails {
   email: string

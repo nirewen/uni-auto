@@ -4,8 +4,8 @@ import { JwtService } from '@nestjs/jwt'
 
 import { JwtPayload, JwtSign, Payload } from './auth.interface'
 
+import { User } from '@uni-auto/shared/entities/user.entity'
 import { UsersService } from 'src/base/users/users.service'
-import { User } from 'src/entities/user.entity'
 
 @Injectable()
 export class AuthService {

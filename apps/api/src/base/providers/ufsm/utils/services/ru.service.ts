@@ -7,7 +7,7 @@ import {
   ScheduleOptions,
 } from 'src/interfaces/ru.interface'
 
-import * as dayjs from 'dayjs'
+import { differenceInDays, format, parseISO } from 'date-fns'
 import { Credentials } from '../../interfaces/credentials.interface'
 import { APIService } from './api.service'
 
@@ -39,13 +39,13 @@ export class RUService {
     }
 
     for (const day of meals) {
-      const currentDate = dayjs(day.dateStart)
+      const currentDate = parseISO(day.dateStart)
 
       if (
         group.meals.length === 0 ||
         (group.restaurant === day.restaurant &&
           group.meals.toString() === day.meals.toString() &&
-          currentDate.diff(group.dateEnd, 'day') === 1)
+          differenceInDays(currentDate, parseISO(group.dateEnd)) === 1)
       ) {
         if (group.meals.length === 0) {
           group.dateStart = currentDate
@@ -56,8 +56,8 @@ export class RUService {
       } else {
         result.push({
           meals: group.meals,
-          dateStart: dayjs(group.dateStart).format('YYYY-MM-DD HH:mm:ss'),
-          dateEnd: dayjs(group.dateEnd).format('YYYY-MM-DD HH:mm:ss'),
+          dateStart: format(parseISO(group.dateStart), 'YYYY-MM-DD HH:mm:ss'),
+          dateEnd: format(parseISO(group.dateEnd), 'YYYY-MM-DD HH:mm:ss'),
           restaurant: group.restaurant,
           vegan: group.vegan,
         })
@@ -72,8 +72,8 @@ export class RUService {
     if (group.meals.length > 0) {
       result.push({
         meals: group.meals,
-        dateStart: dayjs(group.dateStart).format('YYYY-MM-DD HH:mm:ss'),
-        dateEnd: dayjs(group.dateEnd).format('YYYY-MM-DD HH:mm:ss'),
+        dateStart: format(parseISO(group.dateStart), 'YYYY-MM-DD HH:mm:ss'),
+        dateEnd: format(parseISO(group.dateEnd), 'YYYY-MM-DD HH:mm:ss'),
         restaurant: group.restaurant,
         vegan: group.vegan,
       })

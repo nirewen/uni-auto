@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Connection } from 'src/entities/connection.entity'
-import { Provider } from 'src/entities/provider.entity'
+import { Connection } from '@uni-auto/shared/entities/connection.entity'
+import { Provider } from '@uni-auto/shared/entities/provider.entity'
 import { Repository } from 'typeorm'
 import { APIService as UFSMAPIService } from './ufsm/utils/services/api.service'
 

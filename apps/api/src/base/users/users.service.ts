@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { FindOptionsWhere, Repository } from 'typeorm'
 
-import { User, UserRole } from 'src/entities/user.entity'
+import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { NtfyService } from '../ntfy/ntfy.service'
 
 @Injectable()

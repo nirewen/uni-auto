@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common'
-import { Module } from 'src/entities/module.entity'
-import { Provider } from 'src/entities/provider.entity'
+import { Module } from '@uni-auto/shared/entities/module.entity'
+import { Provider } from '@uni-auto/shared/entities/provider.entity'
 import { sleep } from 'src/utils/sleep'
 
 export abstract class CustomController {

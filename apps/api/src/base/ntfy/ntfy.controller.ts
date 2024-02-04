@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common'
+import { UserRole } from '@uni-auto/shared/entities/user.entity'
 import { Roles } from 'src/common/decorators'
-import { UserRole } from 'src/entities/user.entity'
 import { AddTopicDTO } from './dto/add-topic.dto'
 import { CreateUserDTO } from './dto/create-user.dto'
 import { NtfyPayload } from './ntfy.interface'

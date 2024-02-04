@@ -3,9 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { ModulesController } from './modules.controller'
 import { ModulesService } from './modules.service'
 
-import { ConnectionModule } from 'src/entities/connection-module.entity'
-import { ModuleSettings } from 'src/entities/module-settings.entity'
-import { Module as ModuleEntity } from 'src/entities/module.entity'
+import { ConnectionModule } from '@uni-auto/shared/entities/connection-module.entity'
+import { ModuleSettings } from '@uni-auto/shared/entities/module-settings.entity'
+import { Module as ModuleEntity } from '@uni-auto/shared/entities/module.entity'
 
 @Global()
 @Module({

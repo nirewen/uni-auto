@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { Provider } from 'src/entities/provider.entity'
+import { Provider } from '@uni-auto/shared/entities/provider.entity'
 import { ProvidersController } from './providers.controller'
 import { ProvidersService } from './providers.service'
 import { UfsmProvider } from './ufsm/ufsm.module'
