@@ -26,6 +26,8 @@ export const configuration = async (): Promise<Config> => {
   const environment =
     process.env.NODE_ENV === 'production' ? ProductionConfig : DevelopmentConfig
 
+  console.log('config', config)
+
   // object deep merge
   return util.merge(config, environment)
 }

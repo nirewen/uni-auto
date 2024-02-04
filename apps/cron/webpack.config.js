@@ -11,7 +11,6 @@ module.exports = {
       compiler: 'tsc',
       main: './src/main.ts',
       tsConfig: './tsconfig.app.json',
-      outputFileName: 'dist/apps/api/main.js',
       optimization: false,
       outputHashing: 'none',
     }),
