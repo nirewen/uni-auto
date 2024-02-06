@@ -23,8 +23,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { ModuleSection } from '@/features/connections/components/:id/module-section'
-import { RUSettings } from '@/features/connections/components/:id/settings/ru'
+import { ModuleSection } from '@/features/connections/components/[id]/module-section'
+import { RUSettings } from '@/features/connections/components/[id]/settings/ru'
 import useAutosave from '@/hooks/useAutosave'
 import {
   useConnectionSettings,
@@ -82,7 +82,7 @@ const cards = [
 export const AutoRU = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { mutate, isLoading } = useMutateConnection(id!)
+  const { mutate, isPending } = useMutateConnection(id!)
   const {
     data,
     isLoading: isSettingsLoading,
@@ -124,9 +124,9 @@ export const AutoRU = () => {
                 className='bg-neutral-800 border-neutral-700'
                 variant='outline'
                 size='icon'
-                disabled={isLoading}
+                disabled={isPending}
               >
-                {isLoading ? (
+                {isPending ? (
                   <Loader2 className='w-4 h-4 animate-spin' />
                 ) : (
                   <Save className='w-4 h-4' />
@@ -233,9 +233,9 @@ export const AutoRU = () => {
                     variant='outline'
                     size='icon'
                     onClick={() => mutate(settings)}
-                    disabled={isLoading}
+                    disabled={isPending}
                   >
-                    {isLoading ? (
+                    {isPending ? (
                       <Loader2 className='w-4 h-4 animate-spin' />
                     ) : (
                       <Save className='w-4 h-4' />
@@ -281,7 +281,7 @@ export const AutoRU = () => {
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => {
-                      toggle({ slug: 'auto-ru', enabled: !data.enabled })
+                      toggle({ slug: 'auto-ru', enabled: !data?.enabled })
                     }}
                   >
                     Desativar
@@ -317,7 +317,7 @@ export const AutoRU = () => {
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => {
-                      if (!data.enabled) return
+                      if (!data?.enabled) return
 
                       deleteModule({ slug: 'auto-ru' })
 

@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils'
 import { CalendarDays, Leaf } from 'lucide-react'
 import { useState } from 'react'
 import { Balancer } from 'react-wrap-balancer'
-import { Settings } from '../../../../../../routes/(protected)/connections/:id/:module_slug/modules/auto-ru'
+import { Settings } from '../../../../../../routes/(protected)/connections/[id]/[module_slug]/modules/auto-ru'
 
 import {
   iconBreakfast,
@@ -104,12 +104,12 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
   const [restaurant, setRestaurant] = useState(restaurantes[0].id)
   const [weekday, setWeekday] = useState(1)
   const restaurantSettings = settings.days.filter(
-    day => day.restaurant === restaurant && day.weekday === weekday
+    (day) => day.restaurant === restaurant && day.weekday === weekday
   )
 
-  const onSelectDay = (meal: typeof meals[number]) => {
+  const onSelectDay = (meal: (typeof meals)[number]) => {
     const otherRestaurantDay = settings.days.find(
-      day =>
+      (day) =>
         day.meals.includes(meal.id) &&
         day.restaurant !== restaurant &&
         day.weekday === weekday
@@ -123,8 +123,7 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
     }
     if (
       !settings.days.find(
-        day =>
-          day.weekday === weekday && day.restaurant === restaurant
+        (day) => day.weekday === weekday && day.restaurant === restaurant
       )
     ) {
       settings.days.push({
@@ -134,13 +133,10 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
       })
     }
     const newSettings = settings.days
-      .map(day => {
-        if (
-          day.restaurant === restaurant &&
-          day.weekday === weekday
-        ) {
+      .map((day) => {
+        if (day.restaurant === restaurant && day.weekday === weekday) {
           if (day.meals.indexOf(meal.id) !== -1) {
-            day.meals = day.meals.filter(id => id !== meal.id)
+            day.meals = day.meals.filter((id) => id !== meal.id)
           } else {
             day.meals.push(meal.id)
           }
@@ -148,7 +144,7 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
 
         return day
       })
-      .filter(day => day.meals.length > 0)
+      .filter((day) => day.meals.length > 0)
 
     newSettings.sort((a, b) => a.weekday - b.weekday)
 
@@ -164,10 +160,10 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
   }
 
   return (
-    <div className='flex border border-solid rounded-lg bg-neutral-800 border-neutral-700 max-h-72 md:max-h-80'>
-      <div className='flex flex-col gap-2 p-1 border-r border-solid rounded-l-lg select-none md:p-2 bg-neutral-900 border-neutral-700'>
-        <div className='flex items-center justify-end gap-2 p-2 whitespace-nowrap'>
-          <CalendarDays className='w-4 h-4' />
+    <div className="flex border border-solid rounded-lg bg-neutral-800 border-neutral-700 max-h-72 md:max-h-80">
+      <div className="flex flex-col gap-2 p-1 border-r border-solid rounded-l-lg select-none md:p-2 bg-neutral-900 border-neutral-700">
+        <div className="flex items-center justify-end gap-2 p-2 whitespace-nowrap">
+          <CalendarDays className="w-4 h-4" />
         </div>
         <TooltipProvider>
           {weekdays.map((day, index) => (
@@ -185,16 +181,16 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
                   {day.short}
                 </div>
               </TooltipTrigger>
-              <TooltipContent side='right'>
+              <TooltipContent side="right">
                 <p>{day.long}</p>
               </TooltipContent>
             </Tooltip>
           ))}
         </TooltipProvider>
       </div>
-      <div className='flex flex-col w-full gap-2 p-2 overflow-hidden'>
-        <div className='flex flex-col gap-2 md:flex-row'>
-          <div className='flex items-center h-8 gap-2 overflow-hidden overflow-x-auto shrink-0'>
+      <div className="flex flex-col w-full gap-2 p-2 overflow-hidden">
+        <div className="flex flex-col gap-2 md:flex-row">
+          <div className="flex items-center h-8 gap-2 overflow-hidden overflow-x-auto shrink-0">
             {restaurantes.map((restaurante, index) => (
               <div
                 key={index}
@@ -211,15 +207,20 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
               </div>
             ))}
           </div>
-          <Toggle aria-label="Toggle opção vegetariana" className='md:ml-auto border-neutral-700 border p-2 py-1.5 gap-1 h-auto data-[state=on]:bg-neutral-600' onPressedChange={onChangeVegan} pressed={settings.vegan}>
-            <Leaf className='w-4 h-4' />
+          <Toggle
+            aria-label="Toggle opção vegetariana"
+            className="md:ml-auto border-neutral-700 border p-2 py-1.5 gap-1 h-auto data-[state=on]:bg-neutral-600"
+            onPressedChange={onChangeVegan}
+            pressed={settings.vegan}
+          >
+            <Leaf className="w-4 h-4" />
             <span className="text-xs whitespace-nowrap">Opção vegetariana</span>
           </Toggle>
         </div>
-        <div className='grid h-full grid-cols-2 gap-2 overflow-auto md:grid-cols-3 lg:grid-cols-5'>
+        <div className="grid h-full grid-cols-2 gap-2 overflow-auto md:grid-cols-3 lg:grid-cols-5">
           {meals.map((meal, index) => {
             const active = restaurantSettings.find(
-              day => day.meals.indexOf(meal.id) !== -1
+              (day) => day.meals.indexOf(meal.id) !== -1
             )
 
             return (
@@ -234,8 +235,8 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
                 )}
                 onClick={() => onSelectDay(meal)}
               >
-                <img src={meal.icon} width='56' height='56' alt={meal.name} />
-                <span className='text-xs text-center whitespace-pre-wrap'>
+                <img src={meal.icon} width="56" height="56" alt={meal.name} />
+                <span className="text-xs text-center whitespace-pre-wrap">
                   <Balancer>{meal.name}</Balancer>
                 </span>
               </div>

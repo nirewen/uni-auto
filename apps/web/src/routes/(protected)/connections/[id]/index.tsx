@@ -2,7 +2,7 @@ import { Loader2 } from 'lucide-react'
 import { Helmet } from 'react-helmet'
 import { Navigate, Outlet, useParams } from 'react-router-dom'
 
-import { Sidebar } from '@/features/connections/components/:id/sidebar'
+import { Sidebar } from '@/features/connections/components/[id]/sidebar'
 import { useConnection } from '@/hooks/useConnections'
 
 export function ConnectionHome() {

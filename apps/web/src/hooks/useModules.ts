@@ -1,12 +1,12 @@
 import { Module, api } from '@/lib/api'
-import { ConnectionModule } from '@/routes/(protected)/connections/:id/:module_slug/modules/auto-ru'
+import { ConnectionModule } from '@/routes/(protected)/connections/[id]/[module_slug]/modules/auto-ru'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useModules = (provider: string) => {
   return useQuery({
     queryKey: ['modules', provider],
     queryFn: async () =>
-      api.get<Module[]>(`/modules/${provider}`).then(res => res.data),
+      api.get<Module[]>(`/modules/${provider}`).then((res) => res.data),
   })
 }
 
@@ -21,7 +21,7 @@ export const useToggleModule = (connectionId: string) => {
           connection: connectionId,
           enabled,
         })
-        .then(async res => {
+        .then(async (res) => {
           await Promise.all([
             queryClient.refetchQueries({
               queryKey: ['connection', connectionId],
@@ -48,7 +48,7 @@ export const useDeleteModule = (connectionId: string) => {
         .post<ConnectionModule>(`/modules/${slug}/delete`, {
           connection: connectionId,
         })
-        .then(async res => {
+        .then(async (res) => {
           await Promise.all([
             queryClient.refetchQueries({
               queryKey: ['connection', connectionId],
