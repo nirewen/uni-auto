@@ -18,8 +18,9 @@ export const config = {
     apiUrl: process.env['UFSM_API_URL'],
     deviceIdPrefix: process.env['UFSM_DEVICE_ID_PREFIX'],
   },
-  loki: {
-    host: process.env['LOKI_HOST'],
+  api: {
+    baseUrl: process.env['API_BASE_URL'],
+    accessToken: process.env['API_ACCESS_TOKEN'],
   },
   auth: {
     google: {

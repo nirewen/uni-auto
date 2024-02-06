@@ -50,12 +50,14 @@ export class QueueService {
             .catch(async (e) => {
               this.logger.error(e.message, e.stack)
 
-              return []
+              return null
             })
 
-          entry.status = QueueStatus.COMPLETED
+          if (result !== null) {
+            entry.status = QueueStatus.COMPLETED
 
-          manager.save(entry)
+            manager.save(entry)
+          }
 
           return {
             identifier: entry.connection.identifier,
