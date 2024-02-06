@@ -86,7 +86,7 @@ export class EnqueueService extends ModuleService {
     this.logger.verbose(`Enqueueing user ${connection.identifier}`)
 
     const currentDay = new Date()
-    const weekday = currentDay.getDate()
+    const weekday = currentDay.getDay()
     const days = Array(6)
       .fill(1)
       .slice(weekday, weekday + 3)
@@ -97,7 +97,7 @@ export class EnqueueService extends ModuleService {
 
         return {
           date: day,
-          day: day.getDate(),
+          day: day.getDay(),
         }
       })
       .filter((day) => day.day !== 0)
