@@ -32,15 +32,9 @@
       "configurations": {
         "local": {
           "tags": [
-            "api:latest"
+            "uni-auto/api:latest"
           ],
           "push": false
-        },
-        "production": {
-          "tags": [
-            "my.image-registry.com/api:latest"
-          ],
-          "push": true
         }
       }
     }

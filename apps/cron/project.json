@@ -32,15 +32,9 @@
       "configurations": {
         "local": {
           "tags": [
-            "cron:latest"
+            "uni-auto/cron:latest"
           ],
           "push": false
-        },
-        "production": {
-          "tags": [
-            "my.image-registry.com/cron:latest"
-          ],
-          "push": true
         }
       }
     }

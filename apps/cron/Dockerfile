@@ -21,7 +21,6 @@ COPY --from=dependencies /usr/src/app/node_modules ./node_modules
 COPY ./dist/apps/cron/main.js ./
 COPY ./.env.production ./.env
 
-RUN chown -R node:node .
 USER node
 EXPOSE 3000
 

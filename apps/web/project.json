@@ -9,20 +9,17 @@
       "dependsOn": [
         "build"
       ],
+      "defaultConfiguration": "local",
       "options": {
         "engine": "docker",
-        "metadata": {
-          "images": [
-            "web"
-          ],
-          "load": true,
+        "file": "apps/web/Dockerfile"
+      },
+      "configurations": {
+        "local": {
           "tags": [
-            "type=schedule",
-            "type=ref,event=branch",
-            "type=ref,event=tag",
-            "type=ref,event=pr",
-            "type=sha,prefix=sha-"
-          ]
+            "uni-auto/web:latest"
+          ],
+          "push": false
         }
       }
     }
