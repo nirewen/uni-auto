@@ -46,11 +46,10 @@ export interface Provider {
   enabled: boolean
 }
 
-export interface ProviderProfile {
-  provider: string
-  identifier: string
+export interface ConnectionProfile {
   displayName: string
   avatarUrl: string
+  connection: Connection
 }
 
 export const api = axios.create({

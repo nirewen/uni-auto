@@ -3,8 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { ConnectionModule } from '@uni-auto/shared/entities/connection-module.entity'
+import { ConnectionProfile } from '@uni-auto/shared/entities/connection-profile.entity'
 import { Connection } from '@uni-auto/shared/entities/connection.entity'
-import { User } from '@uni-auto/shared/entities/user.entity'
+import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
+import { differenceInCalendarDays } from 'date-fns'
 import { ProvidersService } from '../providers/providers.service'
 import { Payload } from './interfaces/payload.interface'
 import { UpdateSettingsDTO } from './interfaces/update-settings.dto'
@@ -15,6 +17,8 @@ export class ConnectionsService {
     @InjectRepository(Connection) private connections: Repository<Connection>,
     @InjectRepository(ConnectionModule)
     private connectionModule: Repository<ConnectionModule>,
+    @InjectRepository(ConnectionProfile)
+    private connectionProfiles: Repository<ConnectionProfile>,
     private providersService: ProvidersService
   ) {}
 
@@ -43,7 +47,7 @@ export class ConnectionsService {
   async findConnection(id: string) {
     const connection = await this.connections.findOne({
       where: { id },
-      relations: ['provider', 'user'],
+      relations: ['provider', 'user', 'profile', 'profile.connection'],
     })
 
     if (!connection) {
@@ -138,5 +142,34 @@ export class ConnectionsService {
     }
 
     return this.connections.remove(connection)
+  }
+
+  async getProfile(user: User, id: string, forced: boolean = false) {
+    const connection = await this.findConnection(id)
+    const profile = connection.profile ?? this.connectionProfiles.create()
+
+    if (
+      (connection.user.id === user.id &&
+        differenceInCalendarDays(profile.updatedAt ?? 0, new Date()) < 0) ||
+      (forced && user.role === UserRole.ADMIN)
+    ) {
+      let result = await this.providersService.getProviderProfile(connection)
+
+      if (result) {
+        profile.displayName = result.displayName
+        profile.avatarUrl = result.avatarUrl
+        profile.updatedAt = new Date()
+        profile.connection = this.connections.create({
+          id: connection.id,
+          identifier: connection.identifier,
+        })
+
+        connection.profile = await this.connectionProfiles.save(profile)
+
+        await this.connections.save(connection)
+      }
+    }
+
+    return profile
   }
 }

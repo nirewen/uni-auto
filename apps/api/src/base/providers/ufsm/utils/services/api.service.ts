@@ -21,6 +21,7 @@ import { Credentials } from '../../interfaces/credentials.interface'
 import { BeneficioResponse, TokenResponse } from '../../interfaces/ru.interface'
 
 import { format, parseISO, differenceInDays } from 'date-fns'
+import { ConnectionProfile } from '@uni-auto/shared/entities/connection-profile.entity'
 
 @Injectable()
 export class APIService {
@@ -159,6 +160,8 @@ export class APIService {
   }
 
   async getProfile(credentials: Credentials) {
+    const profile = new ConnectionProfile()
+
     const { data } = await firstValueFrom(
       this.http.post(
         '/vinculos',
@@ -172,12 +175,10 @@ export class APIService {
       )
     )
 
-    return {
-      provider: 'ufsm',
-      identifier: credentials.identifier,
-      displayName: data.nome,
-      avatarUrl: 'data:image/png;base64,' + data.fotoBase64,
-    }
+    profile.displayName = data.nome
+    profile.avatarUrl = 'data:image/png;base64,' + data.fotoBase64
+
+    return profile
   }
 
   private responseToNtfyPayloads(response: ScheduleResponse[]) {

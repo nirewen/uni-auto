@@ -40,4 +40,9 @@ export class ConnectionsController {
   public deleteConnection(@ReqUser() user: User, @Param('id') id: string) {
     return this.connectionsService.deleteConnection(user, id)
   }
+
+  @Get('/:id/profile')
+  public getProfile(@ReqUser() user: User, @Param('id') id: string) {
+    return this.connectionsService.getProfile(user, id)
+  }
 }

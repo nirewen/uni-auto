@@ -21,11 +21,12 @@ export class ProvidersService {
     return this.providersRepository.find()
   }
 
-  async getProfile(connection: Connection) {
-    if (connection.provider.slug === 'ufsm') {
-      return this.ufsmApiService.getProfile(connection)
+  getProviderProfile(connection: Connection) {
+    switch (connection.provider.slug) {
+      case 'ufsm':
+        return this.ufsmApiService.getProfile(connection)
+      default:
+        return null
     }
-
-    return null
   }
 }

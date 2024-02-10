@@ -1,11 +1,14 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { ConnectionModule } from './connection-module.entity'
+import { ConnectionProfile } from './connection-profile.entity'
 import { Provider } from './provider.entity'
 import { Queue } from './queue.entity'
 import { User } from './user.entity'
@@ -32,4 +35,8 @@ export class Connection {
 
   @OneToMany(() => Queue, queue => queue.connection)
   queues: Queue[]
+
+  @OneToOne(() => ConnectionProfile, profile => profile.connection)
+  @JoinColumn()
+  profile: ConnectionProfile
 }

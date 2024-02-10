@@ -28,7 +28,8 @@
         "command": "nest build -p ./tsconfig.app.json",
         "outputFileName": "main.js",
         "outputPath": "dist/apps/api/src",
-        "args": []
+        "args": [],
+        "watch": true
       }
     },
     "migration:generate": {
@@ -55,6 +56,25 @@
       "defaultConfiguration": "development",
       "options": {
         "command": "typeorm -d dist/packages/shared/src/config/ormconfig.js migration:run",
+        "args": []
+      },
+      "dependsOn": [
+        "build"
+      ],
+      "configurations": {
+        "production": {
+          "envFile": ".env.production"
+        },
+        "development": {
+          "envFile": ".env.development"
+        }
+      }
+    },
+    "migration:revert": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "development",
+      "options": {
+        "command": "typeorm -d dist/packages/shared/src/config/ormconfig.js migration:revert",
         "args": []
       },
       "dependsOn": [

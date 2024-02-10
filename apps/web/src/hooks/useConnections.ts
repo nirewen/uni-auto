@@ -1,4 +1,4 @@
-import { Connection, api } from '@/lib/api'
+import { Connection, ConnectionProfile, api } from '@/lib/api'
 import {
   ConnectionModule,
   Settings,
@@ -43,5 +43,16 @@ export const useConnectionSettings = (connectionId: string, slug: string) => {
       api
         .get<ConnectionModule>(`/connections/${connectionId}/${slug}/settings`)
         .then((res) => res.data),
+  })
+}
+
+export const useConnectionProfile = (connectionId: string) => {
+  return useQuery({
+    queryKey: ['connections', connectionId, 'profile'],
+    queryFn: () => {
+      return api
+        .get<ConnectionProfile>(`/connections/${connectionId}/profile`)
+        .then((res) => res.data)
+    },
   })
 }
