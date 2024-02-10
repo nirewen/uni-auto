@@ -175,7 +175,7 @@ export const AutoRU = () => {
   return (
     <div className='relative flex flex-col w-full gap-2'>
       {!data?.enabled && (
-        <div className='absolute inset-0 flex flex-col items-center justify-center overflow-hidden border border-solid rounded-md bg-neutral-950 bg-opacity-70 backdrop-blur-md border-neutral-800 z-[51]'>
+        <div className='absolute inset-0 flex flex-col items-center justify-center overflow-hidden border border-solid rounded-md bg-neutral-950 bg-opacity-70 backdrop-blur-md border-neutral-800 z-50'>
           <h1 className='text-2xl font-bold'>Módulo desativado</h1>
           <div className='flex flex-col max-w-sm gap-8 mt-4'>
             <Balancer className='text-center'>
