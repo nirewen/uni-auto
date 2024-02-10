@@ -1,8 +1,6 @@
-import * as entities from '../../entities'
-
 export const config = {
   db: {
-    entities: Object.values(entities),
+    entities: [`${__dirname}/../../entities/**/*.{js,ts}`],
     subscribers: [`${__dirname}/../../subscribers/**/*.{js,ts}`],
     migrations: [`${__dirname}/../../migrations/**/*.{js,ts}`],
   },
