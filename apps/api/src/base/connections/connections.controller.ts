@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Query,
+} from '@nestjs/common'
 import { User } from '@uni-auto/shared/entities/user.entity'
 import { ReqUser } from 'src/common/decorators'
 import { ConnectionsService } from './connections.service'
@@ -42,7 +50,11 @@ export class ConnectionsController {
   }
 
   @Get('/:id/profile')
-  public getProfile(@ReqUser() user: User, @Param('id') id: string) {
-    return this.connectionsService.getProfile(user, id)
+  public getProfile(
+    @ReqUser() user: User,
+    @Param('id') id: string,
+    @Query('forced') forced: boolean = false
+  ) {
+    return this.connectionsService.getProfile(user, id, forced)
   }
 }
