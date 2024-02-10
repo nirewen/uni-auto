@@ -19,6 +19,16 @@
         }
       }
     },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/cron"
+      ],
+      "options": {
+        "command": "nest build -p ./tsconfig.app.json",
+        "args": []
+      }
+    },
     "container": {
       "executor": "@nx-tools/nx-container:build",
       "dependsOn": [

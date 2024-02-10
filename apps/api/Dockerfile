@@ -18,10 +18,11 @@ ENV HOST 0.0.0.0
 WORKDIR /usr/src/app
 
 COPY --from=dependencies /usr/src/app/node_modules ./node_modules
-COPY ./dist/apps/api/main.js ./
+COPY ./dist/apps/api ./apps/api
+COPY ./dist/packages ./packages
 COPY ./.env.production ./.env
 
 USER node
 EXPOSE 3000
 
-CMD dumb-init node --env-file=.env main.js
+CMD dumb-init node --env-file=.env ./apps/api/src/main.js

@@ -5,6 +5,8 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 
 import { configuration } from './configuration'
 
+import './ormconfig'
+
 @Module({
   imports: [
     ConfigModule.forRoot({

@@ -19,6 +19,54 @@
         }
       }
     },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{workspaceRoot}/dist/apps/api"
+      ],
+      "options": {
+        "command": "nest build -p ./tsconfig.app.json",
+        "args": []
+      }
+    },
+    "migration:generate": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "development",
+      "options": {
+        "command": "typeorm -d dist/packages/shared/src/config/ormconfig.js migration:generate",
+        "args": []
+      },
+      "dependsOn": [
+        "build"
+      ],
+      "configurations": {
+        "production": {
+          "envFile": ".env.production"
+        },
+        "development": {
+          "envFile": ".env.development"
+        }
+      }
+    },
+    "migration:run": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "development",
+      "options": {
+        "command": "typeorm -d dist/packages/shared/src/config/ormconfig.js migration:run",
+        "args": []
+      },
+      "dependsOn": [
+        "build"
+      ],
+      "configurations": {
+        "production": {
+          "envFile": ".env.production"
+        },
+        "development": {
+          "envFile": ".env.development"
+        }
+      }
+    },
     "container": {
       "executor": "@nx-tools/nx-container:build",
       "dependsOn": [
