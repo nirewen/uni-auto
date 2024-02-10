@@ -20,5 +20,9 @@
     "noFallthroughCasesInSwitch": false
   },
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"],
-  "include": ["src/**/*.ts"]
+  "include": [
+    "src/**/*.ts",
+    "../../packages/shared/src/migrations/*.ts",
+    "../../packages/shared/src/config/ormconfig.ts"
+  ]
 }
