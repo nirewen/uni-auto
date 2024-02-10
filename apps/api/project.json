@@ -26,6 +26,8 @@
       ],
       "options": {
         "command": "nest build -p ./tsconfig.app.json",
+        "outputFileName": "main.js",
+        "outputPath": "dist/apps/api/src",
         "args": []
       }
     },
