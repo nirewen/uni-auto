@@ -65,3 +65,7 @@ Mais comandos relacionados a migrations podem ser adicionados no [project.json](
 
 Algumas vezes pode ocorrer problema de cache durante o desenvolvimento.<br/>
 Caso aconteça, o comando `nx reset` e a exclusão da pasta `dist` geralmente resolvem
+
+> `docker compose up -d [nomes]`<br/>
+> Cria e executa os containers Docker criados com `nx container`<br/>
+> Utiliza o arquivo `.env.production`
