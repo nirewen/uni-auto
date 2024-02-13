@@ -113,7 +113,7 @@ export class EnqueueService extends ModuleService {
           const meals = await this.ruService
             .meals(
               {
-                day: format(day.date, 'DD/MM/YYYY'),
+                day: format(day.date, 'dd/MM/yyyy'),
                 restaurant: selectedDay.restaurant,
               },
               connection
@@ -128,7 +128,7 @@ export class EnqueueService extends ModuleService {
           }
 
           return {
-            dateStart: format(day.date, 'YYYY-MM-DD HH:mm:ss'),
+            dateStart: format(day.date, 'yyyy-MM-dd HH:mm:ss'),
             restaurant: selectedDay.restaurant,
             meals: meals.map((meal) => meal.id),
           }

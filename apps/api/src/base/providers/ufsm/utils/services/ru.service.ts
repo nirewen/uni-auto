@@ -56,8 +56,8 @@ export class RUService {
       } else {
         result.push({
           meals: group.meals,
-          dateStart: format(parseISO(group.dateStart), 'YYYY-MM-DD HH:mm:ss'),
-          dateEnd: format(parseISO(group.dateEnd), 'YYYY-MM-DD HH:mm:ss'),
+          dateStart: format(parseISO(group.dateStart), 'yyyy-MM-dd HH:mm:ss'),
+          dateEnd: format(parseISO(group.dateEnd), 'yyyy-MM-dd HH:mm:ss'),
           restaurant: group.restaurant,
           vegan: group.vegan,
         })
@@ -72,8 +72,8 @@ export class RUService {
     if (group.meals.length > 0) {
       result.push({
         meals: group.meals,
-        dateStart: format(parseISO(group.dateStart), 'YYYY-MM-DD HH:mm:ss'),
-        dateEnd: format(parseISO(group.dateEnd), 'YYYY-MM-DD HH:mm:ss'),
+        dateStart: format(parseISO(group.dateStart), 'yyyy-MM-dd HH:mm:ss'),
+        dateEnd: format(parseISO(group.dateEnd), 'yyyy-MM-dd HH:mm:ss'),
         restaurant: group.restaurant,
         vegan: group.vegan,
       })

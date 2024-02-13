@@ -20,8 +20,9 @@ import { CreateConnectionDTO } from '../../dto/create-connection.dto'
 import { Credentials } from '../../interfaces/credentials.interface'
 import { BeneficioResponse, TokenResponse } from '../../interfaces/ru.interface'
 
-import { format, parseISO, differenceInDays } from 'date-fns'
 import { ConnectionProfile } from '@uni-auto/shared/entities/connection-profile.entity'
+import { differenceInDays, format, parseISO } from 'date-fns'
+import { ptBR } from "date-fns/locale"
 
 @Injectable()
 export class APIService {
@@ -148,8 +149,8 @@ export class APIService {
         {},
         {
           params: {
-            dataInicioStr: format(parseISO(options.dateStart), 'DD/MM/YYYY'),
-            dataFimStr: format(parseISO(options.dateEnd), 'DD/MM/YYYY'),
+            dataInicioStr: format(parseISO(options.dateStart), 'dd/MM/YYYY'),
+            dataFimStr: format(parseISO(options.dateEnd), 'dd/MM/yyyy'),
           },
           headers: this.getHeaders(credentials),
         }
@@ -244,7 +245,7 @@ export class APIService {
         )
         const dates = [item.dates.shift(), item.dates.pop()]
           .filter(Boolean)
-          .map((d) => format(parseISO(d), 'ddd DD/MM'))
+          .map((d) => format(parseISO(d), 'EEEE dd/MM'), { locale: ptBR })
 
         if (item.success) {
           message = `${formatList(item.meals)} agendado${p(
