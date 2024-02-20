@@ -22,7 +22,8 @@ import { BeneficioResponse, TokenResponse } from '../../interfaces/ru.interface'
 
 import { ConnectionProfile } from '@uni-auto/shared/entities/connection-profile.entity'
 import { differenceInDays, format, parseISO } from 'date-fns'
-import { ptBR } from "date-fns/locale"
+import { ptBR } from 'date-fns/locale'
+import { Carteira } from '../../dto/carteira.dto'
 
 @Injectable()
 export class APIService {
@@ -47,13 +48,13 @@ export class APIService {
         login: payload.login,
         senha: payload.senha,
         appName: 'UFSMDigital',
-        deviceId: deviceId ?? this.getDeviceId(payload.login),
+        deviceId: this.getDeviceId(deviceId ?? payload.login),
         deviceInfo: '',
       })
     )
 
     if (data.error) {
-      throw new UnauthorizedException('Invalid credentials')
+      throw new BadRequestException('Invalid credentials')
     }
 
     return data as {
@@ -88,13 +89,13 @@ export class APIService {
       )
     )
 
-    if (data.some((b) => b.error)) {
+    if (data.some(b => b.error)) {
       throw new UnauthorizedException(
         `Invalid credentials for ${credentials.identifier}`
       )
     }
 
-    return data.map((beneficio) => ({
+    return data.map(beneficio => ({
       id: beneficio.idRefeicao,
       desc: beneficio.descRefeicao,
     }))
@@ -108,7 +109,7 @@ export class APIService {
           idRestaurante: options.restaurant,
           dataInicio: options.dateStart,
           dataFim: options.dateEnd,
-          tiposRefeicoes: options.meals.map((m) => ({
+          tiposRefeicoes: options.meals.map(m => ({
             item: m,
           })),
           opcaoVegetariana: options.vegan,
@@ -118,13 +119,13 @@ export class APIService {
         }
       )
     )
-      .then((r) => r.data)
-      .then((r) => {
-        if (r.some((i) => i.error)) {
+      .then(r => r.data)
+      .then(r => {
+        if (r.some(i => i.error)) {
           throw new BadRequestException(
             r
-              .filter((i) => i.error)
-              .map((i) => i.mensagem)
+              .filter(i => i.error)
+              .map(i => i.mensagem)
               .join('\n')
           )
         }
@@ -134,7 +135,7 @@ export class APIService {
     const notifications = this.responseToNtfyPayloads(data)
 
     await Promise.all(
-      notifications.map(async (notification) =>
+      notifications.map(async notification =>
         this.ntfy.publish(credentials.identifier, notification)
       )
     )
@@ -176,10 +177,26 @@ export class APIService {
       )
     )
 
+    console.log(data)
+
     profile.displayName = data.nome
     profile.avatarUrl = 'data:image/png;base64,' + data.fotoBase64
 
     return profile
+  }
+
+  async getCarteira(credentials: Credentials) {
+    const { data } = await firstValueFrom(
+      this.http.post<Carteira>(
+        '/buscaCarteira',
+        {},
+        {
+          headers: this.getHeaders(credentials),
+        }
+      )
+    )
+
+    return data
   }
 
   private responseToNtfyPayloads(response: ScheduleResponse[]) {
@@ -191,7 +208,7 @@ export class APIService {
     }
 
     const isEqual = (a: string[], b: string[]) =>
-      a.every((item) => b.includes(item)) && b.every((item) => a.includes(item))
+      a.every(item => b.includes(item)) && b.every(item => a.includes(item))
 
     return response
       .reduce((acc, item) => {
@@ -203,7 +220,7 @@ export class APIService {
         }
 
         let found = acc.find(
-          (i) =>
+          i =>
             i.dates.includes(item.dataRefAgendada) &&
             i.message === item.impedimento
         )
@@ -219,10 +236,13 @@ export class APIService {
       }, [] as Item[])
       .reduce((acc, item) => {
         const found = acc.find(
-          (i) =>
+          i =>
             isEqual(item.meals, i.meals) &&
             !isEqual(item.dates, i.dates) &&
-            differenceInDays(parseISO(item.dates.at(-1)), parseISO(i.dates.at(-1))) === 1 &&
+            differenceInDays(
+              parseISO(item.dates.at(-1)),
+              parseISO(i.dates.at(-1))
+            ) === 1 &&
             item.message === i.message
         )
 
@@ -234,7 +254,7 @@ export class APIService {
 
         return [...acc, item]
       }, [] as Item[])
-      .map((item) => {
+      .map(item => {
         const joining = item.dates.length > 2 ? ' até ' : ' e '
         let message = ''
 
@@ -245,7 +265,7 @@ export class APIService {
         )
         const dates = [item.dates.shift(), item.dates.pop()]
           .filter(Boolean)
-          .map((d) => format(parseISO(d), 'EEEE dd/MM'), { locale: ptBR })
+          .map(d => format(parseISO(d), 'EEEE dd/MM'), { locale: ptBR })
 
         if (item.success) {
           message = `${formatList(item.meals)} agendado${p(

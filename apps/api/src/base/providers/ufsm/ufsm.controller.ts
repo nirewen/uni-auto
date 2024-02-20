@@ -6,7 +6,6 @@ import { APIService } from './utils/services/api.service'
 
 import { RolesGuard } from 'src/auth/guards'
 import { ConnectionsService } from 'src/base/connections/connections.service'
-import { NtfyService } from 'src/base/ntfy/ntfy.service'
 import { CustomController } from 'src/common/base/custom.controller'
 import { CreateConnectionDTO } from './dto/create-connection.dto'
 
@@ -16,20 +15,25 @@ import { CreateConnectionDTO } from './dto/create-connection.dto'
 export class UfsmController extends CustomController {
   constructor(
     private api: APIService,
-    private connectionService: ConnectionsService,
-    private ntfy: NtfyService
+    private connectionService: ConnectionsService
   ) {
     super()
   }
 
   @Post('connect')
   async connect(@ReqUser() user: User, @Body() body: CreateConnectionDTO) {
-    const credentials = await this.api.authorize(body)
+    // temp fix: reauthorize using matricula as identifier
+    const { token } = await this.api.authorize(body)
+    const carteira = await this.api.getCarteira({
+      identifier: body.login,
+      token,
+    })
+    const credentials = await this.api.authorize(body, carteira.matricula)
 
     return this.connectionService.connect(
       {
         provider: this.provider.slug,
-        identifier: body.login,
+        identifier: carteira.matricula,
         token: credentials.token,
       },
       user
