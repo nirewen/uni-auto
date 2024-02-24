@@ -4,6 +4,7 @@ import { HttpService } from '@nestjs/axios'
 import {
   BadRequestException,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common'
 
@@ -122,6 +123,12 @@ export class APIService {
       .then(r => r.data)
       .then(r => {
         if (r.some(i => i.error)) {
+          Logger.error({
+            message: `Ocorreu um erro ao agendar refeições para ${credentials.identifier}`,
+            options,
+            response: r,
+          })
+
           throw new BadRequestException(
             r
               .filter(i => i.error)
