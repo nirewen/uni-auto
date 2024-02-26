@@ -4,15 +4,15 @@ export type APIResponse<T> = {
   codigo: number
 } & T
 
-export type BeneficioResponse = APIResponse<{
+export type BeneficioResponse = {
   idRefeicao: number
   descRefeicao: string
-}>
+}
 
-export type TokenResponse = APIResponse<{
+export type TokenResponse = {
   id: number
   token: string
-}>
+}
 
 export type UserSettings = {
   days: {

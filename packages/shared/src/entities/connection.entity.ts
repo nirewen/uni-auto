@@ -13,6 +13,11 @@ import { Provider } from './provider.entity'
 import { Queue } from './queue.entity'
 import { User } from './user.entity'
 
+export enum ConnectionType {
+  STANDARD = 'STANDARD',
+  LEGACY = 'LEGACY',
+}
+
 @Entity({ name: 'connections' })
 export class Connection {
   @PrimaryGeneratedColumn('uuid')
@@ -39,4 +44,11 @@ export class Connection {
   @OneToOne(() => ConnectionProfile, profile => profile.connection)
   @JoinColumn()
   profile: ConnectionProfile
+
+  @Column({
+    type: 'enum',
+    enum: ConnectionType,
+    default: ConnectionType.STANDARD,
+  })
+  type: ConnectionType
 }

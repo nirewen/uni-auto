@@ -7,24 +7,24 @@ import {
   ScheduleOptions,
 } from 'src/interfaces/ru.interface'
 
+import { Connection } from '@uni-auto/shared/entities/connection.entity'
 import { differenceInDays, format, parseISO } from 'date-fns'
-import { Credentials } from '../../interfaces/credentials.interface'
 import { APIService } from './api.service'
 
 @Injectable()
 export class RUService {
   constructor(private api: APIService) {}
 
-  async schedule(options: GroupedMeal, credentials: Credentials) {
-    return this.api.agendarRefeicao(options, credentials)
+  async schedule(options: GroupedMeal, connection: Connection) {
+    return this.api.agendarRefeicao(options, connection)
   }
 
-  async meals(options: AllowancesOptions, credentials: Credentials) {
-    return this.api.getBeneficios(options, credentials)
+  async meals(options: AllowancesOptions, connection: Connection) {
+    return this.api.getBeneficios(options, connection)
   }
 
-  async menu(options: MenuOptions, credentials: Credentials) {
-    return this.api.getCardapio(options, credentials)
+  async menu(options: MenuOptions, connection: Connection) {
+    return this.api.getCardapio(options, connection)
   }
 
   groupMeals(meals: ScheduleOptions[]) {

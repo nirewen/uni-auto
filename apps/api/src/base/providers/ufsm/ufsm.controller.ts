@@ -22,13 +22,8 @@ export class UfsmController extends CustomController {
 
   @Post('connect')
   async connect(@ReqUser() user: User, @Body() body: CreateConnectionDTO) {
-    // temp fix: reauthorize using matricula as identifier
-    const { token } = await this.api.authorize(body)
-    const carteira = await this.api.getCarteira({
-      identifier: body.login,
-      token,
-    })
-    const credentials = await this.api.authorize(body, carteira.matricula)
+    const credentials = await this.api.authorize(body, user)
+    const carteira = await this.api.getCarteira(credentials)
 
     return this.connectionService.connect(
       {

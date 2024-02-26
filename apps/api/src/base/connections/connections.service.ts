@@ -4,7 +4,10 @@ import { Repository } from 'typeorm'
 
 import { ConnectionModule } from '@uni-auto/shared/entities/connection-module.entity'
 import { ConnectionProfile } from '@uni-auto/shared/entities/connection-profile.entity'
-import { Connection } from '@uni-auto/shared/entities/connection.entity'
+import {
+  Connection,
+  ConnectionType,
+} from '@uni-auto/shared/entities/connection.entity'
 import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { differenceInCalendarDays } from 'date-fns'
 import { ProvidersService } from '../providers/providers.service'
@@ -38,8 +41,8 @@ export class ConnectionsService {
     connection.provider = provider
     connection.identifier = data.identifier
     connection.token = data.token
-
     connection.user = user
+    connection.type = ConnectionType.STANDARD
 
     return this.connections.save(connection)
   }

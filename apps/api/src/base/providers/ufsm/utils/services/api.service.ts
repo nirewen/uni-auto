@@ -1,12 +1,8 @@
 import { firstValueFrom } from 'rxjs'
 
 import { HttpService } from '@nestjs/axios'
-import {
-  BadRequestException,
-  Injectable,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common'
+import { BadRequestException, Injectable, Logger } from '@nestjs/common'
+import type { AxiosRequestConfig } from 'axios'
 
 import { ConfigService } from '@nestjs/config'
 import { NtfyService } from 'src/base/ntfy/ntfy.service'
@@ -18,13 +14,19 @@ import {
 } from 'src/interfaces/ru.interface'
 import { formatList, mealNames, p } from 'src/utils/mappings'
 import { CreateConnectionDTO } from '../../dto/create-connection.dto'
-import { Credentials } from '../../interfaces/credentials.interface'
-import { BeneficioResponse, TokenResponse } from '../../interfaces/ru.interface'
+import {
+  APIResponse,
+  BeneficioResponse,
+  TokenResponse,
+} from '../../interfaces/ru.interface'
 
 import { ConnectionProfile } from '@uni-auto/shared/entities/connection-profile.entity'
+import { ConnectionType } from '@uni-auto/shared/entities/connection.entity'
+import { User } from '@uni-auto/shared/entities/user.entity'
 import { differenceInDays, format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Carteira } from '../../dto/carteira.dto'
+import { Credentials } from '../../interfaces/credentials.interface'
 
 @Injectable()
 export class APIService {
@@ -37,64 +39,88 @@ export class APIService {
     this.deviceIdPrefix = config.get<string>('ufsm.deviceIdPrefix')
   }
 
-  private getDeviceId(login: string) {
-    const base64 = Buffer.from(login).toString('base64')
+  private getDeviceId(credentials: Credentials) {
+    if (credentials.type === ConnectionType.LEGACY) {
+      const base64 = Buffer.from(credentials.identifier).toString('base64')
 
-    return `${this.deviceIdPrefix}${base64}`
+      return `${this.deviceIdPrefix}${base64}`
+    }
+
+    return `${this.deviceIdPrefix}${credentials.user.id}`
   }
 
-  async authorize(payload: CreateConnectionDTO, deviceId?: string) {
-    const { data } = await firstValueFrom(
-      this.http.post<TokenResponse>('/generateToken', {
-        login: payload.login,
-        senha: payload.senha,
-        appName: 'UFSMDigital',
-        deviceId: this.getDeviceId(deviceId ?? payload.login),
-        deviceInfo: '',
-      })
+  private async fetch<T>(
+    url: string,
+    data = {},
+    config: AxiosRequestConfig<any> = {}
+  ) {
+    const result = await firstValueFrom(
+      this.http.post<APIResponse<T>>(url, data, config)
     )
 
-    if (data.error) {
-      throw new BadRequestException('Invalid credentials')
+    if (
+      result.data &&
+      ((Array.isArray(result.data) && result.data.some(r => r.error)) ||
+        (result.data as APIResponse<T>).error)
+    ) {
+      throw new BadRequestException(
+        (Array.isArray(result.data)
+          ? (result.data as Array<APIResponse<T>>)
+              .map(r => r.mensagem)
+              .join('\n')
+          : (result.data as APIResponse<T>).mensagem) ?? 'Unknown error'
+      )
     }
 
-    return data as {
-      id: number
-      token: string
-    }
+    return result
   }
 
   getHeaders(credentials: Credentials, mime: string = 'application/json') {
     return {
       'Content-Type': mime,
       'x-ufsm-access-token': credentials.token,
-      'x-ufsm-device-id':
-        credentials.deviceId ?? this.getDeviceId(credentials.identifier),
+      'x-ufsm-device-id': this.getDeviceId(credentials),
     }
   }
 
-  async getBeneficios(options: AllowancesOptions, credentials: Credentials) {
-    const { data } = await firstValueFrom(
-      this.http.post<BeneficioResponse[]>(
-        '/ru/getBeneficios',
-        {
-          idRestaurante: options.restaurant,
-          dataStr: options.day,
-        },
-        {
-          headers: this.getHeaders(
-            credentials,
-            'application/x-www-form-urlencoded'
-          ),
-        }
-      )
-    )
+  async authorize(payload: CreateConnectionDTO, user: User) {
+    const { data } = await this.fetch<TokenResponse>('/generateToken', {
+      login: payload.login,
+      senha: payload.senha,
+      appName: 'UFSMDigital',
+      deviceId: this.getDeviceId({
+        identifier: payload.login,
+        type: ConnectionType.STANDARD,
+        user,
+      } as unknown as Credentials),
+      deviceInfo: '',
+    })
 
-    if (data.some(b => b.error)) {
-      throw new UnauthorizedException(
-        `Invalid credentials for ${credentials.identifier}`
-      )
+    if (data.error) {
+      throw new BadRequestException('Invalid credentials')
     }
+
+    return {
+      identifier: payload.login,
+      token: data.token,
+      user: { id: user.id },
+    } as Credentials
+  }
+
+  async getBeneficios(options: AllowancesOptions, credentials: Credentials) {
+    const { data } = await this.fetch<BeneficioResponse[]>(
+      '/ru/getBeneficios',
+      {
+        idRestaurante: options.restaurant,
+        dataStr: options.day,
+      },
+      {
+        headers: this.getHeaders(
+          credentials,
+          'application/x-www-form-urlencoded'
+        ),
+      }
+    )
 
     return data.map(beneficio => ({
       id: beneficio.idRefeicao,
@@ -103,22 +129,18 @@ export class APIService {
   }
 
   async agendarRefeicao(options: GroupedMeal, credentials: Credentials) {
-    const data = await firstValueFrom(
-      this.http.post<ScheduleResponse[]>(
-        '/ru/agendaRefeicoes',
-        {
-          idRestaurante: options.restaurant,
-          dataInicio: options.dateStart,
-          dataFim: options.dateEnd,
-          tiposRefeicoes: options.meals.map(m => ({
-            item: m,
-          })),
-          opcaoVegetariana: options.vegan,
-        },
-        {
-          headers: this.getHeaders(credentials),
-        }
-      )
+    const data = await this.fetch<ScheduleResponse[]>(
+      '/ru/agendaRefeicoes',
+      {
+        idRestaurante: options.restaurant,
+        dataInicio: options.dateStart,
+        dataFim: options.dateEnd,
+        tiposRefeicoes: options.meals.map(m => ({
+          item: m,
+        })),
+        opcaoVegetariana: options.vegan,
+      },
+      { headers: this.getHeaders(credentials) }
     )
       .then(r => r.data)
       .then(r => {
@@ -151,18 +173,16 @@ export class APIService {
   }
 
   async getCardapio(options: MenuOptions, credentials: Credentials) {
-    const { data } = await firstValueFrom(
-      this.http.post(
-        '/ru/cardapio',
-        {},
-        {
-          params: {
-            dataInicioStr: format(parseISO(options.dateStart), 'dd/MM/YYYY'),
-            dataFimStr: format(parseISO(options.dateEnd), 'dd/MM/yyyy'),
-          },
-          headers: this.getHeaders(credentials),
-        }
-      )
+    const { data } = await this.fetch(
+      '/ru/cardapio',
+      {},
+      {
+        params: {
+          dataInicioStr: format(parseISO(options.dateStart), 'dd/MM/YYYY'),
+          dataFimStr: format(parseISO(options.dateEnd), 'dd/MM/yyyy'),
+        },
+        headers: this.getHeaders(credentials),
+      }
     )
 
     return data
@@ -171,20 +191,16 @@ export class APIService {
   async getProfile(credentials: Credentials) {
     const profile = new ConnectionProfile()
 
-    const { data } = await firstValueFrom(
-      this.http.post(
-        '/vinculos',
-        {},
-        {
-          params: {
-            buscaFoto: true,
-          },
-          headers: this.getHeaders(credentials),
-        }
-      )
+    const { data } = await this.fetch<{ nome: string; fotoBase64: string }>(
+      '/vinculos',
+      {},
+      {
+        params: {
+          buscaFoto: true,
+        },
+        headers: this.getHeaders(credentials),
+      }
     )
-
-    console.log(data)
 
     profile.displayName = data.nome
     profile.avatarUrl = 'data:image/png;base64,' + data.fotoBase64
@@ -193,14 +209,12 @@ export class APIService {
   }
 
   async getCarteira(credentials: Credentials) {
-    const { data } = await firstValueFrom(
-      this.http.post<Carteira>(
-        '/buscaCarteira',
-        {},
-        {
-          headers: this.getHeaders(credentials),
-        }
-      )
+    const { data } = await this.fetch<Carteira>(
+      '/buscaCarteira',
+      {},
+      {
+        headers: this.getHeaders(credentials),
+      }
     )
 
     return data
