@@ -33,7 +33,11 @@ export class ModulesService {
           slug: module,
         },
       },
-      relations: ['connection'],
+      relations: {
+        connection: {
+          user: true,
+        },
+      },
     })
   }
 
@@ -168,6 +172,6 @@ export class ModulesService {
         },
         relations: ['module'],
       })
-      .then((settings) => settings.map((setting) => setting.module))
+      .then(settings => settings.map(setting => setting.module))
   }
 }
