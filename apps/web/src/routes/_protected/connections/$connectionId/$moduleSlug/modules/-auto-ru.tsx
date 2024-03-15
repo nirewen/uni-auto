@@ -112,7 +112,7 @@ export const AutoRU = () => {
   if (isSettingsLoading || !settings) {
     return (
       <div className="relative flex w-full flex-col gap-2 overflow-auto">
-        <ModuleSection>
+        <ModuleSection.Root>
           <ModuleSection.Header>
             <ModuleSection.Title>Configurações</ModuleSection.Title>
             <ModuleSection.Subtitle>
@@ -137,8 +137,8 @@ export const AutoRU = () => {
           <ModuleSection.Body>
             <Skeleton className="h-[292px]" />
           </ModuleSection.Body>
-        </ModuleSection>
-        <ModuleSection>
+        </ModuleSection.Root>
+        <ModuleSection.Root>
           <ModuleSection.Body>
             <div className="flex justify-between gap-2">
               <div className="flex flex-col gap-1">
@@ -166,7 +166,7 @@ export const AutoRU = () => {
               </Button>
             </div>
           </ModuleSection.Body>
-        </ModuleSection>
+        </ModuleSection.Root>
       </div>
     )
   }
@@ -217,7 +217,7 @@ export const AutoRU = () => {
           </ModuleSection.Card.Row>
         </ModuleSection.Body>
       </ModuleSection> */}
-      <ModuleSection>
+      <ModuleSection.Root>
         <ModuleSection.Header>
           <ModuleSection.Title>Configurações</ModuleSection.Title>
           <ModuleSection.Subtitle>
@@ -252,8 +252,8 @@ export const AutoRU = () => {
         <ModuleSection.Body>
           <RUSettings settings={settings} onSave={onSave} />
         </ModuleSection.Body>
-      </ModuleSection>
-      <ModuleSection>
+      </ModuleSection.Root>
+      <ModuleSection.Root>
         <ModuleSection.Body>
           <div className="flex justify-between gap-2">
             <div className="flex flex-col gap-1">
@@ -333,7 +333,7 @@ export const AutoRU = () => {
             </AlertDialog>
           </div>
         </ModuleSection.Body>
-      </ModuleSection>
+      </ModuleSection.Root>
     </div>
   )
 }
