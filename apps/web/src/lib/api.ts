@@ -52,6 +52,15 @@ export interface ConnectionProfile {
   connection: Connection
 }
 
+export type ConnectionModule<Settings = Record<string, any>> = {
+  id: string
+  settings: Settings
+  enabled: boolean
+  updatedAt: string
+  createdAt: string
+  connection: Connection
+}
+
 export const api = axios.create({
   baseURL: '/api',
   headers: {
@@ -62,12 +71,12 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     config.headers.Authorization = `Bearer ${localStorage.getItem(
-      'access_token'
+      'access_token',
     )}`
 
     return config
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 )
 
 api.interceptors.response.use(
@@ -91,7 +100,7 @@ api.interceptors.response.use(
               'Content-Type': 'application/json',
               Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
-          }
+          },
         )
 
         localStorage.setItem('access_token', tokens.access_token)
@@ -110,5 +119,5 @@ api.interceptors.response.use(
       }
     }
     return Promise.reject(error)
-  }
+  },
 )

@@ -1,34 +1,25 @@
-import { Link, useLocation } from 'react-router-dom'
 import { LoggedInUser } from './user'
 
 import logo from '@/assets/Logo.svg'
-import { cn } from '@/lib/utils'
+import { Link } from '@tanstack/react-router'
+import { Connections } from './components/connections'
+import { Modules } from './components/modules'
 
 export function Navbar() {
-  const { pathname } = useLocation()
-
   return (
-    <div className='flex items-center w-full p-1 border border-solid rounded-md bg-neutral-900 border-neutral-800'>
-      <Link to='/connections'>
-        <div className='flex items-center gap-1'>
-          <div className='flex items-center gap-4 p-1 rounded-md bg-neutral-800'>
-            <img src={logo} alt='Logo' width={32} height={32} />
-          </div>
-          <div
-            className={cn(
-              'items-center hidden gap-4 p-1 px-3 py-2 rounded-md md:flex',
-              {
-                'bg-neutral-800': pathname.startsWith('/connections'),
-              }
-            )}
-          >
-            Conexões
-          </div>
+    <div className="flex w-full items-center gap-2 p-1">
+      <Link to="/">
+        <div className="flex select-none items-center gap-2 p-1">
+          <img className="h-8 w-8 min-w-8" src={logo} alt="Logo" />
+          <span className="hidden font-logo font-semibold md:inline">
+            uni-auto
+          </span>
         </div>
       </Link>
-      <div className='flex items-center justify-end flex-1 gap-2'>
-        <LoggedInUser />
-      </div>
+      <span className="h-6 w-0.5 bg-neutral-900"></span>
+      <Connections />
+      <Modules />
+      <LoggedInUser className="ml-auto" />
     </div>
   )
 }

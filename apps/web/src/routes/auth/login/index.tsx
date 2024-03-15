@@ -1,20 +1,25 @@
 import logo from '@/assets/Logo.svg'
-import { Form } from './form'
+import { createFileRoute } from '@tanstack/react-router'
+import { Form } from './-form'
 
-export function Login() {
+export const Route = createFileRoute('/auth/login/')({
+  component: LoginRoute,
+})
+
+function LoginRoute() {
   return (
-    <div className='flex flex-col flex-1 border border-solid rounded-md md:flex-row h-96 bg-neutral-900 border-neutral-600'>
-      <div className='flex flex-col justify-between p-10 md:flex-1 bg-neutral-800'>
-        <span className='flex gap-2'>
-          <img src={logo} alt='Logo' className='w-6 h-6' />
-          <b className='font-bold'>university automation</b>
+    <div className="flex h-96 flex-1 flex-col rounded-md border border-solid border-neutral-600 bg-neutral-900 md:flex-row">
+      <div className="flex flex-col justify-between bg-neutral-800 p-10 md:flex-1">
+        <span className="flex gap-2">
+          <img src={logo} alt="Logo" className="h-6 w-6" />
+          <b className="font-bold">university automation</b>
         </span>
 
-        <b className='hidden font-bold md:inline'>
+        <b className="hidden font-bold md:inline">
           Ferramenta para automatizar afazeres da sua universidade
         </b>
       </div>
-      <div className='flex flex-1 md:p-12'>
+      <div className="flex flex-1 md:p-12">
         <Form />
       </div>
     </div>

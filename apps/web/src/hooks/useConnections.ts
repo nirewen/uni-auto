@@ -1,8 +1,4 @@
-import { Connection, ConnectionProfile, api } from '@/lib/api'
-import {
-  ConnectionModule,
-  Settings,
-} from '@/routes/(protected)/connections/[id]/[module_slug]/modules/auto-ru'
+import { Connection, ConnectionModule, ConnectionProfile, api } from '@/lib/api'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
 export const useConnections = () => {
@@ -17,6 +13,10 @@ export const useConnection = (connectionId: string) => {
   return useQuery({
     queryKey: ['connection', connectionId],
     queryFn: () => {
+      if (!connectionId) {
+        return Promise.resolve(null)
+      }
+
       return api
         .get<Connection>(`/connections/${connectionId}`)
         .then((res) => res.data)
@@ -24,7 +24,7 @@ export const useConnection = (connectionId: string) => {
   })
 }
 
-export const useMutateConnection = (connectionId: string) => {
+export const useMutateConnection = <Settings>(connectionId: string) => {
   return useMutation({
     mutationKey: ['modules', 'auto-ru', 'settings'],
     mutationFn: (settings: Settings) => {
@@ -36,12 +36,17 @@ export const useMutateConnection = (connectionId: string) => {
   })
 }
 
-export const useConnectionSettings = (connectionId: string, slug: string) => {
+export const useConnectionSettings = <Settings>(
+  connectionId: string,
+  slug: string,
+) => {
   return useQuery({
     queryKey: ['connections', connectionId, slug, 'settings'],
     queryFn: () =>
       api
-        .get<ConnectionModule>(`/connections/${connectionId}/${slug}/settings`)
+        .get<
+          ConnectionModule<Settings>
+        >(`/connections/${connectionId}/${slug}/settings`)
         .then((res) => res.data),
   })
 }

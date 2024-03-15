@@ -7,7 +7,7 @@ import {
   RefetchOptions,
   RefetchQueryFilters,
 } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 
 interface AuthContextProps {
   user?: User
@@ -16,7 +16,7 @@ interface AuthContextProps {
   signIn: (tokens: TokenPair) => Promise<void>
   signOut: () => Promise<void>
   updateUser?: <TPageData>(
-    options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined
+    options?: (RefetchOptions & RefetchQueryFilters) | undefined
   ) => Promise<QueryObserverResult<User, unknown>>
 }
 
@@ -30,14 +30,16 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     localStorage.setItem('access_token', tokens.access_token)
     localStorage.setItem('refresh_token', tokens.refresh_token)
 
-    navigate('/')
+    navigate({
+      to: '/auth/login',
+    })
   }
 
   async function signOut() {
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
 
-    navigate('/auth/login')
+    navigate({ to: '/auth/login' })
   }
 
   const isAuthenticated = localStorage.getItem('access_token') !== null
