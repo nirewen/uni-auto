@@ -23,8 +23,8 @@ import { AddConnection } from './add-connection'
 export function Connections() {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
-  const { connectionId } = useParams({
-    from: '/_protected/connections/$connectionId',
+  const { connectionId, moduleSlug } = useParams({
+    from: '/_protected/connections/$connectionId/$moduleSlug/',
   })
   const { data: connections, isLoading: isConnectionsLoading } =
     useConnections()
@@ -49,7 +49,11 @@ export function Connections() {
             fallback={
               <div className="flex items-center gap-2">
                 <div className="h-9 w-9 rounded-full bg-neutral-800"></div>
-                <div className="hidden flex-1 flex-col leading-4 md:flex">
+                <div
+                  className={cn('hidden flex-1 flex-col leading-4 md:flex', {
+                    flex: !moduleSlug,
+                  })}
+                >
                   Escolha uma
                   <br />
                   conexão
@@ -67,7 +71,11 @@ export function Connections() {
               <span>{connection?.provider.name}</span>
             </div>
           </Show>
-          <ChevronDown className="ml-2 hidden h-4 w-4 shrink-0 opacity-50 md:inline" />
+          <ChevronDown
+            className={cn('ml-2 hidden h-4 w-4 shrink-0 opacity-50 md:inline', {
+              flex: !moduleSlug && !connectionId,
+            })}
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">

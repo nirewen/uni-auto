@@ -68,7 +68,11 @@ export function Modules() {
               <strong>{selected?.name}</strong>
             </div>
           </Show>
-          <ChevronDown className="ml-2 hidden h-4 w-4 shrink-0 opacity-50 md:inline" />
+          <ChevronDown
+            className={cn('ml-2 hidden h-4 w-4 shrink-0 opacity-50 md:inline', {
+              flex: !moduleSlug,
+            })}
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">

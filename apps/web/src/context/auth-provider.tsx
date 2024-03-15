@@ -6,6 +6,7 @@ import {
   QueryObserverResult,
   RefetchOptions,
   RefetchQueryFilters,
+  useQueryClient,
 } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 
@@ -24,6 +25,7 @@ export const AuthContext = React.createContext<AuthContextProps>(null!)
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const { data: user, refetch, isLoading } = useUser()
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
 
   async function signIn(tokens: TokenPair) {
@@ -32,6 +34,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
     navigate({
       to: '/connections',
+    })
+
+    queryClient.invalidateQueries({
+      queryKey: ['user'],
     })
   }
 

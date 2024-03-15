@@ -4,8 +4,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 export const useUser = () => {
   return useQuery({
     queryKey: ['user'],
-    queryFn: () => api.get<User>('/users/@me').then(res => res.data),
-    enabled: !!localStorage.getItem('access_token'),
+    queryFn: () => api.get<User>('/users/@me').then((res) => res.data),
   })
 }
 
@@ -13,7 +12,7 @@ export const useMutateUser = () => {
   return useMutation({
     mutationKey: ['user'],
     mutationFn: (data: { password: string }) => {
-      return api.patch<User>('/users/@me', data).then(res => res.data)
+      return api.patch<User>('/users/@me', data).then((res) => res.data)
     },
   })
 }
