@@ -16,7 +16,7 @@ interface AuthContextProps {
   signIn: (tokens: TokenPair) => Promise<void>
   signOut: () => Promise<void>
   updateUser?: <TPageData>(
-    options?: (RefetchOptions & RefetchQueryFilters) | undefined
+    options?: (RefetchOptions & RefetchQueryFilters) | undefined,
   ) => Promise<QueryObserverResult<User, unknown>>
 }
 
@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     localStorage.setItem('refresh_token', tokens.refresh_token)
 
     navigate({
-      to: '/auth/login',
+      to: '/connections',
     })
   }
 
