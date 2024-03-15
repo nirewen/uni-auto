@@ -21,6 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { For } from '@/components/util/for'
 
 interface RUSettingsProps {
   settings: Settings
@@ -107,7 +108,7 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
     (day) => day.restaurant === restaurant && day.weekday === weekday,
   )
 
-  const onSelectDay = (meal: (typeof meals)[number]) => {
+  const onSelectMeal = (meal: (typeof meals)[number]) => {
     const otherRestaurantDay = settings.days.find(
       (day) =>
         day.meals.includes(meal.id) &&
@@ -218,30 +219,32 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
           </Toggle>
         </div>
         <div className="grid h-full grid-cols-2 gap-2 overflow-auto p-[1px] md:grid-cols-3 lg:grid-cols-5">
-          {meals.map((meal, index) => {
-            const active = restaurantSettings.find(
-              (day) => day.meals.indexOf(meal.id) !== -1,
-            )
+          <For each={meals}>
+            {(meal) => {
+              const active = restaurantSettings.find(
+                (day) => day.meals.indexOf(meal.id) !== -1,
+              )
 
-            return (
-              <div
-                key={index}
-                className={cn(
-                  'grid gap-2 p-2 border border-solid rounded-md place-items-center bg-neutral-700 border-neutral-600 select-none transition-all duration-75',
-                  {
-                    'outline outline-blue-400 outline-[3px] -outline-offset-2':
-                      !!active,
-                  },
-                )}
-                onClick={() => onSelectDay(meal)}
-              >
-                <img src={meal.icon} width="56" height="56" alt={meal.name} />
-                <span className="whitespace-pre-wrap text-center text-xs">
-                  <Balancer>{meal.name}</Balancer>
-                </span>
-              </div>
-            )
-          })}
+              return (
+                <div
+                  key={weekday + '_' + meal.id}
+                  className={cn(
+                    'grid gap-2 p-2 border border-solid rounded-md place-items-center bg-neutral-700 border-neutral-600 select-none transition-all duration-75',
+                    {
+                      'outline outline-blue-400 outline-[3px] -outline-offset-2':
+                        !!active,
+                    },
+                  )}
+                  onClick={() => onSelectMeal(meal)}
+                >
+                  <img src={meal.icon} width="56" height="56" alt={meal.name} />
+                  <span className="whitespace-pre-wrap text-center text-xs">
+                    <Balancer>{meal.name}</Balancer>
+                  </span>
+                </div>
+              )
+            }}
+          </For>
         </div>
       </div>
     </div>
