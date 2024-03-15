@@ -7,21 +7,25 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/context/auth-provider'
 import { cn } from '@/lib/utils'
-import { ChevronDown, LogOut } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link } from '@tanstack/react-router'
+import { LogOut } from 'lucide-react'
 import { Button } from '../ui/button'
 
-export function LoggedInUser() {
+export type LoggedInUserProps = {
+  className?: string
+}
+
+export function LoggedInUser({ className }: LoggedInUserProps) {
   const { signOut, user } = useAuth()
 
   if (!user) {
     return (
       <Button
-        className='bg-neutral-900 border-neutral-800'
-        variant='outline'
+        className="border-neutral-800 bg-neutral-900"
+        variant="outline"
         asChild
       >
-        <Link to='/auth/login'>Entrar</Link>
+        <Link to="/auth/login">Entrar</Link>
       </Button>
     )
   }
@@ -31,26 +35,22 @@ export function LoggedInUser() {
       <DropdownMenuTrigger asChild>
         <Button
           className={cn(
-            'flex h-auto gap-2 pr-2 bg-neutral-900 border-neutral-800',
-            {
-              'pl-2': user.avatarUrl,
-            }
+            'flex p-2 h-auto bg-neutral-900 border-neutral-800 rounded-full',
+            className,
           )}
-          variant='outline'
+          variant="outline"
         >
           <img
             src={user.avatarUrl}
             alt={user.displayName}
-            className='w-6 rounded-full'
+            className="h-9 w-9 min-w-9 rounded-full"
           />
-          {user.displayName}
-          <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className='w-56' align='end'>
+      <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
         <DropdownMenuItem onClick={signOut}>
-          <LogOut className='w-4 h-4 mr-2' />
+          <LogOut className="mr-2 h-4 w-4" />
           <span>Encerrar sessão</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

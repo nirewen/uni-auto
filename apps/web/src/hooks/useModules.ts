@@ -1,12 +1,16 @@
-import { Module, api } from '@/lib/api'
-import { ConnectionModule } from '@/routes/(protected)/connections/[id]/[module_slug]/modules/auto-ru'
+import { ConnectionModule, Module, api } from '@/lib/api'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useModules = (provider: string) => {
   return useQuery({
     queryKey: ['modules', provider],
-    queryFn: async () =>
-      api.get<Module[]>(`/modules/${provider}`).then((res) => res.data),
+    queryFn: async () => {
+      if (!provider) {
+        return Promise.resolve([])
+      }
+
+      return api.get<Module[]>(`/modules/${provider}`).then((res) => res.data)
+    },
   })
 }
 

@@ -68,6 +68,9 @@ dependencies:
   '@tanstack/react-query':
     specifier: ^5.24.7
     version: 5.24.7(react@18.2.0)
+  '@tanstack/react-router':
+    specifier: ^1.18.3
+    version: 1.18.3(react-dom@18.2.0)(react@18.2.0)
   axios:
     specifier: ^1.6.7
     version: 1.6.7
@@ -125,9 +128,6 @@ dependencies:
   react-hook-form:
     specifier: ^7.51.0
     version: 7.51.0(react@18.2.0)
-  react-router-dom:
-    specifier: 6.11.2
-    version: 6.11.2(react-dom@18.2.0)(react@18.2.0)
   react-wrap-balancer:
     specifier: ^1.1.0
     version: 1.1.0(react@18.2.0)
@@ -214,6 +214,12 @@ devDependencies:
   '@swc/helpers':
     specifier: ~0.5.6
     version: 0.5.6
+  '@tanstack/router-devtools':
+    specifier: ^1.18.3
+    version: 1.18.3(csstype@3.1.3)(react-dom@18.2.0)(react@18.2.0)
+  '@tanstack/router-vite-plugin':
+    specifier: ^1.18.1
+    version: 1.18.1
   '@testing-library/react':
     specifier: 14.0.0
     version: 14.0.0(react-dom@18.2.0)(react@18.2.0)
@@ -298,9 +304,6 @@ devDependencies:
   postcss:
     specifier: ^8.4.35
     version: 8.4.35
-  prettier:
-    specifier: ^2.8.8
-    version: 2.8.8
   swc-loader:
     specifier: 0.1.15
     version: 0.1.15(@swc/core@1.3.107)(webpack@5.90.3)
@@ -4734,11 +4737,6 @@ packages:
       '@babel/runtime': 7.24.0
     dev: false
 
-  /@remix-run/router@1.6.2:
-    resolution: {integrity: sha512-LzqpSrMK/3JBAVBI9u3NWtOhWNw5AMQfrUFYB0+bDHTSw17z++WJLsPsxAuK+oSddsxk4d7F/JcdDPM1M5YAhA==}
-    engines: {node: '>=14'}
-    dev: false
-
   /@renovate/pep440@1.0.0:
     resolution: {integrity: sha512-k3pZVxGEGpU7rpH507/9vxfFjuxX7qx4MSj9Fk+6zBsf/uZmAy8x97dNtZacbge7gP9TazbW1d7SEb5vsOmKlw==}
     dependencies:
@@ -5212,6 +5210,10 @@ packages:
       defer-to-connect: 2.0.1
     dev: true
 
+  /@tanstack/history@1.15.13:
+    resolution: {integrity: sha512-ToaeMtK5S4YaxCywAlYexc7KPFN0esjyTZ4vXzJhXEWAkro9iHgh7m/4ozPJb7oTo65WkHWX0W9GjcZbInSD8w==}
+    engines: {node: '>=12'}
+
   /@tanstack/query-core@5.24.7:
     resolution: {integrity: sha512-24d9o44FktHTgTOu3XdQWXMu24SJodmzGWXfvd9gT57ijarjOsN2cUyg/RqyCzuDTfD59+1QdCfPB4QvRRsCjw==}
     dev: false
@@ -5224,6 +5226,66 @@ packages:
       '@tanstack/query-core': 5.24.7
       react: 18.2.0
     dev: false
+
+  /@tanstack/react-router@1.18.3(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-SaP3myClq8VLrIy+ZCQb+azRa55quWeKVCyjbRZUfNWS0mzRRWkCeNfWBb8M9dYimTLeGHck8GthZDuQBiBkbw==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      '@tanstack/history': 1.15.13
+      '@tanstack/react-store': 0.2.1(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      tiny-invariant: 1.3.3
+      tiny-warning: 1.0.3
+
+  /@tanstack/react-store@0.2.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-tEbMCQjbeVw9KOP/202LfqZMSNAVi6zYkkp1kBom8nFuMx/965Hzes3+6G6b/comCwVxoJU8Gg9IrcF8yRPthw==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      '@tanstack/store': 0.1.3
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      use-sync-external-store: 1.2.0(react@18.2.0)
+
+  /@tanstack/router-devtools@1.18.3(csstype@3.1.3)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-mB/2DQcaAiP2GxzfSa8ssBq7FjbsJ8LzfiLYlO9VQSODe/zI0gEdR04OOSJkMwo7oeigxxAlSBVRvBZ4RZyQRA==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      '@tanstack/react-router': 1.18.3(react-dom@18.2.0)(react@18.2.0)
+      clsx: 2.1.0
+      date-fns: 2.30.0
+      goober: 2.1.14(csstype@3.1.3)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    transitivePeerDependencies:
+      - csstype
+    dev: true
+
+  /@tanstack/router-generator@1.18.1:
+    resolution: {integrity: sha512-7nyeXcSaCnYhOdgY2CpEtQGccDLpo73xmoXL+DNrQiugjuqkoBQ7JGNEXIQQcH8lPra+gU4TeVS1vlRav2F/Dg==}
+    engines: {node: '>=12'}
+    dependencies:
+      prettier: 3.2.5
+      zod: 3.22.4
+    dev: true
+
+  /@tanstack/router-vite-plugin@1.18.1:
+    resolution: {integrity: sha512-gGlU5TbeQZWYERQVmjjTiZxPsrL2Id51YbL5MFQ41HBRmNMRPl4Xom32sc8ZzwADw8YXA9uPcRqRYFBLQDABSA==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@tanstack/router-generator': 1.18.1
+    dev: true
+
+  /@tanstack/store@0.1.3:
+    resolution: {integrity: sha512-GnolmC8Fr4mvsHE1fGQmR3Nm0eBO3KnZjDU0a+P3TeQNM/dDscFGxtA7p31NplQNW3KwBw4t1RVFmz0VeKLxcw==}
 
   /@testing-library/dom@9.3.4:
     resolution: {integrity: sha512-FlS4ZWlp97iiNWig0Muq8p+3rVDjRiYE+YKGbAqXOu9nwJFFOdL00kFpz42M+4huzYi86vAK1sOOfyOG45muIQ==}
@@ -6952,7 +7014,6 @@ packages:
   /clsx@2.1.0:
     resolution: {integrity: sha512-m3iNNWpd9rl3jvvcBnu70ylMdrXt8Vlq4HYadnU5fwcOtvkSQWPmj7amUcDT2qYI7risszBjI5AUIUox9D16pg==}
     engines: {node: '>=6'}
-    dev: false
 
   /cmdk@0.2.1(@types/react@18.2.33)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-U6//9lQ6JvT47+6OF6Gi8BvkxYQ8SCRRSKIJkthIMsFsLZRG0cKvTtuTaefyIKMQb8rvvXy0wGdpTNq/jPtm+g==}
@@ -7447,6 +7508,13 @@ packages:
       abab: 2.0.6
       whatwg-mimetype: 3.0.0
       whatwg-url: 12.0.1
+    dev: true
+
+  /date-fns@2.30.0:
+    resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
+    engines: {node: '>=0.11'}
+    dependencies:
+      '@babel/runtime': 7.24.0
     dev: true
 
   /date-fns@3.3.1:
@@ -8872,6 +8940,14 @@ packages:
       ignore: 5.3.1
       merge2: 1.4.1
       slash: 4.0.0
+    dev: true
+
+  /goober@2.1.14(csstype@3.1.3):
+    resolution: {integrity: sha512-4UpC0NdGyAFqLNPnhCT2iHpza2q+RAY3GV85a/mRPdzyPQMsj0KmMMuetdIkzWRbJ+Hgau1EZztq8ImmiMGhsg==}
+    peerDependencies:
+      csstype: ^3.0.10
+    dependencies:
+      csstype: 3.1.3
     dev: true
 
   /gopd@1.0.1:
@@ -11921,9 +11997,9 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier@2.8.8:
-    resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
-    engines: {node: '>=10.13.0'}
+  /prettier@3.2.5:
+    resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
+    engines: {node: '>=14'}
     hasBin: true
     dev: true
 
@@ -12168,29 +12244,6 @@ packages:
       tslib: 2.6.2
       use-callback-ref: 1.3.1(@types/react@18.2.33)(react@18.2.0)
       use-sidecar: 1.1.2(@types/react@18.2.33)(react@18.2.0)
-    dev: false
-
-  /react-router-dom@6.11.2(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-JNbKtAeh1VSJQnH6RvBDNhxNwemRj7KxCzc5jb7zvDSKRnPWIFj9pO+eXqjM69gQJ0r46hSz1x4l9y0651DKWw==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      react: '>=16.8'
-      react-dom: '>=16.8'
-    dependencies:
-      '@remix-run/router': 1.6.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-router: 6.11.2(react@18.2.0)
-    dev: false
-
-  /react-router@6.11.2(react@18.2.0):
-    resolution: {integrity: sha512-74z9xUSaSX07t3LM+pS6Un0T55ibUE/79CzfZpy5wsPDZaea1F8QkrsiyRnA2YQ7LwE/umaydzXZV80iDCPkMg==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      react: '>=16.8'
-    dependencies:
-      '@remix-run/router': 1.6.2
-      react: 18.2.0
     dev: false
 
   /react-side-effect@2.1.2(react@18.2.0):
@@ -13325,6 +13378,12 @@ packages:
     resolution: {integrity: sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==}
     dev: true
 
+  /tiny-invariant@1.3.3:
+    resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
+
+  /tiny-warning@1.0.3:
+    resolution: {integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==}
+
   /tinybench@2.6.0:
     resolution: {integrity: sha512-N8hW3PG/3aOoZAN5V/NSAEDz0ZixDSSt5b/a05iqtpgfLWMSVuCo7w0k2vVvEjdrIoeGqZzweX2WlyioNIHchA==}
     dev: true
@@ -13846,6 +13905,13 @@ packages:
       react: 18.2.0
       tslib: 2.6.2
     dev: false
+
+  /use-sync-external-store@1.2.0(react@18.2.0):
+    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -14458,4 +14524,3 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
-    dev: false

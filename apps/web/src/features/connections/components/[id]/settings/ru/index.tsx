@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils'
+import { Settings } from '@/routes/_protected/connections/$connectionId/$moduleSlug/modules/-auto-ru'
 import { CalendarDays, Leaf } from 'lucide-react'
 import { useState } from 'react'
 import { Balancer } from 'react-wrap-balancer'
-import { Settings } from '../../../../../../routes/(protected)/connections/[id]/[module_slug]/modules/auto-ru'
 
 import {
   iconBreakfast,
@@ -21,6 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { For } from '@/components/util/for'
 
 interface RUSettingsProps {
   settings: Settings
@@ -104,26 +105,26 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
   const [restaurant, setRestaurant] = useState(restaurantes[0].id)
   const [weekday, setWeekday] = useState(1)
   const restaurantSettings = settings.days.filter(
-    (day) => day.restaurant === restaurant && day.weekday === weekday
+    (day) => day.restaurant === restaurant && day.weekday === weekday,
   )
 
-  const onSelectDay = (meal: (typeof meals)[number]) => {
+  const onSelectMeal = (meal: (typeof meals)[number]) => {
     const otherRestaurantDay = settings.days.find(
       (day) =>
         day.meals.includes(meal.id) &&
         day.restaurant !== restaurant &&
-        day.weekday === weekday
+        day.weekday === weekday,
     )
 
     if (otherRestaurantDay) {
       otherRestaurantDay?.meals.splice(
         otherRestaurantDay?.meals.indexOf(meal.id)!,
-        1
+        1,
       )
     }
     if (
       !settings.days.find(
-        (day) => day.weekday === weekday && day.restaurant === restaurant
+        (day) => day.weekday === weekday && day.restaurant === restaurant,
       )
     ) {
       settings.days.push({
@@ -160,10 +161,10 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
   }
 
   return (
-    <div className="flex border border-solid rounded-lg bg-neutral-800 border-neutral-700 max-h-72 md:max-h-80">
-      <div className="flex flex-col gap-2 p-1 border-r border-solid rounded-l-lg select-none md:p-2 bg-neutral-900 border-neutral-700">
-        <div className="flex items-center justify-end gap-2 p-2 whitespace-nowrap">
-          <CalendarDays className="w-4 h-4" />
+    <div className="flex max-h-72 rounded-lg border border-solid border-neutral-700 bg-neutral-800 md:max-h-80">
+      <div className="flex select-none flex-col gap-2 rounded-l-lg border-r border-solid border-neutral-700 bg-neutral-900 p-1 md:p-2">
+        <div className="flex items-center justify-end gap-2 whitespace-nowrap p-2">
+          <CalendarDays className="h-4 w-4" />
         </div>
         <TooltipProvider>
           {weekdays.map((day, index) => (
@@ -174,7 +175,7 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
                     'flex gap-2 p-2 rounded-md cursor-pointer whitespace-nowrap h-8 leading-none justify-center font-bold',
                     {
                       'bg-neutral-800': day.weekday === weekday,
-                    }
+                    },
                   )}
                   onClick={() => setWeekday(day.weekday)}
                 >
@@ -188,9 +189,9 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
           ))}
         </TooltipProvider>
       </div>
-      <div className="flex flex-col w-full gap-2 p-2 overflow-hidden">
+      <div className="flex w-full flex-col gap-2 overflow-hidden p-2">
         <div className="flex flex-col gap-2 md:flex-row">
-          <div className="flex items-center h-8 gap-2 overflow-hidden overflow-x-auto shrink-0">
+          <div className="flex h-8 shrink-0 items-center gap-2 overflow-hidden overflow-x-auto">
             {restaurantes.map((restaurante, index) => (
               <div
                 key={index}
@@ -199,7 +200,7 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
                   {
                     'bg-neutral-700 border-neutral-600':
                       restaurante.id === restaurant,
-                  }
+                  },
                 )}
                 onClick={() => setRestaurant(restaurante.id)}
               >
@@ -209,39 +210,41 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
           </div>
           <Toggle
             aria-label="Toggle opção vegetariana"
-            className="md:ml-auto border-neutral-700 border p-2 py-1.5 gap-1 h-auto data-[state=on]:bg-neutral-600"
+            className="h-auto gap-1 border border-neutral-700 p-2 py-1.5 data-[state=on]:bg-neutral-600 md:ml-auto"
             onPressedChange={onChangeVegan}
             pressed={settings.vegan}
           >
-            <Leaf className="w-4 h-4" />
-            <span className="text-xs whitespace-nowrap">Opção vegetariana</span>
+            <Leaf className="h-4 w-4" />
+            <span className="whitespace-nowrap text-xs">Opção vegetariana</span>
           </Toggle>
         </div>
-        <div className="grid h-full grid-cols-2 gap-2 overflow-auto md:grid-cols-3 lg:grid-cols-5">
-          {meals.map((meal, index) => {
-            const active = restaurantSettings.find(
-              (day) => day.meals.indexOf(meal.id) !== -1
-            )
+        <div className="grid h-full grid-cols-2 gap-2 overflow-auto p-[1px] md:grid-cols-3 lg:grid-cols-5">
+          <For each={meals}>
+            {(meal) => {
+              const active = restaurantSettings.find(
+                (day) => day.meals.indexOf(meal.id) !== -1,
+              )
 
-            return (
-              <div
-                key={index}
-                className={cn(
-                  'grid gap-2 p-2 border border-solid rounded-md place-items-center bg-neutral-700 border-neutral-600 select-none transition-all duration-75',
-                  {
-                    'outline outline-blue-400 outline-[3px] -outline-offset-2':
-                      !!active,
-                  }
-                )}
-                onClick={() => onSelectDay(meal)}
-              >
-                <img src={meal.icon} width="56" height="56" alt={meal.name} />
-                <span className="text-xs text-center whitespace-pre-wrap">
-                  <Balancer>{meal.name}</Balancer>
-                </span>
-              </div>
-            )
-          })}
+              return (
+                <div
+                  key={weekday + '_' + meal.id}
+                  className={cn(
+                    'grid gap-2 p-2 border border-solid rounded-md place-items-center bg-neutral-700 border-neutral-600 select-none transition-all duration-75',
+                    {
+                      'outline outline-blue-400 outline-[3px] -outline-offset-2':
+                        !!active,
+                    },
+                  )}
+                  onClick={() => onSelectMeal(meal)}
+                >
+                  <img src={meal.icon} width="56" height="56" alt={meal.name} />
+                  <span className="whitespace-pre-wrap text-center text-xs">
+                    <Balancer>{meal.name}</Balancer>
+                  </span>
+                </div>
+              )
+            }}
+          </For>
         </div>
       </div>
     </div>

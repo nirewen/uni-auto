@@ -1,7 +1,12 @@
 import { useAuth } from '@/context/auth-provider'
+import { createFileRoute } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
-export function Callback() {
+export const Route = createFileRoute('/auth/callback/')({
+  component: CallbackRoute,
+})
+
+export function CallbackRoute() {
   const { signIn } = useAuth()
 
   useEffect(() => {
