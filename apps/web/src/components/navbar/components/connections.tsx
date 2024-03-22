@@ -16,7 +16,7 @@ import { Show } from '@/components/util/show'
 import { useConnections } from '@/hooks/useConnections'
 import { cn } from '@/lib/utils'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { Check, ChevronDown } from 'lucide-react'
+import { CableIcon, Check, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 import { AddConnection } from './add-connection'
 
@@ -48,7 +48,9 @@ export function Connections() {
             when={!!connection}
             fallback={
               <div className="flex items-center gap-2">
-                <div className="h-9 w-9 rounded-full bg-neutral-800"></div>
+                <div className="grid h-9 w-9 place-items-center rounded-full bg-neutral-800">
+                  <CableIcon />
+                </div>
                 <div
                   className={cn('hidden flex-1 flex-col leading-4 md:flex', {
                     flex: !moduleSlug,

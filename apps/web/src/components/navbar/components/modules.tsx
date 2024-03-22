@@ -16,7 +16,7 @@ import { Show } from '@/components/util/show'
 import { useConnection } from '@/hooks/useConnections'
 import { cn } from '@/lib/utils'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { Check, ChevronDown } from 'lucide-react'
+import { Check, ChevronDown, PackageIcon } from 'lucide-react'
 import { useState } from 'react'
 import { AddModule } from './add-module'
 
@@ -48,7 +48,9 @@ export function Modules() {
             when={!!selected}
             fallback={
               <>
-                <div className="h-9 w-9 rounded-full bg-neutral-800"></div>{' '}
+                <div className="grid h-9 w-9 place-items-center rounded-full bg-neutral-800">
+                  <PackageIcon />
+                </div>
                 <div className="flex-1 leading-4">
                   Escolha um
                   <br />
