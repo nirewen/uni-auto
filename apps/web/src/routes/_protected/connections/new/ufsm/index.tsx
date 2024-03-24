@@ -53,9 +53,10 @@ function UFSM() {
         params: { connectionId: data.id },
       })
 
-      queryClient.invalidateQueries({
-        queryKey: ['connections'],
-      })
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['connections'], }),
+        queryClient.invalidateQueries({ queryKey: ['connections', data.id, 'health'], }),
+      ])
     } catch (_e) {
       if (_e instanceof AxiosError) {
         setInvalid(_e.response?.data.message)
