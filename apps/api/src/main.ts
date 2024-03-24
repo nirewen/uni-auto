@@ -4,12 +4,29 @@ import {
   ValidationPipe,
 } from '@nestjs/common'
 import { NestFactory, Reflector } from '@nestjs/core'
+import { WinstonModule } from 'nest-winston'
+import * as winston from 'winston'
 
 import { AppModule } from './app.module'
 import { JwtAuthGuard } from './auth/guards'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule, {
+    logger:
+      process.env.NODE_ENV === 'production'
+        ? WinstonModule.createLogger({
+            transports: [
+              new winston.transports.Console({
+                format: winston.format.combine(
+                  winston.format.timestamp(),
+                  winston.format.ms(),
+                  winston.format.json(),
+                ),
+              }),
+            ],
+          })
+        : ['log', 'error', 'warn', 'debug', 'verbose'],
+  })
 
   const globalPrefix = 'api'
   app.setGlobalPrefix(globalPrefix)
@@ -20,7 +37,7 @@ async function bootstrap() {
   await app.listen(port)
 
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
   )
 }
 
