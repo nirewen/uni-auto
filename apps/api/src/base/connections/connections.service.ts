@@ -175,4 +175,18 @@ export class ConnectionsService {
 
     return profile
   }
+
+  async getHealth(id: string) {
+    const connection = await this.findConnection(id)
+
+    try {
+      await this.providersService.getProviderProfile(connection, { minimal: true })
+
+      return { status: 'OK' }
+    } catch (e) {
+      return { status: 'ERROR' }
+    }
+
+    return { status: 'ERROR' }
+  }
 }

@@ -27,6 +27,7 @@ import { differenceInDays, format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Carteira } from '../../dto/carteira.dto'
 import { Credentials } from '../../interfaces/credentials.interface'
+import { ProviderProfileOptions } from 'src/base/providers/providers.service'
 
 @Injectable()
 export class APIService {
@@ -188,16 +189,14 @@ export class APIService {
     return data
   }
 
-  async getProfile(credentials: Credentials) {
+  async getProfile(credentials: Credentials, options: ProviderProfileOptions) {
     const profile = new ConnectionProfile()
 
     const { data } = await this.fetch<{ nome: string; fotoBase64: string }>(
       '/vinculos',
       {},
       {
-        params: {
-          buscaFoto: true,
-        },
+        params: { buscaFoto: !options.minimal },
         headers: this.getHeaders(credentials),
       }
     )

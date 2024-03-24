@@ -57,4 +57,11 @@ export class ConnectionsController {
   ) {
     return this.connectionsService.getProfile(user, id, forced)
   }
+  
+  @Get('/:id/health')
+  public getProfileHealth(
+    @Param('id') id: string,
+  ) {
+    return this.connectionsService.getHealth(id)
+  }
 }

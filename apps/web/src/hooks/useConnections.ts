@@ -1,4 +1,10 @@
-import { Connection, ConnectionModule, ConnectionProfile, api } from '@/lib/api'
+import {
+  Connection,
+  ConnectionModule,
+  ConnectionProfile,
+  ConnectionProfileHealth,
+  api,
+} from '@/lib/api'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
 export const useConnections = () => {
@@ -13,14 +19,11 @@ export const useConnection = (connectionId: string) => {
   return useQuery({
     queryKey: ['connection', connectionId],
     queryFn: () => {
-      if (!connectionId) {
-        return Promise.resolve(null)
-      }
-
       return api
         .get<Connection>(`/connections/${connectionId}`)
         .then((res) => res.data)
     },
+    enabled: !!connectionId,
   })
 }
 
@@ -59,5 +62,19 @@ export const useConnectionProfile = (connectionId: string) => {
         .get<ConnectionProfile>(`/connections/${connectionId}/profile`)
         .then((res) => res.data)
     },
+  })
+}
+
+export const useConnectionHealth = (connectionId: string) => {
+  return useQuery({
+    queryKey: ['connections', connectionId, 'health'],
+    queryFn: () => {
+      return api
+        .get<ConnectionProfileHealth>(`/connections/${connectionId}/health`)
+        .then((res) => res.data)
+    },
+    enabled: !!connectionId,
+    refetchOnWindowFocus: false,
+    retry: false,
   })
 }

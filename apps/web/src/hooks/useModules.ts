@@ -5,12 +5,9 @@ export const useModules = (provider: string) => {
   return useQuery({
     queryKey: ['modules', provider],
     queryFn: async () => {
-      if (!provider) {
-        return Promise.resolve([])
-      }
-
       return api.get<Module[]>(`/modules/${provider}`).then((res) => res.data)
     },
+    enabled: !!provider,
   })
 }
 

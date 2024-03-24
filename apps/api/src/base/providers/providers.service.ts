@@ -5,6 +5,10 @@ import { Provider } from '@uni-auto/shared/entities/provider.entity'
 import { Repository } from 'typeorm'
 import { APIService as UFSMAPIService } from './ufsm/utils/services/api.service'
 
+export type ProviderProfileOptions = {
+  minimal: boolean
+}
+
 @Injectable()
 export class ProvidersService {
   constructor(
@@ -21,10 +25,10 @@ export class ProvidersService {
     return this.providersRepository.find()
   }
 
-  getProviderProfile(connection: Connection) {
+  getProviderProfile(connection: Connection, options: ProviderProfileOptions = { minimal: false }) {
     switch (connection.provider.slug) {
       case 'ufsm':
-        return this.ufsmApiService.getProfile(connection)
+        return this.ufsmApiService.getProfile(connection, options)
       default:
         return null
     }

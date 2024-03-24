@@ -61,6 +61,10 @@ export type ConnectionModule<Settings = Record<string, any>> = {
   connection: Connection
 }
 
+export type ConnectionProfileHealth = {
+  status: 'OK' | 'ERROR'
+}
+
 export const api = axios.create({
   baseURL: '/api',
   headers: {

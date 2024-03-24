@@ -11,9 +11,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { For } from '@/components/util/for'
 import { Show } from '@/components/util/show'
-import { useConnections } from '@/hooks/useConnections'
+import { useConnectionHealth, useConnections } from '@/hooks/useConnections'
 import { cn } from '@/lib/utils'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { CableIcon, Check, ChevronDown } from 'lucide-react'
@@ -28,6 +34,8 @@ export function Connections() {
   })
   const { data: connections, isLoading: isConnectionsLoading } =
     useConnections()
+  const { data: health, isLoading: isConnectionHealthLoading } =
+    useConnectionHealth(connectionId)
 
   if (!connections || isConnectionsLoading) {
     return null
@@ -63,11 +71,35 @@ export function Connections() {
               </div>
             }
           >
-            <img
-              className="h-9 w-9 min-w-9 rounded-full bg-neutral-800"
-              src={`/logos/${connection?.provider.slug}.png`}
-              alt={`Logo da ${connection?.provider.name}`}
-            />
+            <div className="relative">
+              <img
+                className="h-9 w-9 min-w-9 rounded-full bg-neutral-800"
+                src={`/logos/${connection?.provider.slug}.png`}
+                alt={`Logo da ${connection?.provider.name}`}
+              />
+              <Show when={!isConnectionHealthLoading}>
+                <TooltipProvider>
+                  <Tooltip delayDuration={0}>
+                    <TooltipTrigger asChild>
+                      <div
+                        className={cn(
+                          'absolute right-0 bottom-0 h-3 w-3 rounded-full bg-red-600 border border-red-500',
+                          {
+                            'bg-green-600 border-green-500':
+                              health?.status === 'OK',
+                          },
+                        )}
+                      ></div>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      {health?.status === 'OK'
+                        ? 'Conexão ativa'
+                        : 'Conexão com erro - refaça a conexão'}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </Show>
+            </div>
             <div className="hidden flex-1 flex-col leading-4 md:flex">
               <strong>{connection?.identifier}</strong>
               <span>{connection?.provider.name}</span>
