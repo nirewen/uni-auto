@@ -85,6 +85,16 @@ export class EnqueueService extends ModuleService {
   private async handleUser(connection: Connection, settings: UserSettings) {
     this.logger.verbose(`Enqueueing user ${connection.identifier}`)
 
+    const meals = await this.getMeals(connection, settings)
+
+    await Promise.all(
+      meals.map((meal) =>
+        this.queueService.enqueue(meal, connection, '/ufsm/ru/agendar')
+      )
+    )
+  }
+
+  private async getMeals(connection: Connection, settings: UserSettings) {
     const currentDay = new Date()
     const weekday = currentDay.getDay()
     const days = Array(6)
@@ -121,7 +131,11 @@ export class EnqueueService extends ModuleService {
             .then((meals) =>
               meals.filter((meal) => selectedDay.meals.includes(meal.id))
             )
-            .catch(() => [])
+            .catch((e) => {
+              console.log({ identifier: connection.identifier, error: e.message })
+              
+              return []
+            })
 
           if (meals.length === 0) {
             return
@@ -143,10 +157,6 @@ export class EnqueueService extends ModuleService {
       })
     }
 
-    await Promise.all(
-      meals.map((meal) =>
-        this.queueService.enqueue(meal, connection, '/ufsm/ru/agendar')
-      )
-    )
+    return meals
   }
 }
