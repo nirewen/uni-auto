@@ -38,6 +38,17 @@ services:
     networks:
       - uni-auto
 
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/dozzle/data:/data
+    environment:
+      DOZZLE_AUTH_PROVIDER: simple
+    ports:
+      - 9999:8080
+
 networks:
   uni-auto:
     driver: bridge
