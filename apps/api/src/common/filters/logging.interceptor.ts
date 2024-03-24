@@ -24,7 +24,6 @@ export class LoggingInterceptor implements NestInterceptor {
     const userAgent = request.get('user-agent') || ''
     const { ip, method, path: url, user } = request
     const correlationKey = uuidv4()
-    const userId = request.user?.userId
     const now = Date.now()
 
     return next.handle().pipe(
@@ -32,8 +31,17 @@ export class LoggingInterceptor implements NestInterceptor {
         const response = context.switchToHttp().getResponse()
         const { statusCode } = response
 
-        this.logger.log(`${method} ${url} ${statusCode}`)
-      })
+        this.logger.log({
+          correlationKey,
+          ip,
+          method,
+          path: url,
+          statusCode,
+          userAgent,
+          user,
+          responseTime: Date.now() - now,
+        })
+      }),
     )
   }
 }

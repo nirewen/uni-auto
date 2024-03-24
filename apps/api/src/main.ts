@@ -13,8 +13,10 @@ import { JwtAuthGuard } from './auth/guards'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger:
-      process.env.NODE_ENV === 'production'
-        ? WinstonModule.createLogger({
+      process.env.NODE_ENV !== 'production' ||
+      process.env.STRUCTURED_LOGGING === 'false'
+        ? ['log', 'error', 'warn', 'debug', 'verbose']
+        : WinstonModule.createLogger({
             transports: [
               new winston.transports.Console({
                 format: winston.format.combine(
@@ -24,8 +26,7 @@ async function bootstrap() {
                 ),
               }),
             ],
-          })
-        : ['log', 'error', 'warn', 'debug', 'verbose'],
+          }),
   })
 
   const globalPrefix = 'api'
