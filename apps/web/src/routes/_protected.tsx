@@ -11,10 +11,10 @@ export const Route = createFileRoute('/_protected')({
 })
 
 function LayoutComponent() {
-  const { isLoading } = useAuth()
+  const { isLoading, isAuthenticated } = useAuth()
   const user = useTokenUser()
 
-  if (isLoading) {
+  if (isLoading || !isAuthenticated) {
     return <Loader2 className="m-auto h-8 w-8 animate-spin" />
   }
 
