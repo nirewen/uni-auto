@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer'
 import {
   Column,
   Entity,
@@ -33,6 +34,7 @@ export class Connection {
   identifier: string
 
   @Column()
+  @Exclude({ toPlainOnly: true })
   token: string
 
   @OneToMany(() => ConnectionModule, settings => settings.connection)
