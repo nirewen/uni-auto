@@ -42,7 +42,9 @@ export function Modules() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="flex h-auto cursor-pointer select-none items-center justify-between gap-2 text-ellipsis rounded-full border-neutral-800 bg-neutral-900 p-2 text-left text-sm"
+          className={cn(
+            'flex h-auto cursor-pointer select-none items-center justify-between gap-2 text-ellipsis rounded-full border-neutral-800 bg-neutral-900 p-2 text-left text-sm pr-4 sm:pr-2',
+          )}
         >
           <Show
             when={!!selected}
@@ -71,9 +73,7 @@ export function Modules() {
             </div>
           </Show>
           <ChevronDown
-            className={cn('ml-2 hidden h-4 w-4 shrink-0 opacity-50 md:inline', {
-              flex: !moduleSlug,
-            })}
+            className={cn('ml-2 hidden h-4 w-4 shrink-0 opacity-50 sm:flex')}
           />
         </Button>
       </PopoverTrigger>
