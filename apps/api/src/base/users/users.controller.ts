@@ -10,11 +10,13 @@ import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { Payload } from 'src/auth/auth.interface'
 import { RolesGuard } from 'src/auth/guards'
 import { ReqUser } from 'src/common/decorators'
+import { LoggedIn } from 'src/common/decorators/logged-in.guard'
 import { Roles } from 'src/common/decorators/roles.decorator'
 import { FindOptionsWhere } from 'typeorm'
 import { UsersService } from './users.service'
 
 @Controller('/users')
+@LoggedIn()
 @UseGuards(RolesGuard)
 @Roles(UserRole.ADMIN)
 export class UsersController {

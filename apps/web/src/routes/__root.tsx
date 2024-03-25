@@ -7,9 +7,13 @@ import { AuthProvider } from '../context/auth-provider'
 
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 
-const queryClient = new QueryClient()
-
-console.log(process.env.NODE_ENV)
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+})
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === 'production'

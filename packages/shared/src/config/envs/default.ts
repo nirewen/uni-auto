@@ -1,9 +1,14 @@
+import { TypeOrmModuleOptions } from '@nestjs/typeorm'
+
 export const config = {
   db: {
     entities: [`${__dirname}/../../entities/**/*.{js,ts}`],
     subscribers: [`${__dirname}/../../subscribers/**/*.{js,ts}`],
     migrations: [`${__dirname}/../../migrations/**/*.{js,ts}`],
-  },
+    logging: false,
+    autoLoadEntities: true,
+    synchronize: false,
+  } satisfies TypeOrmModuleOptions,
   jwt: {
     secret: process.env['JWT_SECRET'],
     refreshSecret: process.env['JWT_REFRESH_SECRET'],
@@ -27,4 +32,5 @@ export const config = {
       redirectUrl: process.env['GOOGLE_REDIRECT_URL'],
     },
   },
+  inviteOnly: process.env['INVITE_ONLY'] === 'true',
 }

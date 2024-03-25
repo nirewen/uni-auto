@@ -3,13 +3,24 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/web/src",
   "projectType": "application",
+  "configurations": {
+    "development": {
+      "mode": "development"
+    },
+    "production": {
+      "mode": "production"
+    },
+    "staging": {
+      "mode": "staging"
+    }
+  },
   "targets": {
     "container": {
       "executor": "@nx-tools/nx-container:build",
       "dependsOn": [
         "build"
       ],
-      "defaultConfiguration": "local",
+      "defaultConfiguration": "production",
       "options": {
         "engine": "docker",
         "file": "apps/web/Dockerfile"

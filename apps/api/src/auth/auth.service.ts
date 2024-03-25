@@ -12,11 +12,11 @@ export class AuthService {
   constructor(
     private jwt: JwtService,
     private users: UsersService,
-    private config: ConfigService
+    private config: ConfigService,
   ) {}
 
   public async validateUser(
-    details: Pick<User, 'email' | 'displayName' | 'provider' | 'avatarUrl'>
+    details: Pick<User, 'email' | 'displayName' | 'provider' | 'avatarUrl'>,
   ): Promise<Partial<User> | null> {
     const user = await this.users.findOne(details.email)
 
@@ -57,6 +57,7 @@ export class AuthService {
       sub: data.id,
       email: data.email,
       role: data.role,
+      active: data.active,
     }
 
     return {
@@ -71,7 +72,7 @@ export class AuthService {
       {
         secret: this.config.get('jwt.refreshSecret'),
         expiresIn: '7d', // must be > access_token.expiresIn
-      }
+      },
     )
   }
 }

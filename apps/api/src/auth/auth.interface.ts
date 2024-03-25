@@ -15,10 +15,12 @@ export interface JwtPayload {
   sub: string
   email: string
   role: UserRole
+  active: boolean
 }
 
 export interface Payload {
   id: string
   email: string
   role: UserRole
+  active: boolean
 }

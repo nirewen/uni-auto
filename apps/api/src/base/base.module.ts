@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common'
 
 import { ConnectionsModule } from './connections/connections.module'
+import { InviteModule } from './invite/invite.module'
 import { ModulesModule } from './modules/modules.module'
 import { NtfyModule } from './ntfy/ntfy.module'
 import { ProvidersModule } from './providers/providers.module'
@@ -10,10 +11,11 @@ import { UsersModule } from './users/users.module'
 @Module({
   imports: [
     ConnectionsModule,
+    InviteModule,
     ModulesModule,
     NtfyModule,
-    UsersModule,
     ProvidersModule,
+    UsersModule,
   ],
   exports: [ConnectionsModule, ModulesModule, UsersModule],
 })

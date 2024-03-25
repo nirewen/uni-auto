@@ -19,7 +19,10 @@ import { GoogleAuthGuard } from './guards/google-auth.guard'
 
 @Controller('/auth')
 export class AuthController {
-  constructor(private auth: AuthService, private users: UsersService) {}
+  constructor(
+    private auth: AuthService,
+    private users: UsersService,
+  ) {}
 
   @Public()
   @Get('/google/login')
@@ -48,7 +51,7 @@ export class AuthController {
   public async refreshToken(
     @Res() res: Response,
     @ReqUser() payload: Payload,
-    @Body('refresh_token') token: string
+    @Body('refresh_token') token: string,
   ) {
     if (!token || !this.auth.validateRefreshToken(payload, token)) {
       throw new UnauthorizedException('InvalidRefreshToken')

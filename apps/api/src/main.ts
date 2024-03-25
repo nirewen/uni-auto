@@ -9,6 +9,7 @@ import * as winston from 'winston'
 
 import { AppModule } from './app.module'
 import { JwtAuthGuard } from './auth/guards'
+import { ActiveUserGuard } from './auth/guards/active-user.guard'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -33,7 +34,10 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix)
   app.useGlobalPipes(new ValidationPipe({ transform: true }))
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)))
-  app.useGlobalGuards(new JwtAuthGuard(app.get(Reflector)))
+  app.useGlobalGuards(
+    new JwtAuthGuard(app.get(Reflector)),
+    new ActiveUserGuard(app.get(Reflector)),
+  )
   const port = process.env.PORT || 3000
   await app.listen(port)
 

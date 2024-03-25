@@ -3,11 +3,13 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 
 import { Connection } from './connection.entity'
+import { InviteCode } from './invite-code.entity'
 
 export enum UserRole {
   ADMIN = 'ADMIN',
@@ -31,15 +33,30 @@ export class User {
   @Column({ nullable: true })
   avatarUrl: string
 
-  @OneToMany(() => Connection, (connection) => connection.user)
-  connections: Connection[]
-
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   role: UserRole
+
+  @Column({ default: true })
+  active: boolean
 
   @CreateDateColumn()
   createdAt: Date
 
   @UpdateDateColumn()
   updatedAt: Date
+
+  @OneToMany(() => Connection, connection => connection.user)
+  connections: Connection[]
+
+  @OneToOne(() => InviteCode, invite => invite.usedBy)
+  usedInvite: InviteCode
+
+  @OneToMany(() => InviteCode, invite => invite.createdBy)
+  createdInvites: InviteCode[]
+
+  @OneToMany(() => InviteCode, invite => invite.assignedTo)
+  assignedInvites: InviteCode[]
+
+  @OneToMany(() => InviteCode, invite => invite.usableBy)
+  usableInvites: InviteCode[]
 }

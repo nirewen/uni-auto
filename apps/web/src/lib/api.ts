@@ -72,6 +72,37 @@ export const api = axios.create({
   },
 })
 
+export async function refreshToken() {
+  try {
+    const {
+      data: { tokens },
+    } = await axios.post<{ user: User; tokens: TokenPair }>(
+      '/api/auth/refresh',
+      {
+        refresh_token: localStorage.getItem('refresh_token'),
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      },
+    )
+
+    localStorage.setItem('access_token', tokens.access_token)
+    localStorage.setItem('refresh_token', tokens.refresh_token)
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      if (e.response?.status === 401) {
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+
+        window.location.href = '/auth/login'
+      }
+    }
+  }
+}
+
 api.interceptors.request.use(
   (config) => {
     config.headers.Authorization = `Bearer ${localStorage.getItem(
@@ -86,41 +117,20 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    const originalRequest = error.config
+    const alreadyRefreshed = originalRequest._alreadyRefreshed
+
     if (
-      error.response.status === 401 &&
-      !error.config.url?.includes('/login') &&
+      error.response?.status === 401 &&
+      !alreadyRefreshed &&
+      !originalRequest.url?.includes('/login') &&
       window.location.pathname !== '/auth/login'
     ) {
-      try {
-        const {
-          data: { tokens },
-        } = await axios.post<{ user: User; tokens: TokenPair }>(
-          '/api/auth/refresh',
-          {
-            refresh_token: localStorage.getItem('refresh_token'),
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-            },
-          },
-        )
+      originalRequest._alreadyRefreshed = true
 
-        localStorage.setItem('access_token', tokens.access_token)
-        localStorage.setItem('refresh_token', tokens.refresh_token)
+      await refreshToken()
 
-        return api(error.config)
-      } catch (error: unknown) {
-        if (error instanceof AxiosError) {
-          localStorage.removeItem('access_token')
-          localStorage.removeItem('refresh_token')
-
-          window.location.href = '/auth/login'
-        } else {
-          Promise.reject(error)
-        }
-      }
+      return api(originalRequest)
     }
     return Promise.reject(error)
   },

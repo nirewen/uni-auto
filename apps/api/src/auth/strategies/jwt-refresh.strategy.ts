@@ -8,7 +8,7 @@ import type { JwtPayload, Payload } from '../auth.interface'
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
   Strategy,
-  'jwt-refresh'
+  'jwt-refresh',
 ) {
   constructor(config: ConfigService) {
     super({
@@ -23,6 +23,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
       id: payload.sub,
       email: payload.email,
       role: payload.role,
+      active: payload.active,
     }
   }
 }

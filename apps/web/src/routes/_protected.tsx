@@ -1,5 +1,8 @@
 import { Navbar } from '@/components/navbar'
+import { Show } from '@/components/util/show'
 import { useAuth } from '@/context/auth-provider'
+import { Activation } from '@/features/activation'
+import { useTokenUser } from '@/lib/utils'
 import { Outlet, createFileRoute } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 
@@ -9,15 +12,18 @@ export const Route = createFileRoute('/_protected')({
 
 function LayoutComponent() {
   const { isLoading } = useAuth()
+  const user = useTokenUser()
 
   if (isLoading) {
-    return <Loader2 className="w-8 h-8 m-auto animate-spin" />
+    return <Loader2 className="m-auto h-8 w-8 animate-spin" />
   }
 
   return (
     <>
       <Navbar />
-      <Outlet />
+      <Show when={!!user.data && user.data.active} fallback={<Activation />}>
+        <Outlet />
+      </Show>
     </>
   )
 }

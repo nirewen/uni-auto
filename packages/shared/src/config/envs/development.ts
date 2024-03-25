@@ -9,9 +9,5 @@ export const config = {
     password: process.env['DB_PASSWORD'] || '1234',
     database: process.env['DB_NAME'] || 'ufsm-ru',
     schema: process.env['DB_SCHEMA'] || 'public',
-
-    synchronize: false,
-    logging: false,
-    autoLoadEntities: true,
   } satisfies TypeOrmModuleOptions,
 }
