@@ -20,7 +20,7 @@
       "dependsOn": [
         "build"
       ],
-      "defaultConfiguration": "production",
+      "defaultConfiguration": "local",
       "options": {
         "engine": "docker",
         "file": "apps/web/Dockerfile"
