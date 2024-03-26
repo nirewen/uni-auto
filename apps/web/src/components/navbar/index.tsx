@@ -7,7 +7,7 @@ import { Modules } from './components/modules'
 
 export function Navbar() {
   return (
-    <div className="flex w-full items-center gap-2 p-1">
+    <div className="flex w-full items-center gap-2">
       <Link to="/">
         <div className="flex select-none items-center gap-2 p-1">
           <img className="h-8 w-8 min-w-8" src={logo} alt="Logo" />
