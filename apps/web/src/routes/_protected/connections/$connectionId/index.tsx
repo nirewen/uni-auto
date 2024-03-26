@@ -185,8 +185,8 @@ function ConnectionFooter() {
                 <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
                 <AlertDialogDescription>
                   Você tem certeza que deseja excluir essa conexão? <br />
-                  Ao excluir essa conexão, ela será desassociada de sua conta e
-                  todos os módulos ativados - junto com suas configurações -
+                  Ao excluir essa conexão, ela será desvinculada de sua conta e
+                  todos os módulos associados - junto com suas configurações -
                   serão excluídos.
                 </AlertDialogDescription>
               </AlertDialogHeader>
