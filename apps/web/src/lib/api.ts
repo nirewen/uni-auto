@@ -34,9 +34,9 @@ export interface ModuleSettings {
 export interface Connection {
   id: string
   identifier: string
-  token: string
   provider: Provider
   modules?: ModuleSettings[]
+  type: string
 }
 
 export interface Provider {

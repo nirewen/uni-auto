@@ -17,7 +17,9 @@ export class ConnectionModule {
   @ManyToOne(() => Module, module => module.connections)
   module: Module
 
-  @ManyToOne(() => Connection, connection => connection.modules)
+  @ManyToOne(() => Connection, connection => connection.modules, {
+    onDelete: 'CASCADE',
+  })
   connection: Connection
 
   @Column('json')

@@ -219,10 +219,12 @@ export const AutoRU = () => {
       </ModuleSection> */}
       <ModuleSection.Root>
         <ModuleSection.Header>
-          <ModuleSection.Title>Configurações</ModuleSection.Title>
-          <ModuleSection.Subtitle>
-            Configurações para esse módulo
-          </ModuleSection.Subtitle>
+          <div className="flex flex-col gap-2 md:flex-row md:items-center">
+            <ModuleSection.Title>Configurações</ModuleSection.Title>
+            <ModuleSection.Subtitle>
+              Configurações para esse módulo
+            </ModuleSection.Subtitle>
+          </div>
           <ModuleSection.Options>
             <TooltipProvider>
               <Tooltip disableHoverableContent open={saved}>

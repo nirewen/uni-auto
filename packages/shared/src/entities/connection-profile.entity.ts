@@ -19,7 +19,9 @@ export class ConnectionProfile {
   @Column()
   avatarUrl: string
 
-  @OneToOne(() => Connection, connection => connection.profile)
+  @OneToOne(() => Connection, connection => connection.profile, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   connection: Connection
 

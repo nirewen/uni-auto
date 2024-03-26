@@ -5,7 +5,7 @@ import {
   ConnectionProfileHealth,
   api,
 } from '@/lib/api'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const useConnections = () => {
   return useQuery({
@@ -39,6 +39,19 @@ export const useMutateConnection = <Settings>(connectionId: string) => {
   })
 }
 
+export const useDeleteConnection = (connectionId: string) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ['connection'],
+    mutationFn: () => {
+      return api.delete(`/connections/${connectionId}`).then(() => {
+        queryClient.invalidateQueries({ queryKey: ['connections'] })
+      })
+    },
+  })
+}
+
 export const useConnectionSettings = <Settings>(
   connectionId: string,
   slug: string,
@@ -54,12 +67,17 @@ export const useConnectionSettings = <Settings>(
   })
 }
 
-export const useConnectionProfile = (connectionId: string) => {
+export const useConnectionProfile = (
+  connectionId: string,
+  forced?: boolean,
+) => {
   return useQuery({
     queryKey: ['connections', connectionId, 'profile'],
     queryFn: () => {
       return api
-        .get<ConnectionProfile>(`/connections/${connectionId}/profile`)
+        .get<ConnectionProfile>(`/connections/${connectionId}/profile`, {
+          params: { forced },
+        })
         .then((res) => res.data)
     },
   })
@@ -74,7 +92,6 @@ export const useConnectionHealth = (connectionId: string) => {
         .then((res) => res.data)
     },
     enabled: !!connectionId,
-    refetchOnWindowFocus: false,
     retry: false,
   })
 }

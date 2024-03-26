@@ -21,7 +21,9 @@ export class Queue {
   @Column({ type: 'enum', enum: QueueStatus, default: QueueStatus.PENDING })
   status: QueueStatus
 
-  @ManyToOne(() => Connection, connection => connection.queues)
+  @ManyToOne(() => Connection, connection => connection.queues, {
+    onDelete: 'CASCADE',
+  })
   connection: Connection
 
   @Column({ type: 'json' })

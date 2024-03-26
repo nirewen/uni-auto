@@ -16,7 +16,6 @@ export function Navbar() {
           </span>
         </div>
       </Link>
-      <span className="h-6 w-0.5 bg-neutral-900"></span>
       <Connections />
       <Modules />
       <LoggedInUser className="ml-auto" />

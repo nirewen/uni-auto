@@ -1,8 +1,9 @@
+import { ConnectionCard } from '@/features/connections/components/connection-card'
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
 import { z } from 'zod'
 
 export const Route = createFileRoute('/_protected/connections/$connectionId')({
-  component: LayoutAComponent,
+  component: ConnectionIdLayoutComponent,
   parseParams: (params) => {
     return z
       .object({
@@ -15,6 +16,11 @@ export const Route = createFileRoute('/_protected/connections/$connectionId')({
   },
 })
 
-function LayoutAComponent() {
-  return <Outlet />
+function ConnectionIdLayoutComponent() {
+  return (
+    <>
+      <ConnectionCard />
+      <Outlet />
+    </>
+  )
 }
