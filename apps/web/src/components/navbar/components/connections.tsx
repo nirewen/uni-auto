@@ -20,7 +20,7 @@ import {
 import { For } from '@/components/util/for'
 import { Show } from '@/components/util/show'
 import { useConnectionHealth, useConnections } from '@/hooks/useConnections'
-import { cn } from '@/lib/utils'
+import { cn, universityLogos } from '@/lib/utils'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { CableIcon, Check, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
@@ -74,7 +74,7 @@ export function Connections() {
             <div className="relative">
               <img
                 className="h-9 w-9 min-w-9 rounded-full bg-neutral-800"
-                src={`/logos/${connection?.provider.slug}.png`}
+                src={universityLogos[connection?.provider.slug ?? 'none']}
                 alt={`Logo da ${connection?.provider.name}`}
               />
               <Show when={!isConnectionHealthLoading}>

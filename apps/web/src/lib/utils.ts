@@ -4,6 +4,11 @@ import { twMerge } from 'tailwind-merge'
 import { useQuery } from '@tanstack/react-query'
 import type { JwtPayload } from '@uni-auto/api/auth/auth.interface'
 
+export const universityLogos: Record<string, string> = {
+  ufsm: 'https://www.ufsm.br/app/uploads/2019/12/D%C3%ADstico.png',
+  none: 'data:image/png;base64,',
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

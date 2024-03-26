@@ -1,7 +1,7 @@
 import { GraduationCapIcon } from 'lucide-react'
 
 import { Provider } from '@/lib/api'
-import { cn } from '@/lib/utils'
+import { cn, universityLogos } from '@/lib/utils'
 
 import { ModuleSection } from '../[id]/module-section'
 import { ConnectionInfoLoader } from './connection-info.loader'
@@ -39,7 +39,7 @@ export function ConnectionInfoProvider({
           >
             <img
               className="aspect-square h-full w-auto rounded-full bg-neutral-800"
-              src={`/logos/${provider?.slug}.png`}
+              src={universityLogos[provider?.slug ?? 'none']}
               alt={`Logo da ${provider?.name}`}
             />
             <span className="text-sm font-bold">{provider?.name}</span>
