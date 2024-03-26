@@ -5,9 +5,7 @@ export function ConnectionInfoLoader() {
   return (
     <ModuleSection.Root>
       <ModuleSection.Header>
-        <ModuleSection.Icon>
-          <Skeleton className="h-8 w-8 rounded-full" />
-        </ModuleSection.Icon>
+        <Skeleton className="h-10 w-10 rounded-md" />
         <ModuleSection.Title>
           <Skeleton className="h-8 w-full" />
         </ModuleSection.Title>

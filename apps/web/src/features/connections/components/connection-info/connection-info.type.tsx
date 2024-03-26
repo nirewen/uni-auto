@@ -13,7 +13,7 @@ export function ConnectionInfoType({ type }: { type?: string }) {
     <ModuleSection.Root>
       <ModuleSection.Header>
         <ModuleSection.Icon>
-          <PuzzleIcon className="h-8 w-8" />
+          <PuzzleIcon className="h-6 w-6" />
         </ModuleSection.Icon>
         <ModuleSection.Title>Tipo</ModuleSection.Title>
       </ModuleSection.Header>

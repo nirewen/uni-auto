@@ -19,7 +19,7 @@ export function ConnectionInfoProvider({
     <ModuleSection.Root>
       <ModuleSection.Header>
         <ModuleSection.Icon>
-          <GraduationCapIcon className="h-8 w-8" />
+          <GraduationCapIcon className="h-6 w-6" />
         </ModuleSection.Icon>
         <ModuleSection.Title>Provedor</ModuleSection.Title>
       </ModuleSection.Header>
