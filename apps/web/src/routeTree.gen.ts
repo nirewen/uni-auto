@@ -17,6 +17,7 @@ import { Route as AuthIndexImport } from './routes/auth/index'
 import { Route as ProtectedConnectionsImport } from './routes/_protected/connections'
 import { Route as AuthLoginIndexImport } from './routes/auth/login/index'
 import { Route as AuthCallbackIndexImport } from './routes/auth/callback/index'
+import { Route as ProtectedProfileIndexImport } from './routes/_protected/profile/index'
 import { Route as ProtectedConnectionsIndexImport } from './routes/_protected/connections/index'
 import { Route as ProtectedConnectionsConnectionIdImport } from './routes/_protected/connections/$connectionId'
 import { Route as ProtectedConnectionsConnectionIdIndexImport } from './routes/_protected/connections/$connectionId/index'
@@ -54,6 +55,11 @@ const AuthLoginIndexRoute = AuthLoginIndexImport.update({
 const AuthCallbackIndexRoute = AuthCallbackIndexImport.update({
   path: '/auth/callback/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const ProtectedProfileIndexRoute = ProtectedProfileIndexImport.update({
+  path: '/profile/',
+  getParentRoute: () => ProtectedRoute,
 } as any)
 
 const ProtectedConnectionsIndexRoute = ProtectedConnectionsIndexImport.update({
@@ -119,6 +125,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedConnectionsIndexImport
       parentRoute: typeof ProtectedConnectionsImport
     }
+    '/_protected/profile/': {
+      preLoaderRoute: typeof ProtectedProfileIndexImport
+      parentRoute: typeof ProtectedImport
+    }
     '/auth/callback/': {
       preLoaderRoute: typeof AuthCallbackIndexImport
       parentRoute: typeof rootRoute
@@ -161,6 +171,7 @@ export const routeTree = rootRoute.addChildren([
       ProtectedConnectionsIndexRoute,
       ProtectedConnectionsNewUfsmIndexRoute,
     ]),
+    ProtectedProfileIndexRoute,
   ]),
   AuthIndexRoute,
   AuthCallbackIndexRoute,
