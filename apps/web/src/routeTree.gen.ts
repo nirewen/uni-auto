@@ -20,6 +20,7 @@ import { Route as AuthCallbackIndexImport } from './routes/auth/callback/index'
 import { Route as ProtectedConnectionsIndexImport } from './routes/_protected/connections/index'
 import { Route as ProtectedConnectionsConnectionIdImport } from './routes/_protected/connections/$connectionId'
 import { Route as ProtectedConnectionsConnectionIdIndexImport } from './routes/_protected/connections/$connectionId/index'
+import { Route as ProtectedConnectionsConnectionIdModuleSlugImport } from './routes/_protected/connections/$connectionId/$moduleSlug'
 import { Route as ProtectedConnectionsNewUfsmIndexImport } from './routes/_protected/connections/new/ufsm/index'
 import { Route as ProtectedConnectionsConnectionIdModuleSlugIndexImport } from './routes/_protected/connections/$connectionId/$moduleSlug/index'
 
@@ -72,6 +73,12 @@ const ProtectedConnectionsConnectionIdIndexRoute =
     getParentRoute: () => ProtectedConnectionsConnectionIdRoute,
   } as any)
 
+const ProtectedConnectionsConnectionIdModuleSlugRoute =
+  ProtectedConnectionsConnectionIdModuleSlugImport.update({
+    path: '/$moduleSlug',
+    getParentRoute: () => ProtectedConnectionsConnectionIdRoute,
+  } as any)
+
 const ProtectedConnectionsNewUfsmIndexRoute =
   ProtectedConnectionsNewUfsmIndexImport.update({
     path: '/new/ufsm/',
@@ -80,8 +87,8 @@ const ProtectedConnectionsNewUfsmIndexRoute =
 
 const ProtectedConnectionsConnectionIdModuleSlugIndexRoute =
   ProtectedConnectionsConnectionIdModuleSlugIndexImport.update({
-    path: '/$moduleSlug/',
-    getParentRoute: () => ProtectedConnectionsConnectionIdRoute,
+    path: '/',
+    getParentRoute: () => ProtectedConnectionsConnectionIdModuleSlugRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -120,13 +127,17 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginIndexImport
       parentRoute: typeof rootRoute
     }
+    '/_protected/connections/$connectionId/$moduleSlug': {
+      preLoaderRoute: typeof ProtectedConnectionsConnectionIdModuleSlugImport
+      parentRoute: typeof ProtectedConnectionsConnectionIdImport
+    }
     '/_protected/connections/$connectionId/': {
       preLoaderRoute: typeof ProtectedConnectionsConnectionIdIndexImport
       parentRoute: typeof ProtectedConnectionsConnectionIdImport
     }
     '/_protected/connections/$connectionId/$moduleSlug/': {
       preLoaderRoute: typeof ProtectedConnectionsConnectionIdModuleSlugIndexImport
-      parentRoute: typeof ProtectedConnectionsConnectionIdImport
+      parentRoute: typeof ProtectedConnectionsConnectionIdModuleSlugImport
     }
     '/_protected/connections/new/ufsm/': {
       preLoaderRoute: typeof ProtectedConnectionsNewUfsmIndexImport
@@ -142,8 +153,10 @@ export const routeTree = rootRoute.addChildren([
   ProtectedRoute.addChildren([
     ProtectedConnectionsRoute.addChildren([
       ProtectedConnectionsConnectionIdRoute.addChildren([
+        ProtectedConnectionsConnectionIdModuleSlugRoute.addChildren([
+          ProtectedConnectionsConnectionIdModuleSlugIndexRoute,
+        ]),
         ProtectedConnectionsConnectionIdIndexRoute,
-        ProtectedConnectionsConnectionIdModuleSlugIndexRoute,
       ]),
       ProtectedConnectionsIndexRoute,
       ProtectedConnectionsNewUfsmIndexRoute,
