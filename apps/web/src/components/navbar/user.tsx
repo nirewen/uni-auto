@@ -1,15 +1,15 @@
+import { useAuth } from '@/context/auth-provider'
+import { cn } from '@/lib/utils'
+import { useNavigate } from '@tanstack/react-router'
+import { LogInIcon, LogOutIcon, SquareUserRoundIcon } from 'lucide-react'
+import { Button } from '../ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { useAuth } from '@/context/auth-provider'
-import { cn } from '@/lib/utils'
-import { Link } from '@tanstack/react-router'
-import { LogOut } from 'lucide-react'
-import { Button } from '../ui/button'
+} from '../ui/dropdown-menu'
 
 export type LoggedInUserProps = {
   className?: string
@@ -17,15 +17,21 @@ export type LoggedInUserProps = {
 
 export function LoggedInUser({ className }: LoggedInUserProps) {
   const { signOut, user } = useAuth()
+  const navigate = useNavigate()
+  const actions = {
+    profile: () => {
+      navigate({ to: '/profile' })
+    },
+    signOut,
+  }
 
   if (!user) {
     return (
       <Button
-        className="border-neutral-800 bg-neutral-900"
+        className="ml-auto flex h-auto rounded-full border-neutral-800 bg-neutral-900 p-3"
         variant="outline"
-        asChild
       >
-        <Link to="/auth/login">Entrar</Link>
+        <LogInIcon className="h-7 w-7" />
       </Button>
     )
   }
@@ -49,8 +55,12 @@ export function LoggedInUser({ className }: LoggedInUserProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
-        <DropdownMenuItem onClick={signOut}>
-          <LogOut className="mr-2 h-4 w-4" />
+        <DropdownMenuItem onClick={actions.profile}>
+          <SquareUserRoundIcon className="mr-2 h-4 w-4" />
+          <span>Perfil</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={actions.signOut}>
+          <LogOutIcon className="mr-2 h-4 w-4" />
           <span>Encerrar sessão</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -1,5 +1,6 @@
 import logo from '@/assets/Logo.svg'
-import { createFileRoute } from '@tanstack/react-router'
+import { useAuth } from '@/context/auth-provider'
+import { Navigate, createFileRoute } from '@tanstack/react-router'
 import { Form } from './-form'
 
 export const Route = createFileRoute('/auth/login/')({
@@ -7,6 +8,12 @@ export const Route = createFileRoute('/auth/login/')({
 })
 
 function LoginRoute() {
+  const { isAuthenticated } = useAuth()
+
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />
+  }
+
   return (
     <div className="flex h-96 flex-1 flex-col rounded-md border border-solid border-neutral-600 bg-neutral-900 md:flex-row">
       <div className="flex flex-col justify-between bg-neutral-800 p-10 md:flex-1">
