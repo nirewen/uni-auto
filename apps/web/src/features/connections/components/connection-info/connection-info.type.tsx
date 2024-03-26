@@ -4,8 +4,11 @@ import { Show } from '@/components/util/show'
 import { cn } from '@/lib/utils'
 
 import { ModuleSection } from '../[id]/module-section'
+import { ConnectionInfoLoader } from './connection-info.loader'
 
 export function ConnectionInfoType({ type }: { type?: string }) {
+  if (!type) return <ConnectionInfoLoader />
+
   return (
     <ModuleSection.Root>
       <ModuleSection.Header>

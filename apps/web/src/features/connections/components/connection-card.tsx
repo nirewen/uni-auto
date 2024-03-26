@@ -2,16 +2,14 @@ import { Button } from '@/components/ui/button'
 import { useConnectionProfile } from '@/hooks/useConnections'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { Settings } from 'lucide-react'
+import { ConnectionCardLoader } from './connection-card.loader'
 
 export function ConnectionCard() {
   const params = useParams({ from: '/_protected/connections/$connectionId' })
   const profile = useConnectionProfile(params.connectionId)
   const navigate = useNavigate()
 
-  if (profile.isLoading || !profile.data)
-    return (
-      <div className="flex h-14 items-center gap-2 rounded-full border border-neutral-800 bg-neutral-900 p-2" />
-    )
+  if (profile.isLoading || !profile.data) return <ConnectionCardLoader />
 
   return (
     <div className="flex h-14 items-center gap-2 rounded-full border border-neutral-800 bg-neutral-900 p-2">
