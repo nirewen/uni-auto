@@ -21,7 +21,10 @@ function LayoutComponent() {
   return (
     <>
       <Navbar />
-      <Show when={!!user.data && user.data.active} fallback={<Activation />}>
+      <Show when={!!user.data && isAuthenticated && !user.data.active}>
+        <Activation />
+      </Show>
+      <Show when={!!user.data && isAuthenticated && user.data.active}>
         <Outlet />
       </Show>
     </>

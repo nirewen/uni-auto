@@ -2,6 +2,7 @@ import React, { PropsWithChildren } from 'react'
 
 import { useUser } from '@/hooks/useUser'
 import { TokenPair, User } from '@/lib/api'
+import { useTokenUser } from '@/lib/utils'
 import {
   QueryObserverResult,
   RefetchOptions,
@@ -27,6 +28,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const { data: user, refetch, isLoading } = useUser()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { data: isAuthenticated } = useTokenUser()
 
   async function signIn(tokens: TokenPair) {
     localStorage.setItem('access_token', tokens.access_token)
@@ -45,10 +47,12 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
 
+    queryClient.invalidateQueries({
+      queryKey: ['token-user'],
+    })
+
     navigate({ to: '/auth/login' })
   }
-
-  const isAuthenticated = localStorage.getItem('access_token') !== null
 
   return (
     <AuthContext.Provider
@@ -57,8 +61,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         signOut,
         user,
         updateUser: refetch,
-        isLoading: isLoading && isAuthenticated,
-        isAuthenticated,
+        isLoading: isLoading && !!isAuthenticated,
+        isAuthenticated: !!isAuthenticated,
       }}
     >
       {children}

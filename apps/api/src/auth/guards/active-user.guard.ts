@@ -3,12 +3,12 @@ import {
   ExecutionContext,
   Injectable,
   InternalServerErrorException,
-  UnauthorizedException,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { User } from '@uni-auto/shared/entities/user.entity'
 import { IS_PUBLIC_KEY } from 'src/common/decorators'
 import { IS_LOGGED_IN } from 'src/common/decorators/logged-in.guard'
+import { UpgradeRequiredException } from 'src/common/filters/upgrade-required.exception'
 
 @Injectable()
 export class ActiveUserGuard implements CanActivate {
@@ -37,7 +37,7 @@ export class ActiveUserGuard implements CanActivate {
     }
 
     if (!user.active) {
-      throw new UnauthorizedException('Your account is not active')
+      throw new UpgradeRequiredException('Your account is not active')
     }
 
     return true
