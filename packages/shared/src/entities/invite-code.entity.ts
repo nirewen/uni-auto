@@ -29,6 +29,12 @@ export class InviteCode {
   })
   role: InviteCodeRole
 
+  @Column({ default: 1 })
+  uses: number
+
+  @Column({ default: 1 })
+  maxUses: number
+
   @Column({ default: true })
   active: boolean
 

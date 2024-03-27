@@ -1,6 +1,25 @@
-import { IsBoolean, IsOptional, IsUUID } from 'class-validator'
+import { InviteCodeRole } from '@uni-auto/shared/entities/invite-code.entity'
+import {
+  IsBoolean,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsUUID,
+} from 'class-validator'
 
 export class CreateInviteDto {
+  @IsUUID()
+  @IsOptional()
+  code: string
+
+  @IsEnum(InviteCodeRole)
+  @IsOptional()
+  role: InviteCodeRole = InviteCodeRole.ACCOUNT_ACTIVATION
+
+  @IsNumber()
+  @IsOptional()
+  maxUses: number = 1
+
   @IsBoolean()
   @IsOptional()
   active: boolean = true

@@ -4,7 +4,7 @@ import {
   InviteCode,
   InviteCodeRole,
 } from '@uni-auto/shared/entities/invite-code.entity'
-import { User } from '@uni-auto/shared/entities/user.entity'
+import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { OkResponse } from 'src/common/filters/ok.exception'
 import { Repository } from 'typeorm'
 import { UsersService } from '../users/users.service'
@@ -24,15 +24,7 @@ export class InviteService {
     })
   }
 
-  async useInvite(reqUser: User, code: string) {
-    const user = await this.usersService.findOneById(reqUser.id)
-    const invite = (await this.inviteRepository
-      .findOne({
-        where: { code },
-        relations: ['createdBy', 'usedBy', 'usableBy'],
-      })
-      .catch(e => null)) as InviteCode
-
+  validateInvite(user: User, invite: InviteCode) {
     if (!invite) {
       throw new BadRequestException('Invalid invite code')
     }
@@ -49,9 +41,34 @@ export class InviteService {
       throw new BadRequestException('Invite code is not usable by this user')
     }
 
+    if (invite.uses === 0) {
+      throw new BadRequestException('Invite code has no more uses')
+    }
+  }
+
+  async useInvite(reqUser: User, code: string) {
+    const user = await this.usersService.findOneById(reqUser.id)
+    const invite = (await this.inviteRepository
+      .findOne({
+        where: { code },
+        relations: ['createdBy', 'usedBy', 'usableBy'],
+      })
+      .catch(e => null)) as InviteCode
+
+    this.validateInvite(user, invite)
+
     invite.usedBy = user
     invite.usedAt = new Date()
-    invite.active = false
+
+    if (invite.uses > 0) {
+      if (invite.uses > 0) {
+        invite.uses--
+      }
+
+      if (invite.uses === 0) {
+        invite.active = false
+      }
+    }
 
     await this.inviteRepository.save(invite)
     await this.inviteActionRole(user, invite)
@@ -69,9 +86,7 @@ export class InviteService {
         break
       }
       default: {
-        throw new BadRequestException(
-          'Invalid invite code role - Role action not implemented',
-        )
+        throw new BadRequestException('Invite Code Role action not implemented')
       }
     }
   }
@@ -81,7 +96,14 @@ export class InviteService {
     const usableBy = await this.usersService.findOneById(dto.usableBy)
     const assignedTo = await this.usersService.findOneById(dto.assignedTo)
 
+    if (dto.maxUses < 1 && user.role !== UserRole.ADMIN) {
+      throw new BadRequestException('Invalid max uses value')
+    }
+
     const invite = this.inviteRepository.create({
+      code: dto.code,
+      role: dto.role,
+      maxUses: dto.maxUses,
       active: dto.active,
       createdBy: user,
       usableBy,
