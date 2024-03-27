@@ -22,7 +22,7 @@ export class ConnectionsService {
     private connectionModule: Repository<ConnectionModule>,
     @InjectRepository(ConnectionProfile)
     private connectionProfiles: Repository<ConnectionProfile>,
-    private providersService: ProvidersService
+    private providersService: ProvidersService,
   ) {}
 
   async connect(data: Payload, user: User) {
@@ -104,6 +104,16 @@ export class ConnectionsService {
     return settings
   }
 
+  async getAll() {
+    return this.connections.find({
+      relations: {
+        provider: true,
+        user: true,
+        profile: true,
+      },
+    })
+  }
+
   async getAllConnections(user: User) {
     return this.connections.find({
       where: { user },
@@ -114,12 +124,12 @@ export class ConnectionsService {
   async updateSettings(
     user: User,
     slug: string,
-    { connectionId, settings }: UpdateSettingsDTO
+    { connectionId, settings }: UpdateSettingsDTO,
   ) {
     const connectionModule = await this.findConnectionSettings(
       user,
       connectionId,
-      slug
+      slug,
     )
 
     if (connectionModule.connection.user.id !== user.id) {
@@ -176,17 +186,21 @@ export class ConnectionsService {
     return profile
   }
 
-  async getHealth(id: string) {
+  async getHealth(user: User, id: string) {
     const connection = await this.findConnection(id)
 
+    if (connection.user.id !== user.id && user.role !== UserRole.ADMIN) {
+      throw new BadRequestException('Invalid connection id')
+    }
+
     try {
-      await this.providersService.getProviderProfile(connection, { minimal: true })
+      await this.providersService.getProviderProfile(connection, {
+        minimal: true,
+      })
 
       return { status: 'OK' }
     } catch (e) {
       return { status: 'ERROR' }
     }
-
-    return { status: 'ERROR' }
   }
 }

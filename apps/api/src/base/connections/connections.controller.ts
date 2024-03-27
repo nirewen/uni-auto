@@ -6,15 +6,24 @@ import {
   Param,
   Patch,
   Query,
+  UseGuards,
 } from '@nestjs/common'
-import { User } from '@uni-auto/shared/entities/user.entity'
-import { ReqUser } from 'src/common/decorators'
+import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
+import { RolesGuard } from 'src/auth/guards'
+import { ReqUser, Roles } from 'src/common/decorators'
 import { ConnectionsService } from './connections.service'
 import { UpdateSettingsDTO } from './interfaces/update-settings.dto'
 
 @Controller('connections')
 export class ConnectionsController {
   constructor(private readonly connectionsService: ConnectionsService) {}
+
+  @Get()
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
+  getAll() {
+    return this.connectionsService.getAll()
+  }
 
   @Get('@me')
   me(@ReqUser() user: User) {
@@ -30,7 +39,7 @@ export class ConnectionsController {
   getConnectionSettings(
     @ReqUser() user: User,
     @Param('id') id: string,
-    @Param('slug') slug: string
+    @Param('slug') slug: string,
   ) {
     return this.connectionsService.findConnectionSettings(user, id, slug)
   }
@@ -39,7 +48,7 @@ export class ConnectionsController {
   public updateSettings(
     @ReqUser() user: User,
     @Param('slug') slug: string,
-    @Body() body: UpdateSettingsDTO
+    @Body() body: UpdateSettingsDTO,
   ) {
     return this.connectionsService.updateSettings(user, slug, body)
   }
@@ -53,15 +62,13 @@ export class ConnectionsController {
   public getProfile(
     @ReqUser() user: User,
     @Param('id') id: string,
-    @Query('forced') forced: boolean = false
+    @Query('forced') forced: boolean = false,
   ) {
     return this.connectionsService.getProfile(user, id, forced)
   }
-  
+
   @Get('/:id/health')
-  public getProfileHealth(
-    @Param('id') id: string,
-  ) {
-    return this.connectionsService.getHealth(id)
+  public getProfileHealth(@ReqUser() user: User, @Param('id') id: string) {
+    return this.connectionsService.getHealth(user, id)
   }
 }
