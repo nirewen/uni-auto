@@ -2,7 +2,14 @@ import { Navigate, useNavigate, useParams } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { Balancer } from 'react-wrap-balancer'
 
-import { Calendar, DollarSign, Loader2, RotateCw, Save } from 'lucide-react'
+import {
+  Calendar,
+  DollarSign,
+  Loader2,
+  RotateCw,
+  Save,
+  SettingsIcon,
+} from 'lucide-react'
 
 import {
   AlertDialog,
@@ -101,6 +108,12 @@ export const AutoRU = () => {
 
   function onSave(newSettings: Settings) {
     setSettings((settings) => ({ ...settings, ...newSettings }))
+  }
+
+  function onChangeVegan(vegan: boolean) {
+    data!.settings.vegan = vegan
+
+    onSave(data!.settings)
   }
 
   if (isError) {
@@ -219,7 +232,10 @@ export const AutoRU = () => {
       </ModuleSection> */}
       <ModuleSection.Root>
         <ModuleSection.Header>
-          <div className="flex flex-col gap-2 md:flex-row md:items-center">
+          <ModuleSection.Icon>
+            <SettingsIcon />
+          </ModuleSection.Icon>
+          <div className="flex flex-col md:flex-row md:items-center md:gap-2">
             <ModuleSection.Title>Configurações</ModuleSection.Title>
             <ModuleSection.Subtitle>
               Configurações para esse módulo

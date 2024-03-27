@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import { Settings } from '@/routes/_protected/connections/$connectionId/$moduleSlug/modules/-auto-ru'
-import { CalendarDays, Leaf } from 'lucide-react'
+import { CalendarDays, InfoIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Balancer } from 'react-wrap-balancer'
 
@@ -14,7 +14,15 @@ import {
   iconLunch,
   iconPlasticFoodContainer,
 } from '@/assets/icons'
-import { Toggle } from '@/components/ui/toggle'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import { Switch } from '@/components/ui/switch'
 import {
   Tooltip,
   TooltipContent,
@@ -161,91 +169,132 @@ function RUSettings({ settings, onSave }: RUSettingsProps) {
   }
 
   return (
-    <div className="flex max-h-72 rounded-lg border border-solid border-neutral-700 bg-neutral-800 md:max-h-80">
-      <div className="flex select-none flex-col gap-2 rounded-l-lg border-r border-solid border-neutral-700 bg-neutral-900 p-1 md:p-2">
-        <div className="flex items-center justify-end gap-2 whitespace-nowrap p-2">
-          <CalendarDays className="h-4 w-4" />
-        </div>
-        <TooltipProvider>
-          {weekdays.map((day, index) => (
-            <Tooltip delayDuration={50} key={index}>
-              <TooltipTrigger asChild>
-                <div
-                  className={cn(
-                    'flex gap-2 p-2 rounded-md cursor-pointer whitespace-nowrap h-8 leading-none justify-center font-bold',
-                    {
-                      'bg-neutral-800': day.weekday === weekday,
-                    },
-                  )}
-                  onClick={() => setWeekday(day.weekday)}
-                >
-                  {day.short}
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>{day.long}</p>
-              </TooltipContent>
-            </Tooltip>
-          ))}
-        </TooltipProvider>
-      </div>
-      <div className="flex w-full flex-col gap-2 overflow-hidden p-2">
-        <div className="flex flex-col gap-2 md:flex-row">
-          <div className="flex h-8 shrink-0 items-center gap-2 overflow-hidden overflow-x-auto">
-            {restaurantes.map((restaurante, index) => (
-              <div
-                key={index}
-                className={cn(
-                  'flex gap-2 px-2 py-1 text-sm rounded-md bg-neutral-800 border-neutral-700 border border-solid cursor-pointer whitespace-nowrap hover:bg-neutral-600 hover:border-neutral-500 hover:text-neutral-100 transition-colors select-none',
-                  {
-                    'bg-neutral-700 border-neutral-600':
-                      restaurante.id === restaurant,
-                  },
-                )}
-                onClick={() => setRestaurant(restaurante.id)}
-              >
-                {restaurante.name}
-              </div>
-            ))}
+    <div className="flex flex-col gap-2">
+      <div className="flex max-h-72 rounded-lg border border-solid border-neutral-700 bg-neutral-800 md:max-h-80">
+        <div className="flex select-none flex-col gap-2 rounded-l-lg border-r border-solid border-neutral-700 bg-neutral-900 p-1 md:p-2">
+          <div className="flex items-center justify-end gap-2 whitespace-nowrap p-2">
+            <CalendarDays className="h-4 w-4" />
           </div>
-          <Toggle
-            aria-label="Toggle opção vegetariana"
-            className="h-auto gap-1 border border-neutral-700 p-2 py-1.5 data-[state=on]:bg-neutral-600 md:ml-auto"
-            onPressedChange={onChangeVegan}
-            pressed={settings.vegan}
-          >
-            <Leaf className="h-4 w-4" />
-            <span className="whitespace-nowrap text-xs">Opção vegetariana</span>
-          </Toggle>
+          <TooltipProvider>
+            {weekdays.map((day, index) => (
+              <Tooltip delayDuration={50} key={index}>
+                <TooltipTrigger asChild>
+                  <div
+                    className={cn(
+                      'flex gap-2 p-2 rounded-md cursor-pointer whitespace-nowrap h-8 leading-none justify-center font-bold',
+                      {
+                        'bg-neutral-800': day.weekday === weekday,
+                      },
+                    )}
+                    onClick={() => setWeekday(day.weekday)}
+                  >
+                    {day.short}
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>{day.long}</p>
+                </TooltipContent>
+              </Tooltip>
+            ))}
+          </TooltipProvider>
         </div>
-        <div className="grid h-full grid-cols-2 gap-2 overflow-auto p-[1px] md:grid-cols-3 lg:grid-cols-5">
-          <For each={meals}>
-            {(meal) => {
-              const active = restaurantSettings.find(
-                (day) => day.meals.indexOf(meal.id) !== -1,
-              )
-
-              return (
-                <div
-                  key={weekday + '_' + meal.id}
-                  className={cn(
-                    'grid gap-2 p-2 border border-solid rounded-md place-items-center bg-neutral-700 border-neutral-600 select-none transition-all duration-75',
-                    {
-                      'outline outline-blue-400 outline-[3px] -outline-offset-2':
-                        !!active,
-                    },
-                  )}
-                  onClick={() => onSelectMeal(meal)}
+        <div className="flex w-full flex-col gap-2 overflow-hidden p-2">
+          <div className="flex flex-row gap-2">
+            <ScrollArea>
+              <div className="flex h-8 w-full flex-1 shrink-0 items-center gap-2">
+                {restaurantes.map((restaurante, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      'flex gap-2 px-2 py-1 text-sm rounded-md bg-neutral-800 border-neutral-700 border border-solid cursor-pointer whitespace-nowrap hover:bg-neutral-600 hover:border-neutral-500 hover:text-neutral-100 transition-colors select-none',
+                      {
+                        'bg-neutral-700 border-neutral-600':
+                          restaurante.id === restaurant,
+                      },
+                    )}
+                    onClick={() => setRestaurant(restaurante.id)}
+                  >
+                    {restaurante.name}
+                  </div>
+                ))}
+              </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  className="ml-auto h-8 w-8 border border-neutral-700 bg-neutral-800"
+                  variant="outline"
+                  size="icon"
                 >
-                  <img src={meal.icon} width="56" height="56" alt={meal.name} />
-                  <span className="whitespace-pre-wrap text-center text-xs">
-                    <Balancer>{meal.name}</Balancer>
-                  </span>
+                  <InfoIcon className="h-5 w-5" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent side="left">
+                <div className="flex max-w-64 flex-col text-sm md:max-w-96">
+                  <p>
+                    Agendamentos no dia dependem da disponibilidade no
+                    restaurante.
+                  </p>
+                  <p>
+                    O módulo não se responsabiliza por agendamentos não
+                    efetuados por falta de benefício ou indisponibilidade de
+                    refeição.
+                  </p>
                 </div>
-              )
-            }}
-          </For>
+              </PopoverContent>
+            </Popover>
+          </div>
+          <ScrollArea>
+            <div className="grid h-full grid-cols-2 gap-2 p-[1px] md:grid-cols-3 lg:grid-cols-5">
+              <For each={meals}>
+                {(meal) => {
+                  const active = restaurantSettings.find(
+                    (day) => day.meals.indexOf(meal.id) !== -1,
+                  )
+                  return (
+                    <div
+                      key={weekday + '_' + meal.id}
+                      className={cn(
+                        'grid gap-2 p-2 border border-solid rounded-md place-items-center bg-neutral-700 border-neutral-600 select-none transition-all duration-75',
+                        {
+                          'outline outline-blue-400 outline-[3px] -outline-offset-2':
+                            !!active,
+                        },
+                      )}
+                      onClick={() => onSelectMeal(meal)}
+                    >
+                      <img
+                        src={meal.icon}
+                        width="56"
+                        height="56"
+                        alt={meal.name}
+                      />
+                      <span className="whitespace-pre-wrap text-center text-xs">
+                        <Balancer>{meal.name}</Balancer>
+                      </span>
+                    </div>
+                  )
+                }}
+              </For>
+            </div>
+          </ScrollArea>
         </div>
+      </div>
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+        <div className="flex items-center rounded-lg border border-solid border-neutral-700 bg-neutral-800 p-2 md:max-h-80">
+          <Label htmlFor=":vegan:" className="flex-1">
+            Opção vegetariana
+          </Label>
+          <Switch
+            className="data-[state=unchecked]:bg-neutral-700"
+            id=":vegan:"
+            onCheckedChange={onChangeVegan}
+            checked={settings.vegan}
+          ></Switch>
+        </div>
+        <div className="hidden items-center rounded-lg border border-solid border-neutral-700 bg-neutral-800 p-2 md:flex md:max-h-80"></div>
+        <div className="hidden items-center rounded-lg border border-solid border-neutral-700 bg-neutral-800 p-2 md:flex md:max-h-80"></div>
       </div>
     </div>
   )
