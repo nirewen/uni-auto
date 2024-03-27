@@ -15,20 +15,27 @@ import { ModulesService } from './modules.service'
 
 @Controller('modules')
 @UseGuards(RolesGuard)
-@Roles(UserRole.USER, UserRole.ADMIN)
+@Roles(UserRole.ADMIN)
 export class ModulesController {
   constructor(private readonly modulesService: ModulesService) {}
 
+  @Get()
+  public getAll() {
+    return this.modulesService.getAll()
+  }
+
   @Get(':provider')
+  @Roles(UserRole.USER)
   public getModules(@Param('provider') provider: string) {
     return this.modulesService.getModules(provider)
   }
 
   @Post(':slug/toggle')
+  @Roles(UserRole.USER)
   public enable(
     @Param('slug') slug: string,
     @ReqUser() user: User,
-    @Body() body: EnableModuleDTO
+    @Body() body: EnableModuleDTO,
   ) {
     if (user.role === UserRole.ADMIN && !body.connection) {
       return this.modulesService.toggleModule(slug, body)
@@ -42,9 +49,10 @@ export class ModulesController {
   }
 
   @Post(':slug/delete')
+  @Roles(UserRole.USER)
   public deleteModule(
     @Param('slug') slug: string,
-    @Body() body: EnableModuleDTO
+    @Body() body: EnableModuleDTO,
   ) {
     if (!body.connection) {
       throw new BadRequestException('Connection is required')

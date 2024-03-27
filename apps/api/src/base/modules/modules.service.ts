@@ -17,7 +17,7 @@ export class ModulesService {
     private readonly moduleSettingsRepository: Repository<ModuleSettings>,
     @InjectRepository(ConnectionModule)
     private readonly connectionModuleRepository: Repository<ConnectionModule>,
-    private connections: ConnectionsService
+    private connections: ConnectionsService,
   ) {}
 
   public async findEnabled(provider: string, module: string) {
@@ -46,7 +46,7 @@ export class ModulesService {
 
     const moduleSettings = await this.findModuleSettings(
       slug,
-      connection.provider.slug
+      connection.provider.slug,
     )
 
     if (!moduleSettings.enabled) {
@@ -55,7 +55,7 @@ export class ModulesService {
 
     const settings = await this.findConnectionModule(
       moduleSettings.module.id,
-      connection.id
+      connection.id,
     )
 
     return this.connectionModuleRepository.remove(settings)
@@ -66,7 +66,7 @@ export class ModulesService {
 
     const moduleSettings = await this.findModuleSettings(
       slug,
-      connection.provider.slug
+      connection.provider.slug,
     )
 
     if (!moduleSettings.enabled) {
@@ -75,7 +75,7 @@ export class ModulesService {
 
     const settings = await this.findConnectionModule(
       moduleSettings.module.id,
-      connection.id
+      connection.id,
     )
 
     settings.module = moduleSettings.module
@@ -159,6 +159,10 @@ export class ModulesService {
     })
 
     return settings
+  }
+
+  async getAll() {
+    return this.moduleRepository.find()
   }
 
   async getModules(provider: string) {
