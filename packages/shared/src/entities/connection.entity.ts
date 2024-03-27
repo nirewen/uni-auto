@@ -1,12 +1,14 @@
 import { Exclude } from 'class-transformer'
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm'
 import { ConnectionModule } from './connection-module.entity'
 import { ConnectionProfile } from './connection-profile.entity'
@@ -53,4 +55,10 @@ export class Connection {
     default: ConnectionType.STANDARD,
   })
   type: ConnectionType
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 }

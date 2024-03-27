@@ -28,9 +28,9 @@ export class ConnectionModule {
   @Column()
   enabled: boolean
 
-  @UpdateDateColumn()
-  updatedAt: Date
-
   @CreateDateColumn()
   createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 }

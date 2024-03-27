@@ -32,9 +32,9 @@ export class Queue {
   @Column()
   endpoint: string
 
-  @UpdateDateColumn()
-  updatedAt: Date
-
   @CreateDateColumn()
   createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 }
