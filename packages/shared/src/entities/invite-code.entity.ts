@@ -10,10 +10,24 @@ import {
 } from 'typeorm'
 import { User } from './user.entity'
 
+export enum InviteCodeRole {
+  ACCOUNT_ACTIVATION = 'ACCOUNT_ACTIVATION',
+}
+
 @Entity({ name: 'invite_codes' })
 export class InviteCode {
   @PrimaryGeneratedColumn('uuid')
   id: string
+
+  @Column({ unique: true, default: () => 'uuid_generate_v4()' })
+  code: string
+
+  @Column({
+    type: 'enum',
+    enum: InviteCodeRole,
+    default: InviteCodeRole.ACCOUNT_ACTIVATION,
+  })
+  role: InviteCodeRole
 
   @Column({ default: true })
   active: boolean

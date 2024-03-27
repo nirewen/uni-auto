@@ -1,12 +1,11 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { InviteCode } from '@uni-auto/shared/entities/invite-code.entity'
+import {
+  InviteCode,
+  InviteCodeRole,
+} from '@uni-auto/shared/entities/invite-code.entity'
 import { User } from '@uni-auto/shared/entities/user.entity'
+import { OkResponse } from 'src/common/filters/ok.exception'
 import { Repository } from 'typeorm'
 import { UsersService } from '../users/users.service'
 import { CreateInviteDto } from './dto/create-invite.dto'
@@ -29,7 +28,7 @@ export class InviteService {
     const user = await this.usersService.findOneById(reqUser.id)
     const invite = (await this.inviteRepository
       .findOne({
-        where: { id: code },
+        where: { code },
         relations: ['createdBy', 'usedBy', 'usableBy'],
       })
       .catch(e => null)) as InviteCode
@@ -55,12 +54,26 @@ export class InviteService {
     invite.active = false
 
     await this.inviteRepository.save(invite)
+    await this.inviteActionRole(user, invite)
 
-    user.active = true
+    return new OkResponse('Invite code used successfully')
+  }
 
-    await this.usersService.update(user)
+  async inviteActionRole(user: User, invite: InviteCode) {
+    switch (invite.role) {
+      case InviteCodeRole.ACCOUNT_ACTIVATION: {
+        user.active = true
 
-    return new HttpException('Invite code used successfully', HttpStatus.OK)
+        await this.usersService.update(user)
+
+        break
+      }
+      default: {
+        throw new BadRequestException(
+          'Invalid invite code role - Role action not implemented',
+        )
+      }
+    }
   }
 
   async createInvite(dto: CreateInviteDto) {
