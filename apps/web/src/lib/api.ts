@@ -11,6 +11,8 @@ export interface User {
   displayName: string
   avatarUrl: string
   role: string
+  active: boolean
+  provider: string
   createdAt: string
   updatedAt: string
   connections: Connection[]

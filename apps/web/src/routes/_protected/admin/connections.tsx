@@ -24,7 +24,16 @@ function ConnectionsComponent() {
         fallback={<Loader2Icon className="m-auto h-8 w-8 animate-spin" />}
       >
         <ScrollArea>
-          <DataTable columns={columns} data={connections.data!} />
+          <DataTable
+            columns={columns}
+            data={connections.data!}
+            initialSorting={[
+              {
+                id: 'profile',
+                desc: true,
+              },
+            ]}
+          />
           <ScrollBar orientation="horizontal" />
           <ScrollBar orientation="vertical" />
         </ScrollArea>

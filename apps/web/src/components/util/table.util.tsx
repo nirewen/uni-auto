@@ -13,6 +13,7 @@ export function SortingHeader<T>({ column, children }: SortingHeaderProps<T>) {
     <Button
       variant="ghost"
       size="sm"
+      className="-ml-2"
       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
     >
       {children}
