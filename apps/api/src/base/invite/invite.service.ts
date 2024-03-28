@@ -43,6 +43,10 @@ export class InviteService {
     if (invite.uses.length === invite.maxUses && invite.maxUses > 0) {
       throw new BadRequestException('Invite code has no more uses')
     }
+
+    if (invite.uses.find(use => use.usedBy.id === user.id)) {
+      throw new BadRequestException('Invite code already used by this user')
+    }
   }
 
   async useInvite(reqUser: User, code: string) {
@@ -50,7 +54,7 @@ export class InviteService {
     const invite = (await this.inviteRepository
       .findOne({
         where: { code },
-        relations: ['createdBy', 'usedBy', 'usableBy'],
+        relations: ['createdBy', 'uses.usedBy', 'usableBy'],
       })
       .catch(e => {
         console.log(e)
