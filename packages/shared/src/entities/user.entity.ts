@@ -3,13 +3,13 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 
 import { Connection } from './connection.entity'
 import { InviteCode } from './invite-code.entity'
+import { InviteUse } from './invite-use.entity'
 
 export enum UserRole {
   ADMIN = 'ADMIN',
@@ -48,8 +48,8 @@ export class User {
   @OneToMany(() => Connection, connection => connection.user)
   connections: Connection[]
 
-  @OneToOne(() => InviteCode, invite => invite.usedBy)
-  usedInvite: InviteCode
+  @OneToMany(() => InviteUse, use => use.usedBy)
+  usedInvites: InviteUse[]
 
   @OneToMany(() => InviteCode, invite => invite.createdBy)
   createdInvites: InviteCode[]

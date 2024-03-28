@@ -4,6 +4,7 @@ import {
   InviteCode,
   InviteCodeRole,
 } from '@uni-auto/shared/entities/invite-code.entity'
+import { InviteUse } from '@uni-auto/shared/entities/invite-use.entity'
 import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { OkResponse } from 'src/common/filters/ok.exception'
 import { Repository } from 'typeorm'
@@ -15,12 +16,14 @@ export class InviteService {
   constructor(
     @InjectRepository(InviteCode)
     private inviteRepository: Repository<InviteCode>,
+    @InjectRepository(InviteUse)
+    private inviteUseRepository: Repository<InviteUse>,
     private usersService: UsersService,
   ) {}
 
   getInvites() {
     return this.inviteRepository.find({
-      relations: ['createdBy', 'usedBy', 'usableBy'],
+      relations: ['createdBy', 'uses.usedBy', 'usableBy', 'assignedTo'],
     })
   }
 
@@ -33,15 +36,11 @@ export class InviteService {
       throw new BadRequestException('Invite code is no longer active')
     }
 
-    if (invite.usedBy) {
-      throw new BadRequestException('Invite code has already been used')
-    }
-
     if (invite.usableBy && invite.usableBy.id !== user.id) {
       throw new BadRequestException('Invite code is not usable by this user')
     }
 
-    if (invite.uses === 0) {
+    if (invite.uses.length === invite.maxUses && invite.maxUses > 0) {
       throw new BadRequestException('Invite code has no more uses')
     }
   }
@@ -53,21 +52,24 @@ export class InviteService {
         where: { code },
         relations: ['createdBy', 'usedBy', 'usableBy'],
       })
-      .catch(e => null)) as InviteCode
+      .catch(e => {
+        console.log(e)
+        return null
+      })) as InviteCode
 
     this.validateInvite(user, invite)
 
-    invite.usedBy = user
-    invite.usedAt = new Date()
+    const use = this.inviteUseRepository.create({
+      invite,
+      usedBy: user,
+    })
 
-    if (invite.uses > 0) {
-      if (invite.uses > 0) {
-        invite.uses--
-      }
+    invite.uses.push(use)
 
-      if (invite.uses === 0) {
-        invite.active = false
-      }
+    await this.inviteUseRepository.save(use)
+
+    if (invite.maxUses > 0) {
+      invite.active = invite.uses.length < invite.maxUses
     }
 
     await this.inviteRepository.save(invite)

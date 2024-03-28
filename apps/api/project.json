@@ -21,8 +21,15 @@
     },
     "build": {
       "executor": "nx:run-commands",
+      "inputs": [
+        "{workspaceRoot}/apps/api/src/**/*",
+        "{workspaceRoot}/apps/api/tsconfig.app.json",
+        "{workspaceRoot}/apps/api/tsconfig.json",
+        "{workspaceRoot}/packages/shared/src/**/*"
+      ],
       "outputs": [
-        "{workspaceRoot}/dist/apps/api"
+        "{workspaceRoot}/dist/apps/api",
+        "{workspaceRoot}/dist/packages/shared"
       ],
       "options": {
         "command": "nest build -p ./tsconfig.app.json",

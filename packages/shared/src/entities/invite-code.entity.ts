@@ -4,10 +4,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
+import { InviteUse } from './invite-use.entity'
 import { User } from './user.entity'
 
 export enum InviteCodeRole {
@@ -30,9 +31,6 @@ export class InviteCode {
   role: InviteCodeRole
 
   @Column({ default: 1 })
-  uses: number
-
-  @Column({ default: 1 })
   maxUses: number
 
   @Column({ default: true })
@@ -53,7 +51,7 @@ export class InviteCode {
   @ManyToOne(() => User, user => user.usableInvites, { cascade: false })
   usableBy: User
 
-  @OneToOne(() => User, user => user.usedInvite, { cascade: false })
+  @OneToMany(() => InviteUse, use => use.invite, { cascade: false })
   @JoinColumn()
-  usedBy: User
+  uses: InviteUse[]
 }
