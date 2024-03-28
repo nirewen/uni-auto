@@ -39,7 +39,7 @@ export function Copy({
   return (
     <div
       className={cn(
-        'px-2 py-1 bg-neutral-800 rounded-md border border-neutral-700 flex gap-2 items-center cursor-pointer w-min',
+        'px-2 py-1 bg-neutral-800 rounded-md border text-nowrap border-neutral-700 flex gap-2 items-center cursor-pointer w-min',
         className,
       )}
       onClick={copyToClipboard}

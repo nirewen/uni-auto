@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx'
+import { format } from 'date-fns'
 import { twMerge } from 'tailwind-merge'
 
 import { useQuery } from '@tanstack/react-query'
@@ -43,5 +44,5 @@ export const nameToInitials = (name: string) => {
 
 export const formatDate = (date: string) => {
   const d = new Date(date)
-  return d.toLocaleDateString('pt-BR')
+  return format(d, 'dd/MM/yyyy HH:mm')
 }

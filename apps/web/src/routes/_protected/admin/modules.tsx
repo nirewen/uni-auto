@@ -22,16 +22,7 @@ function ModulesComponent() {
         fallback={<Loader2Icon className="m-auto h-8 w-8 animate-spin" />}
       >
         <ScrollArea>
-          <DataTable
-            columns={columns}
-            data={modules.data!}
-            initialSorting={[
-              {
-                id: 'createdAt',
-                desc: false,
-              },
-            ]}
-          />
+          <DataTable columns={columns} data={modules.data!} />
           <ScrollBar orientation="horizontal" />
           <ScrollBar orientation="vertical" />
         </ScrollArea>

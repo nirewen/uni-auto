@@ -16,6 +16,10 @@ export interface User {
   createdAt: string
   updatedAt: string
   connections: Connection[]
+  usedInvites?: InviteUse[]
+  createdInvites?: InviteCode[]
+  assignedInvites?: InviteCode[]
+  usableInvites?: InviteCode[]
 }
 
 export interface Module {
@@ -68,6 +72,26 @@ export type ConnectionModule<Settings = Record<string, any>> = {
 
 export type ConnectionProfileHealth = {
   status: 'OK' | 'ERROR'
+}
+
+export type InviteUse = {
+  id: string
+  invite: InviteCode
+  usedBy: User
+  usedAt: string
+}
+
+export type InviteCode = {
+  id: string
+  code: string
+  role: string
+  maxUses: number
+  active: boolean
+  createdAt: string
+  createdBy: User
+  assignedTo: User
+  usableBy: User
+  uses: InviteUse[]
 }
 
 export const api = axios.create({
