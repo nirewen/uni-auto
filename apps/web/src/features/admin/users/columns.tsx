@@ -1,7 +1,7 @@
+import { ActiveStatus } from '@/components/active-status'
 import { SortingHeader } from '@/components/util/table.util'
 import { UserCard } from '@/features/connections/user/user-card'
 import { RoleIcon } from '@/features/connections/user/user-role'
-import { UserStatus } from '@/features/connections/user/user-status'
 import { User } from '@/lib/api'
 import { formatDate } from '@/lib/utils'
 import { ColumnDef } from '@tanstack/react-table'
@@ -14,7 +14,7 @@ export const columns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       return (
         <div className="-mr-12 flex items-center gap-1">
-          <UserStatus active={row.original.active} />
+          <ActiveStatus active={row.original.active} />
           <RoleIcon role={row.original.role} />
         </div>
       )

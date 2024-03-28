@@ -1,6 +1,15 @@
 import { ConnectionModule, Module, api } from '@/lib/api'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+export const useAllModules = () => {
+  return useQuery({
+    queryKey: ['all', 'modules'],
+    queryFn: async () => {
+      return api.get<Module[]>(`/modules`).then((res) => res.data)
+    },
+  })
+}
+
 export const useModules = (provider: string) => {
   return useQuery({
     queryKey: ['modules', provider],
