@@ -25,8 +25,8 @@ export function LoggedInUser({ className }: LoggedInUserProps) {
   const { signOut, user } = useAuth()
   const navigate = useNavigate()
   const actions = {
-    profile: () => navigate({ to: '/profile' }),
-    admin: () => navigate({ to: '/admin' }),
+    profile: () => navigate({ to: '/profile/' }),
+    admin: () => navigate({ to: '/admin/' }),
     signOut,
   }
 
