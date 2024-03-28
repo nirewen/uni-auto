@@ -1,9 +1,9 @@
 import { HeartPulseIcon } from 'lucide-react'
 
 import { Show } from '@/components/util/show'
-import { cn } from '@/lib/utils'
 
 import { ModuleSection } from '../[id]/module-section'
+import { ConnectionHealth } from '../connection-card/connection-health'
 import { ConnectionInfoLoader } from './connection-info.loader'
 
 type ConnectionInfoHealthProps = {
@@ -34,15 +34,7 @@ export function ConnectionInfoHealth({ health }: ConnectionInfoHealthProps) {
             <span>Alguns módulos podem não funcionar corretamente.</span>
             <span>Refaça a conexão para resolver.</span>
           </Show>
-          <span
-            className={cn('p-2 mt-auto rounded-md font-bold', {
-              'bg-green-700 text-white': health === 'OK',
-              'bg-red-600 text-white': health === 'ERROR',
-            })}
-          >
-            <Show when={health === 'OK'}>SAUDÁVEL</Show>
-            <Show when={health === 'ERROR'}>PROBLEMAS</Show>
-          </span>
+          <ConnectionHealth health={health} />
         </div>
       </ModuleSection.Body>
     </ModuleSection.Root>

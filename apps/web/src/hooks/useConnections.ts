@@ -15,6 +15,14 @@ export const useConnections = () => {
   })
 }
 
+export const useAllConnections = () => {
+  return useQuery({
+    queryKey: ['all', 'connections'],
+    queryFn: () =>
+      api.get<Connection[]>('/connections').then((res) => res.data),
+  })
+}
+
 export const useConnection = (connectionId: string) => {
   return useQuery({
     queryKey: ['connection', connectionId],

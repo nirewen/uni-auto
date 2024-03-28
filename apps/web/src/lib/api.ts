@@ -35,8 +35,10 @@ export interface Connection {
   id: string
   identifier: string
   provider: Provider
+  profile?: ConnectionProfile
   modules?: ModuleSettings[]
   type: string
+  user?: User
 }
 
 export interface Provider {
@@ -50,6 +52,7 @@ export interface ConnectionProfile {
   displayName: string
   avatarUrl: string
   connection: Connection
+  updatedAt: string
 }
 
 export type ConnectionModule<Settings = Record<string, any>> = {

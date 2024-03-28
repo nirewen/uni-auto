@@ -1,8 +1,8 @@
 import { GraduationCapIcon } from 'lucide-react'
 
 import { Provider } from '@/lib/api'
-import { cn, universityLogos } from '@/lib/utils'
 
+import { ProviderCard } from '@/features/connections/provider/provider-card'
 import { ModuleSection } from '../[id]/module-section'
 import { ConnectionInfoLoader } from './connection-info.loader'
 
@@ -29,21 +29,7 @@ export function ConnectionInfoProvider({
           <span>
             O login que você usou para adicionar a conexão ao sistema.
           </span>
-          <div
-            className={cn(
-              'p-2 h-9 rounded-md mt-auto flex items-center gap-2',
-              {
-                'bg-provider-ufsm': provider?.slug === 'ufsm',
-              },
-            )}
-          >
-            <img
-              className="aspect-square h-full w-auto rounded-full bg-neutral-800"
-              src={universityLogos[provider?.slug ?? 'none']}
-              alt={`Logo da ${provider?.name}`}
-            />
-            <span className="text-sm font-bold">{provider?.name}</span>
-          </div>
+          <ProviderCard provider={provider} />
         </div>
       </ModuleSection.Body>
     </ModuleSection.Root>

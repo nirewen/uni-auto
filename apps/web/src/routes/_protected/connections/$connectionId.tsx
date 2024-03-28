@@ -1,4 +1,4 @@
-import { ConnectionCard } from '@/features/connections/components/connection-card'
+import { ConnectionProfileWideCard } from '@/features/connections/components/connection-card/connection-profile'
 import { useConnection } from '@/hooks/useConnections'
 import {
   Navigate,
@@ -36,7 +36,7 @@ function ConnectionIdLayoutComponent() {
       <Helmet
         title={`UniAuto \u007C ${connection.data?.provider.name} - ${connection.data?.identifier}`}
       />
-      <ConnectionCard />
+      <ConnectionProfileWideCard />
       <Outlet />
     </>
   )

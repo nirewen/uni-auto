@@ -1,9 +1,9 @@
 import { Loader2Icon, PuzzleIcon } from 'lucide-react'
 
 import { Show } from '@/components/util/show'
-import { cn } from '@/lib/utils'
 
 import { ModuleSection } from '../[id]/module-section'
+import { ConnectionType } from '../connection-card/connection-type'
 import { ConnectionInfoLoader } from './connection-info.loader'
 
 export function ConnectionInfoType({ type }: { type?: string }) {
@@ -37,14 +37,7 @@ export function ConnectionInfoType({ type }: { type?: string }) {
                 mais segurança
               </span>
             </Show>
-            <span
-              className={cn('p-2 mt-auto rounded-md font-bold', {
-                'bg-green-700 text-white': type === 'STANDARD',
-                'bg-amber-600 text-white': type === 'LEGACY',
-              })}
-            >
-              {type}
-            </span>
+            <ConnectionType type={type} />
           </div>
         </Show>
       </ModuleSection.Body>

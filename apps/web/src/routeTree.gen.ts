@@ -15,11 +15,18 @@ import { Route as ProtectedImport } from './routes/_protected'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthIndexImport } from './routes/auth/index'
 import { Route as ProtectedConnectionsImport } from './routes/_protected/connections'
+import { Route as ProtectedAdminImport } from './routes/_protected/admin'
 import { Route as AuthLoginIndexImport } from './routes/auth/login/index'
 import { Route as AuthCallbackIndexImport } from './routes/auth/callback/index'
 import { Route as ProtectedProfileIndexImport } from './routes/_protected/profile/index'
 import { Route as ProtectedConnectionsIndexImport } from './routes/_protected/connections/index'
+import { Route as ProtectedAdminIndexImport } from './routes/_protected/admin/index'
 import { Route as ProtectedConnectionsConnectionIdImport } from './routes/_protected/connections/$connectionId'
+import { Route as ProtectedAdminUsersImport } from './routes/_protected/admin/users'
+import { Route as ProtectedAdminQueueImport } from './routes/_protected/admin/queue'
+import { Route as ProtectedAdminModulesImport } from './routes/_protected/admin/modules'
+import { Route as ProtectedAdminInvitesImport } from './routes/_protected/admin/invites'
+import { Route as ProtectedAdminConnectionsImport } from './routes/_protected/admin/connections'
 import { Route as ProtectedConnectionsConnectionIdIndexImport } from './routes/_protected/connections/$connectionId/index'
 import { Route as ProtectedConnectionsConnectionIdModuleSlugImport } from './routes/_protected/connections/$connectionId/$moduleSlug'
 import { Route as ProtectedConnectionsNewUfsmIndexImport } from './routes/_protected/connections/new/ufsm/index'
@@ -47,6 +54,11 @@ const ProtectedConnectionsRoute = ProtectedConnectionsImport.update({
   getParentRoute: () => ProtectedRoute,
 } as any)
 
+const ProtectedAdminRoute = ProtectedAdminImport.update({
+  path: '/admin',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+
 const AuthLoginIndexRoute = AuthLoginIndexImport.update({
   path: '/auth/login/',
   getParentRoute: () => rootRoute,
@@ -67,11 +79,41 @@ const ProtectedConnectionsIndexRoute = ProtectedConnectionsIndexImport.update({
   getParentRoute: () => ProtectedConnectionsRoute,
 } as any)
 
+const ProtectedAdminIndexRoute = ProtectedAdminIndexImport.update({
+  path: '/',
+  getParentRoute: () => ProtectedAdminRoute,
+} as any)
+
 const ProtectedConnectionsConnectionIdRoute =
   ProtectedConnectionsConnectionIdImport.update({
     path: '/$connectionId',
     getParentRoute: () => ProtectedConnectionsRoute,
   } as any)
+
+const ProtectedAdminUsersRoute = ProtectedAdminUsersImport.update({
+  path: '/users',
+  getParentRoute: () => ProtectedAdminRoute,
+} as any)
+
+const ProtectedAdminQueueRoute = ProtectedAdminQueueImport.update({
+  path: '/queue',
+  getParentRoute: () => ProtectedAdminRoute,
+} as any)
+
+const ProtectedAdminModulesRoute = ProtectedAdminModulesImport.update({
+  path: '/modules',
+  getParentRoute: () => ProtectedAdminRoute,
+} as any)
+
+const ProtectedAdminInvitesRoute = ProtectedAdminInvitesImport.update({
+  path: '/invites',
+  getParentRoute: () => ProtectedAdminRoute,
+} as any)
+
+const ProtectedAdminConnectionsRoute = ProtectedAdminConnectionsImport.update({
+  path: '/connections',
+  getParentRoute: () => ProtectedAdminRoute,
+} as any)
 
 const ProtectedConnectionsConnectionIdIndexRoute =
   ProtectedConnectionsConnectionIdIndexImport.update({
@@ -109,6 +151,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedImport
       parentRoute: typeof rootRoute
     }
+    '/_protected/admin': {
+      preLoaderRoute: typeof ProtectedAdminImport
+      parentRoute: typeof ProtectedImport
+    }
     '/_protected/connections': {
       preLoaderRoute: typeof ProtectedConnectionsImport
       parentRoute: typeof ProtectedImport
@@ -117,9 +163,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexImport
       parentRoute: typeof rootRoute
     }
+    '/_protected/admin/connections': {
+      preLoaderRoute: typeof ProtectedAdminConnectionsImport
+      parentRoute: typeof ProtectedAdminImport
+    }
+    '/_protected/admin/invites': {
+      preLoaderRoute: typeof ProtectedAdminInvitesImport
+      parentRoute: typeof ProtectedAdminImport
+    }
+    '/_protected/admin/modules': {
+      preLoaderRoute: typeof ProtectedAdminModulesImport
+      parentRoute: typeof ProtectedAdminImport
+    }
+    '/_protected/admin/queue': {
+      preLoaderRoute: typeof ProtectedAdminQueueImport
+      parentRoute: typeof ProtectedAdminImport
+    }
+    '/_protected/admin/users': {
+      preLoaderRoute: typeof ProtectedAdminUsersImport
+      parentRoute: typeof ProtectedAdminImport
+    }
     '/_protected/connections/$connectionId': {
       preLoaderRoute: typeof ProtectedConnectionsConnectionIdImport
       parentRoute: typeof ProtectedConnectionsImport
+    }
+    '/_protected/admin/': {
+      preLoaderRoute: typeof ProtectedAdminIndexImport
+      parentRoute: typeof ProtectedAdminImport
     }
     '/_protected/connections/': {
       preLoaderRoute: typeof ProtectedConnectionsIndexImport
@@ -161,6 +231,14 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
   ProtectedRoute.addChildren([
+    ProtectedAdminRoute.addChildren([
+      ProtectedAdminConnectionsRoute,
+      ProtectedAdminInvitesRoute,
+      ProtectedAdminModulesRoute,
+      ProtectedAdminQueueRoute,
+      ProtectedAdminUsersRoute,
+      ProtectedAdminIndexRoute,
+    ]),
     ProtectedConnectionsRoute.addChildren([
       ProtectedConnectionsConnectionIdRoute.addChildren([
         ProtectedConnectionsConnectionIdModuleSlugRoute.addChildren([

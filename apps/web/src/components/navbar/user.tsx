@@ -1,7 +1,12 @@
 import { useAuth } from '@/context/auth-provider'
 import { cn } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
-import { LogInIcon, LogOutIcon, SquareUserRoundIcon } from 'lucide-react'
+import {
+  LockIcon,
+  LogInIcon,
+  LogOutIcon,
+  SquareUserRoundIcon,
+} from 'lucide-react'
 import { Button } from '../ui/button'
 import {
   DropdownMenu,
@@ -10,6 +15,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
+import { Show } from '../util/show'
 
 export type LoggedInUserProps = {
   className?: string
@@ -19,9 +25,8 @@ export function LoggedInUser({ className }: LoggedInUserProps) {
   const { signOut, user } = useAuth()
   const navigate = useNavigate()
   const actions = {
-    profile: () => {
-      navigate({ to: '/profile' })
-    },
+    profile: () => navigate({ to: '/profile' }),
+    admin: () => navigate({ to: '/admin' }),
     signOut,
   }
 
@@ -59,6 +64,12 @@ export function LoggedInUser({ className }: LoggedInUserProps) {
           <SquareUserRoundIcon className="mr-2 h-4 w-4" />
           <span>Perfil</span>
         </DropdownMenuItem>
+        <Show when={user.role === 'ADMIN'}>
+          <DropdownMenuItem onClick={actions.admin}>
+            <LockIcon className="mr-2 h-4 w-4" />
+            <span>Painel admin</span>
+          </DropdownMenuItem>
+        </Show>
         <DropdownMenuItem onClick={actions.signOut}>
           <LogOutIcon className="mr-2 h-4 w-4" />
           <span>Encerrar sessão</span>
