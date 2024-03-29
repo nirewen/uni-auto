@@ -21,7 +21,7 @@ function UsersComponent() {
         when={!users.isLoading && !!users.data}
         fallback={<Loader2Icon className="m-auto h-8 w-8 animate-spin" />}
       >
-        <ScrollArea>
+        <ScrollArea className="h-full">
           <DataTable
             columns={columns}
             data={users.data!}

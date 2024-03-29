@@ -1,13 +1,13 @@
 import { Copy } from '@/components/copy'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card'
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { DateSpan } from '@/components/util/table.util'
 import { InviteUse } from '@/lib/api'
-import { formatDate, nameToInitials } from '@/lib/utils'
+import { nameToInitials } from '@/lib/utils'
 import { CalendarDaysIcon, TagIcon } from 'lucide-react'
 
 type InviteUseProps = {
@@ -18,22 +18,16 @@ export function InviteUseCard({ use }: InviteUseProps) {
   if (!use) return null
 
   return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="justify-start gap-2 truncate rounded-full p-2"
-        >
-          <Avatar className="h-5 w-5">
-            <AvatarImage className="object-cover" src={use.usedBy.avatarUrl} />
-            <AvatarFallback>
-              {nameToInitials(use.usedBy.displayName)}
-            </AvatarFallback>
-          </Avatar>
-        </Button>
-      </HoverCardTrigger>
-      <HoverCardContent align="start" className="w-fit">
+    <Popover>
+      <PopoverTrigger asChild>
+        <Avatar className="h-9 w-9 cursor-pointer border-[7px] border-background ring-1 ring-input hover:border-accent">
+          <AvatarImage className="object-cover" src={use.usedBy.avatarUrl} />
+          <AvatarFallback>
+            {nameToInitials(use.usedBy.displayName)}
+          </AvatarFallback>
+        </Avatar>
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-fit">
         <div className="flex space-x-4">
           <Avatar className="h-16 w-16">
             <AvatarImage className="object-cover" src={use.usedBy.avatarUrl} />
@@ -50,12 +44,12 @@ export function InviteUseCard({ use }: InviteUseProps) {
             <div className="flex items-center pt-2">
               <CalendarDaysIcon className="mr-2 h-4 w-4 opacity-70" />{' '}
               <span className="text-xs text-muted-foreground">
-                Usado em {formatDate(use.usedAt)}
+                Usado em <DateSpan date={use.usedAt} />
               </span>
             </div>
           </div>
         </div>
-      </HoverCardContent>
-    </HoverCard>
+      </PopoverContent>
+    </Popover>
   )
 }

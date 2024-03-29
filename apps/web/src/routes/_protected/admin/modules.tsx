@@ -21,7 +21,7 @@ function ModulesComponent() {
         when={!modules.isLoading && !!modules.data}
         fallback={<Loader2Icon className="m-auto h-8 w-8 animate-spin" />}
       >
-        <ScrollArea>
+        <ScrollArea className="h-full">
           <DataTable columns={columns} data={modules.data!} />
           <ScrollBar orientation="horizontal" />
           <ScrollBar orientation="vertical" />

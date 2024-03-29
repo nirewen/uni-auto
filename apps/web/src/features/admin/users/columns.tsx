@@ -1,9 +1,8 @@
 import { ActiveStatus } from '@/components/active-status'
-import { SortingHeader } from '@/components/util/table.util'
+import { DateSpan, SortingHeader } from '@/components/util/table.util'
 import { UserCard } from '@/features/connections/user/user-card'
 import { RoleIcon } from '@/features/connections/user/user-role'
 import { User } from '@/lib/api'
-import { formatDate } from '@/lib/utils'
 import { ColumnDef } from '@tanstack/react-table'
 
 export const columns: ColumnDef<User>[] = [
@@ -22,9 +21,9 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: 'displayName',
-    header: ({ column }) => {
-      return <SortingHeader column={column}>Perfil</SortingHeader>
-    },
+    header: ({ column }) => (
+      <SortingHeader column={column}>Perfil</SortingHeader>
+    ),
     cell: ({ row }) => {
       return (
         <div className="flex gap-1">
@@ -44,12 +43,10 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: 'createdAt',
-    header: ({ column }) => {
-      return <SortingHeader column={column}>Criado em</SortingHeader>
-    },
-    cell: ({ row }) => {
-      return formatDate(row.original.createdAt)
-    },
+    header: ({ column }) => (
+      <SortingHeader column={column}>Criado em</SortingHeader>
+    ),
+    cell: ({ row }) => <DateSpan date={row.original.createdAt} />,
     sortingFn: 'datetime',
   },
   {
@@ -57,9 +54,7 @@ export const columns: ColumnDef<User>[] = [
     header: ({ column }) => {
       return <SortingHeader column={column}>Atualizado em</SortingHeader>
     },
-    cell: ({ row }) => {
-      return formatDate(row.original.updatedAt)
-    },
+    cell: ({ row }) => <DateSpan date={row.original.updatedAt} />,
     sortingFn: 'datetime',
   },
 ]

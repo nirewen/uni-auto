@@ -2,13 +2,14 @@ import { Copy } from '@/components/copy'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card'
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { DateSpan } from '@/components/util/table.util'
 import { useConnectionProfile } from '@/hooks/useConnections'
 import { Connection } from '@/lib/api'
-import { formatDate, nameToInitials } from '@/lib/utils'
+import { nameToInitials } from '@/lib/utils'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { CalendarDaysIcon, SettingsIcon, TagIcon } from 'lucide-react'
 import {
@@ -59,8 +60,8 @@ export function ConnectionProfileCard({ connection }: ConnectionProfileProps) {
   if (!profile) return null
 
   return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
+    <Popover>
+      <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="justify-start gap-2">
           <Avatar className="h-5 w-5">
             <AvatarImage className="object-cover" src={profile.avatarUrl} />
@@ -70,8 +71,8 @@ export function ConnectionProfileCard({ connection }: ConnectionProfileProps) {
           </Avatar>
           <span className="truncate">{profile.displayName}</span>
         </Button>
-      </HoverCardTrigger>
-      <HoverCardContent align="start" className="w-80">
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-80">
         <div className="flex space-x-4">
           <Avatar className="h-16 w-16">
             <AvatarImage className="object-cover" src={profile.avatarUrl} />
@@ -88,12 +89,12 @@ export function ConnectionProfileCard({ connection }: ConnectionProfileProps) {
             <div className="flex items-center pt-2">
               <CalendarDaysIcon className="mr-2 h-4 w-4 opacity-70" />{' '}
               <span className="text-xs text-muted-foreground">
-                Atualizado em {formatDate(profile.updatedAt)}
+                Atualizado em <DateSpan date={profile.updatedAt} />
               </span>
             </div>
           </div>
         </div>
-      </HoverCardContent>
-    </HoverCard>
+      </PopoverContent>
+    </Popover>
   )
 }

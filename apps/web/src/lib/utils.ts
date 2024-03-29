@@ -1,5 +1,4 @@
 import { clsx, type ClassValue } from 'clsx'
-import { format } from 'date-fns'
 import { twMerge } from 'tailwind-merge'
 
 import { useQuery } from '@tanstack/react-query'
@@ -39,10 +38,5 @@ export const sleep = (ms: number) =>
 
 export const nameToInitials = (name: string) => {
   const [firstName, lastName] = name.split(' ')
-  return firstName[0] + lastName?.at(0)
-}
-
-export const formatDate = (date: string) => {
-  const d = new Date(date)
-  return format(d, 'dd/MM/yyyy HH:mm')
+  return (firstName[0] + (lastName?.at(0) ?? '')).toUpperCase()
 }

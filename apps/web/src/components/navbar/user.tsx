@@ -1,12 +1,7 @@
 import { useAuth } from '@/context/auth-provider'
 import { cn } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
-import {
-  LockIcon,
-  LogInIcon,
-  LogOutIcon,
-  SquareUserRoundIcon,
-} from 'lucide-react'
+import { LockIcon, LogInIcon, LogOutIcon, UserRoundIcon } from 'lucide-react'
 import { Button } from '../ui/button'
 import {
   DropdownMenu,
@@ -61,7 +56,7 @@ export function LoggedInUser({ className }: LoggedInUserProps) {
       <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
         <DropdownMenuItem onClick={actions.profile}>
-          <SquareUserRoundIcon className="mr-2 h-4 w-4" />
+          <UserRoundIcon className="mr-2 h-4 w-4" />
           <span>Perfil</span>
         </DropdownMenuItem>
         <Show when={user.role === 'ADMIN'}>
