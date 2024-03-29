@@ -25,40 +25,41 @@ import { Pagination } from './pagination'
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[]
   data: Paginated<TData>
-  pagination?: {
-    value: PaginationState
-    update: React.Dispatch<React.SetStateAction<PaginationState>>
-  }
-  sorting?: {
-    value: SortingState
-    update: React.Dispatch<React.SetStateAction<SortingState>>
-  }
-  filter?: {
-    value: string
-    update: React.Dispatch<React.SetStateAction<string>>
-  }
+  filter?: readonly [string, React.Dispatch<React.SetStateAction<string>>]
+  pagination?: readonly [
+    PaginationState,
+    React.Dispatch<React.SetStateAction<PaginationState>>,
+  ]
+  sorting?: readonly [
+    SortingState,
+    React.Dispatch<React.SetStateAction<SortingState>>,
+  ]
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  filter,
-  sorting,
-  pagination,
+  filter: filterState,
+  sorting: sortingState,
+  pagination: paginationState,
 }: DataTableProps<TData, TValue>) {
+  const [filter, setFilter] = filterState ?? []
+  const [sorting, setSorting] = sortingState ?? []
+  const [pagination, setPagination] = paginationState ?? []
+
   const table = useReactTable({
     data: data.items,
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualSorting: true,
-    onSortingChange: sorting?.update,
+    onSortingChange: setSorting,
     manualPagination: true,
     rowCount: data.meta.totalItems,
-    onPaginationChange: pagination?.update,
+    onPaginationChange: setPagination,
     state: {
-      sorting: sorting?.value,
-      pagination: pagination?.value,
-      globalFilter: filter?.value,
+      sorting: sorting,
+      pagination: pagination,
+      globalFilter: filter,
     },
     defaultColumn: {
       size: 0,
@@ -70,12 +71,12 @@ export function DataTable<TData, TValue>({
     <div className="p-1">
       <Show when={!!filter || !!pagination}>
         <div className="flex items-center gap-2">
-          <Show when={!!filter}>
+          <Show when={filter !== undefined}>
             <Input
               type="search"
               placeholder="Pesquisar..."
-              value={filter?.value ?? ''}
-              onChange={(e) => filter?.update(e.target.value)}
+              value={filter ?? ''}
+              onChange={(e) => setFilter!(e.target.value)}
               className="flex-1"
             />
           </Show>
@@ -83,7 +84,7 @@ export function DataTable<TData, TValue>({
             <Pagination
               className={cn({ 'mr-auto': !!filter })}
               table={table}
-              setPagination={pagination!.update}
+              setPagination={setPagination!}
             />
           </Show>
         </div>

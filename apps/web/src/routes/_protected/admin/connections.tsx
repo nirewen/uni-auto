@@ -1,33 +1,27 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { Loader2Icon } from 'lucide-react'
 
-import { columns } from '@/features/admin/connections/columns'
+import { TableQuery } from '@/lib/api'
 
 import { DataTable } from '@/components/ui/data-table'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Show } from '@/components/util/show'
+import { columns } from '@/features/admin/connections/columns'
+
+import { useTableFilter } from '@/hooks/table/useTableFilter'
+import { useTablePagination } from '@/hooks/table/useTablePagination'
+import { useTableSorting } from '@/hooks/table/useTableSorting'
 import { useAllConnections } from '@/hooks/useConnections'
-import useDebounce from '@/hooks/useDebounce'
-import { TableQuery } from '@/lib/api'
-import { PaginationState, SortingState } from '@tanstack/react-table'
-import { Loader2Icon } from 'lucide-react'
-import React from 'react'
 
 export const Route = createFileRoute('/_protected/admin/connections')({
   component: ConnectionsComponent,
 })
 
 function ConnectionsComponent() {
-  const [filterState, setFilter] = React.useState<string>('')
-  const [paginationState, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
-  const [sortingState, setSorting] = React.useState<SortingState>([
+  const [filter, filterState] = useTableFilter()
+  const [pagination, paginationState] = useTablePagination()
+  const [sorting, sortingState] = useTableSorting([
     { id: 'profile_displayName', desc: true },
   ])
-  const filter = useDebounce(filterState, 500)
-  const pagination = useDebounce(paginationState, 500)
-  const sorting = useDebounce(sortingState, 500)
   const connections = useAllConnections(
     new TableQuery({ filter, pagination, sorting }),
   )
@@ -40,26 +34,13 @@ function ConnectionsComponent() {
         when={!connections.isLoading && !!connections.data}
         fallback={<Loader2Icon className="m-auto h-8 w-8 animate-spin" />}
       >
-        <ScrollArea className="h-full">
-          <DataTable
-            columns={columns}
-            data={connections.data!}
-            filter={{
-              value: filterState,
-              update: setFilter,
-            }}
-            pagination={{
-              value: paginationState,
-              update: setPagination,
-            }}
-            sorting={{
-              value: sortingState,
-              update: setSorting,
-            }}
-          />
-          <ScrollBar orientation="horizontal" />
-          <ScrollBar orientation="vertical" />
-        </ScrollArea>
+        <DataTable
+          columns={columns}
+          data={connections.data!}
+          filter={filterState}
+          pagination={paginationState}
+          sorting={sortingState}
+        />
       </Show>
     </div>
   )

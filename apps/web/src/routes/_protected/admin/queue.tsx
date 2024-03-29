@@ -1,30 +1,25 @@
+import { createFileRoute } from '@tanstack/react-router'
+import { Loader2Icon } from 'lucide-react'
+
+import { TableQuery } from '@/lib/api'
+
 import { DataTable } from '@/components/ui/data-table'
 import { Show } from '@/components/util/show'
 import { columns } from '@/features/admin/queue/columns'
-import useDebounce from '@/hooks/useDebounce'
+
+import { useTableFilter } from '@/hooks/table/useTableFilter'
+import { useTablePagination } from '@/hooks/table/useTablePagination'
+import { useTableSorting } from '@/hooks/table/useTableSorting'
 import { useQueue } from '@/hooks/useQueue'
-import { TableQuery } from '@/lib/api'
-import { createFileRoute } from '@tanstack/react-router'
-import { PaginationState, SortingState } from '@tanstack/react-table'
-import { Loader2Icon } from 'lucide-react'
-import React from 'react'
 
 export const Route = createFileRoute('/_protected/admin/queue')({
   component: QueueComponent,
 })
 
 function QueueComponent() {
-  const [filterState, setFilter] = React.useState<string>('')
-  const [paginationState, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
-  const [sortingState, setSorting] = React.useState<SortingState>([
-    { id: 'createdAt', desc: true },
-  ])
-  const filter = useDebounce(filterState, 500)
-  const pagination = useDebounce(paginationState, 500)
-  const sorting = useDebounce(sortingState, 500)
+  const [filter, filterState] = useTableFilter()
+  const [pagination, paginationState] = useTablePagination()
+  const [sorting, sortingState] = useTableSorting()
   const queue = useQueue(new TableQuery({ filter, pagination, sorting }))
 
   return (
@@ -38,18 +33,9 @@ function QueueComponent() {
         <DataTable
           columns={columns}
           data={queue.data!}
-          filter={{
-            value: filterState,
-            update: setFilter,
-          }}
-          pagination={{
-            value: paginationState,
-            update: setPagination,
-          }}
-          sorting={{
-            value: sortingState,
-            update: setSorting,
-          }}
+          filter={filterState}
+          pagination={paginationState}
+          sorting={sortingState}
         />
       </Show>
     </div>

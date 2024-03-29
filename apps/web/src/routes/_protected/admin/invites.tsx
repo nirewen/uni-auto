@@ -1,31 +1,25 @@
+import { createFileRoute } from '@tanstack/react-router'
+import { Loader2Icon } from 'lucide-react'
+
+import { TableQuery } from '@/lib/api'
+
 import { DataTable } from '@/components/ui/data-table'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Show } from '@/components/util/show'
 import { columns } from '@/features/admin/invites/columns'
-import useDebounce from '@/hooks/useDebounce'
+
+import { useTableFilter } from '@/hooks/table/useTableFilter'
+import { useTablePagination } from '@/hooks/table/useTablePagination'
+import { useTableSorting } from '@/hooks/table/useTableSorting'
 import { useAllInvites } from '@/hooks/useInvites'
-import { TableQuery } from '@/lib/api'
-import { createFileRoute } from '@tanstack/react-router'
-import { PaginationState, SortingState } from '@tanstack/react-table'
-import { Loader2Icon } from 'lucide-react'
-import React from 'react'
 
 export const Route = createFileRoute('/_protected/admin/invites')({
   component: InvitesComponent,
 })
 
 function InvitesComponent() {
-  const [filterState, setFilter] = React.useState<string>('')
-  const [paginationState, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
-  const [sortingState, setSorting] = React.useState<SortingState>([
-    { id: 'createdAt', desc: true },
-  ])
-  const filter = useDebounce(filterState, 500)
-  const pagination = useDebounce(paginationState, 500)
-  const sorting = useDebounce(sortingState, 500)
+  const [filter, filterState] = useTableFilter()
+  const [pagination, paginationState] = useTablePagination()
+  const [sorting, sortingState] = useTableSorting()
   const invites = useAllInvites(new TableQuery({ filter, pagination, sorting }))
 
   return (
@@ -36,26 +30,13 @@ function InvitesComponent() {
         when={!invites.isLoading && !!invites.data}
         fallback={<Loader2Icon className="m-auto h-8 w-8 animate-spin" />}
       >
-        <ScrollArea className="h-full">
-          <DataTable
-            columns={columns}
-            data={invites.data!}
-            filter={{
-              value: filterState,
-              update: setFilter,
-            }}
-            pagination={{
-              value: paginationState,
-              update: setPagination,
-            }}
-            sorting={{
-              value: sortingState,
-              update: setSorting,
-            }}
-          />
-          <ScrollBar orientation="horizontal" />
-          <ScrollBar orientation="vertical" />
-        </ScrollArea>
+        <DataTable
+          columns={columns}
+          data={invites.data!}
+          filter={filterState}
+          pagination={paginationState}
+          sorting={sortingState}
+        />
       </Show>
     </div>
   )
