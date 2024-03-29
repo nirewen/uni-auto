@@ -4,16 +4,27 @@ import { ArrowLeftIcon, ArrowRightIcon, MoreHorizontalIcon } from 'lucide-react'
 import { For } from '../util/for'
 import { Show } from '../util/show'
 import { Button } from './button'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from './select'
 
 type PaginationProps = {
   className: string
   table: Table<any>
+  pagination: PaginationState
   setPagination: React.Dispatch<React.SetStateAction<PaginationState>>
 }
 
 export function Pagination({
   className,
   table,
+  pagination,
   setPagination,
 }: PaginationProps) {
   const pageCount = table.getPageCount()
@@ -63,7 +74,7 @@ export function Pagination({
         onClick={() => table.previousPage()}
         disabled={!table.getCanPreviousPage()}
       >
-        <ArrowLeftIcon />
+        <ArrowLeftIcon className="h-5 w-5" />
       </Button>
       <Button
         variant="outline"
@@ -124,8 +135,28 @@ export function Pagination({
         onClick={() => table.nextPage()}
         disabled={!table.getCanNextPage()}
       >
-        <ArrowRightIcon />
+        <ArrowRightIcon className="h-5 w-5" />
       </Button>
+      <Select
+        onValueChange={(value) =>
+          setPagination((prev) => ({ ...prev, pageSize: parseInt(value) }))
+        }
+        value={pagination.pageSize.toString()}
+      >
+        <SelectTrigger className="w-16">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Por página</SelectLabel>
+            <For each={[10, 15, 20, 30, 50]}>
+              {(value) => {
+                return <SelectItem value={value.toString()}>{value}</SelectItem>
+              }}
+            </For>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
     </div>
   )
 }

@@ -4,7 +4,6 @@ import { Loader2Icon } from 'lucide-react'
 import { TableQuery } from '@/lib/api'
 
 import { DataTable } from '@/components/ui/data-table'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Show } from '@/components/util/show'
 import { columns } from '@/features/admin/connections/columns'
 
@@ -35,17 +34,13 @@ function ConnectionsComponent() {
         when={!query.isLoading && !!query.data}
         fallback={<Loader2Icon className="m-auto h-8 w-8 animate-spin" />}
       >
-        <ScrollArea>
-          <DataTable
-            columns={columns}
-            data={query.data!}
-            filter={filterState}
-            pagination={paginationState}
-            sorting={sortingState}
-          />
-          <ScrollBar orientation="horizontal" />
-          <ScrollBar orientation="vertical" />
-        </ScrollArea>
+        <DataTable
+          columns={columns}
+          data={query.data!}
+          filter={filterState}
+          pagination={paginationState}
+          sorting={sortingState}
+        />
       </Show>
     </div>
   )

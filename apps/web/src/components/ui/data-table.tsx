@@ -25,12 +25,12 @@ import { Pagination } from './pagination'
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[]
   data: Paginated<TData>
-  filter?: readonly [string, React.Dispatch<React.SetStateAction<string>>]
-  pagination?: readonly [
+  filter: readonly [string, React.Dispatch<React.SetStateAction<string>>]
+  pagination: readonly [
     PaginationState,
     React.Dispatch<React.SetStateAction<PaginationState>>,
   ]
-  sorting?: readonly [
+  sorting: readonly [
     SortingState,
     React.Dispatch<React.SetStateAction<SortingState>>,
   ]
@@ -43,9 +43,9 @@ export function DataTable<TData, TValue>({
   sorting: sortingState,
   pagination: paginationState,
 }: DataTableProps<TData, TValue>) {
-  const [filter, setFilter] = filterState ?? []
-  const [sorting, setSorting] = sortingState ?? []
-  const [pagination, setPagination] = paginationState ?? []
+  const [filter, setFilter] = filterState
+  const [sorting, setSorting] = sortingState
+  const [pagination, setPagination] = paginationState
 
   const table = useReactTable({
     data: data.items,
@@ -68,7 +68,7 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div className="p-1">
+    <div className="flex flex-col overflow-hidden p-1">
       <Show when={!!filter || !!pagination}>
         <div className="flex items-center gap-2">
           <Show when={filter !== undefined}>
@@ -84,12 +84,13 @@ export function DataTable<TData, TValue>({
             <Pagination
               className={cn({ 'mr-auto': !!filter })}
               table={table}
+              pagination={pagination}
               setPagination={setPagination!}
             />
           </Show>
         </div>
       </Show>
-      <div className="rounded-md border">
+      <div className="flex flex-col overflow-auto rounded-md border">
         <Table className="table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

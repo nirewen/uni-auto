@@ -19,7 +19,7 @@ function LayoutComponent() {
   }
 
   return (
-    <main className="flex w-full max-w-7xl flex-1 flex-col gap-2 p-2 py-8 dark:text-white md:m-auto">
+    <main className="flex max-h-full w-full max-w-7xl flex-1 flex-col gap-2 p-2 py-8 dark:text-white md:m-auto">
       <Navbar />
       <Show when={!!user.data && isAuthenticated && !user.data.active}>
         <Activation />
