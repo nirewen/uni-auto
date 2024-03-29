@@ -19,13 +19,20 @@ export const columns: ColumnDef<InviteCode>[] = [
   {
     accessorKey: 'code',
     header: 'Código',
+    size: 320,
     cell: ({ row }) => {
-      return <Copy spanClassName="truncate" content={row.original.code} />
+      return (
+        <Copy
+          className="w-auto min-w-5"
+          spanClassName="truncate"
+          content={row.original.code}
+        />
+      )
     },
   },
   {
     accessorKey: 'role',
-    size: 200,
+    size: 170,
     header: 'Papel',
     cell: ({ row }) => {
       return (

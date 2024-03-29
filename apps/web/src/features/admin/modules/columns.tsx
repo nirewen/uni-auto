@@ -11,10 +11,12 @@ export const columns: ColumnDef<Module>[] = [
   },
   {
     accessorKey: 'name',
+    size: 300,
     header: 'Nome',
   },
   {
     accessorKey: 'slug',
+    size: 200,
     header: 'Slug',
     cell: ({ row }) => {
       return (

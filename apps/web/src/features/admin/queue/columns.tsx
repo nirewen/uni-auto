@@ -21,16 +21,19 @@ export const columns: ColumnDef<Queue>[] = [
   },
   {
     accessorKey: 'data',
+    size: 150,
     header: 'Data',
     cell: ({ row }) => <JsonData object={row.original.data} />,
   },
   {
     accessorKey: 'endpoint',
+    size: 170,
     header: 'Endpoint',
     cell: ({ row }) => <Copy content={row.original.endpoint} />,
   },
   {
     accessorKey: 'createdAt',
+    size: 150,
     header: ({ column }) => (
       <SortingHeader column={column}>Criado em</SortingHeader>
     ),

@@ -9,6 +9,7 @@ import { ProviderCard } from '../../connections/provider/provider-card'
 export const columns: ColumnDef<Connection>[] = [
   {
     accessorKey: 'profile_displayName',
+    size: 400,
     header: ({ column }) => {
       return <SortingHeader column={column}>Conexão</SortingHeader>
     },

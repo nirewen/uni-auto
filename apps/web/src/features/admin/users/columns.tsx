@@ -20,6 +20,7 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: 'displayName',
+    size: 400,
     header: ({ column }) => (
       <SortingHeader column={column}>Perfil</SortingHeader>
     ),
