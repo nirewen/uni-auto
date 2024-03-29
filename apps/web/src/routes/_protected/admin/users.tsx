@@ -1,4 +1,4 @@
-import { PaginatedDataTable } from '@/components/ui/data-table.paginated'
+import { DataTable } from '@/components/ui/data-table'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Show } from '@/components/util/show'
 import { columns } from '@/features/admin/users/columns'
@@ -33,7 +33,7 @@ function UsersComponent() {
         fallback={<Loader2Icon className="m-auto h-8 w-8 animate-spin" />}
       >
         <ScrollArea className="h-full">
-          <PaginatedDataTable
+          <DataTable
             columns={columns}
             data={users.data!}
             filter={{

@@ -1,4 +1,4 @@
-import { PaginatedDataTable } from '@/components/ui/data-table.paginated'
+import { DataTable } from '@/components/ui/data-table'
 import { Show } from '@/components/util/show'
 import { columns } from '@/features/admin/queue/columns'
 import useDebounce from '@/hooks/useDebounce'
@@ -34,7 +34,7 @@ function QueueComponent() {
         when={!queue.isLoading && !!queue.data}
         fallback={<Loader2Icon className="m-auto h-8 w-8 animate-spin" />}
       >
-        <PaginatedDataTable
+        <DataTable
           columns={columns}
           data={queue.data!}
           filter={{
