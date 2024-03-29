@@ -7,12 +7,9 @@ import {
 import { InviteUse } from '@uni-auto/shared/entities/invite-use.entity'
 import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { paginate } from 'nestjs-typeorm-paginate'
-import {
-  DataTableFilter,
-  filterToWhere,
-  sortToOrder,
-} from 'src/common/filters/data-table.filter'
+import { TableQueryDto } from 'src/common/dto/table-query.dto'
 import { OkResponse } from 'src/common/filters/ok.exception'
+import { filterToWhere, sortToOrder } from 'src/utils/table.util'
 import { Repository } from 'typeorm'
 import { UsersService } from '../users/users.service'
 import { CreateInviteDto } from './dto/create-invite.dto'
@@ -27,7 +24,7 @@ export class InviteService {
     private usersService: UsersService,
   ) {}
 
-  getInvites({ filter, pagination, sorting }: DataTableFilter<InviteCode>) {
+  getInvites({ filter, pagination, sorting }: TableQueryDto<InviteCode>) {
     const filterableFields = [
       'code',
       'role',

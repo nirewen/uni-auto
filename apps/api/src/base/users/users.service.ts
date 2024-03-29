@@ -5,12 +5,12 @@ import { Repository } from 'typeorm'
 import { ConfigService } from '@nestjs/config'
 import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { paginate } from 'nestjs-typeorm-paginate'
+import { TableQueryDto } from 'src/common/dto/table-query.dto'
 import {
-  DataTableFilter,
   filterToWhere,
   paginationToPaging,
   sortToOrder,
-} from 'src/common/filters/data-table.filter'
+} from 'src/utils/table.util'
 
 @Injectable()
 export class UsersService {
@@ -33,7 +33,7 @@ export class UsersService {
     return this.users.create(user)
   }
 
-  async findAll({ pagination, filter, sorting }: DataTableFilter<User>) {
+  async findAll({ pagination, filter, sorting }: TableQueryDto<User>) {
     const filterableFields = ['email', 'displayName']
 
     return paginate(this.users, paginationToPaging(pagination), {

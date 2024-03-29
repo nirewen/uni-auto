@@ -1,8 +1,8 @@
 import { IsOptional } from 'class-validator'
 import { IPaginationOptions } from 'nestjs-typeorm-paginate'
-import { SortingOptions } from '../filters/data-table.filter'
+import { SortingOptions } from '../../utils/table.util'
 
-export class DataTableFilterDto<T> {
+export class TableQueryDto<T> {
   @IsOptional()
   filter: string
 

@@ -5,13 +5,6 @@ export interface SortingOptions<T> {
   id: keyof T
   desc: 'true' | 'false'
 }
-
-export interface DataTableFilter<T> {
-  pagination: IPaginationOptions
-  filter: string
-  sorting: SortingOptions<T>
-}
-
 interface NestedObject {
   [key: string]: NestedObject | string
 }

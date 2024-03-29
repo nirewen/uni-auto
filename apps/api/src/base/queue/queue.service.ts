@@ -3,12 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Connection } from '@uni-auto/shared/entities/connection.entity'
 import { Queue } from '@uni-auto/shared/entities/queue.entity'
 import { Pagination, paginate } from 'nestjs-typeorm-paginate'
+import { TableQueryDto } from 'src/common/dto/table-query.dto'
 import {
-  DataTableFilter,
   filterToWhere,
   paginationToPaging,
   sortToOrder,
-} from 'src/common/filters/data-table.filter'
+} from 'src/utils/table.util'
 import { Repository } from 'typeorm'
 
 @Injectable()
@@ -32,7 +32,7 @@ export class QueueService {
     pagination,
     filter,
     sorting,
-  }: DataTableFilter<Queue>): Promise<Pagination<Queue>> {
+  }: TableQueryDto<Queue>): Promise<Pagination<Queue>> {
     const filterableFields = ['connection_user_displayName']
 
     return paginate(this.queueRepository, paginationToPaging(pagination), {

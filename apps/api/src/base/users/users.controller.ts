@@ -7,13 +7,12 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
-import { IPaginationOptions } from 'nestjs-typeorm-paginate'
 import { Payload } from 'src/auth/auth.interface'
 import { RolesGuard } from 'src/auth/guards'
 import { ReqUser } from 'src/common/decorators'
 import { LoggedIn } from 'src/common/decorators/logged-in.guard'
 import { Roles } from 'src/common/decorators/roles.decorator'
-import { SortingOptions } from 'src/common/filters/data-table.filter'
+import { TableQueryDto } from 'src/common/dto/table-query.dto'
 import { UsersService } from './users.service'
 
 @Controller('/users')
@@ -24,14 +23,8 @@ export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Get()
-  findAll(
-    @Query('query') filter: string,
-    @Query('pagination')
-    pagination: IPaginationOptions = { page: 1, limit: 10 },
-    @Query('sorting')
-    sorting: SortingOptions<User> = { id: 'createdAt', desc: 'false' },
-  ) {
-    return this.userService.findAll({ pagination, filter, sorting })
+  findAll(@Query() query: TableQueryDto<User>) {
+    return this.userService.findAll(query)
   }
 
   @Get('@me')

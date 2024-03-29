@@ -10,10 +10,9 @@ import {
 } from '@nestjs/common'
 import { Connection } from '@uni-auto/shared/entities/connection.entity'
 import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
-import { IPaginationOptions } from 'nestjs-typeorm-paginate'
 import { RolesGuard } from 'src/auth/guards'
 import { ReqUser, Roles } from 'src/common/decorators'
-import { SortingOptions } from 'src/common/filters/data-table.filter'
+import { TableQueryDto } from 'src/common/dto/table-query.dto'
 import { ConnectionsService } from './connections.service'
 import { UpdateSettingsDTO } from './interfaces/update-settings.dto'
 
@@ -24,14 +23,8 @@ export class ConnectionsController {
   @Get()
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
-  getAll(
-    @Query('query') filter: string,
-    @Query('pagination')
-    pagination: IPaginationOptions = { page: 1, limit: 10 },
-    @Query('sorting')
-    sorting: SortingOptions<Connection> = { id: 'createdAt', desc: 'false' },
-  ) {
-    return this.connectionsService.getAll({ filter, pagination, sorting })
+  getAll(@Query() query: TableQueryDto<Connection>) {
+    return this.connectionsService.getAll(query)
   }
 
   @Get('@me')
