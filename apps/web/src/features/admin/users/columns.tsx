@@ -51,7 +51,7 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: 'updatedAt',
-    size: 160,
+    size: 170,
     header: ({ column }) => {
       return <SortingHeader column={column}>Atualizado em</SortingHeader>
     },

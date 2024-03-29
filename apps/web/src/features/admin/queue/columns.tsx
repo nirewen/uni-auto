@@ -1,7 +1,7 @@
 import { Copy } from '@/components/copy'
 import { JsonData } from '@/components/queue/json-data'
 import { QueueEntryStatus } from '@/components/queue/status'
-import { DateSpan } from '@/components/util/table.util'
+import { DateSpan, SortingHeader } from '@/components/util/table.util'
 import { UserCard } from '@/features/connections/user/user-card'
 import { Queue } from '@/lib/api'
 import { ColumnDef } from '@tanstack/react-table'
@@ -31,7 +31,9 @@ export const columns: ColumnDef<Queue>[] = [
   },
   {
     accessorKey: 'createdAt',
-    header: 'Criado em',
+    header: ({ column }) => (
+      <SortingHeader column={column}>Criado em</SortingHeader>
+    ),
     cell: ({ row }) => <DateSpan date={row.original.createdAt} />,
   },
 ]
