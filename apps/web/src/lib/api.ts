@@ -94,6 +94,27 @@ export type InviteCode = {
   uses: InviteUse[]
 }
 
+export type Queue = {
+  id: string
+  status: string
+  data: Record<string, any>
+  endpoint: string
+  connection: Connection
+  createdAt: string
+  updatedAt: string
+}
+
+export type Paginated<T> = {
+  items: T[]
+  meta: {
+    totalItems: number
+    itemCount: number
+    itemsPerPage: number
+    totalPages: number
+    currentPage: number
+  }
+}
+
 export const api = axios.create({
   baseURL: '/api',
   headers: {

@@ -4,11 +4,11 @@ import { Connection } from '@uni-auto/shared/entities/connection.entity'
 import { CronJob } from 'cron'
 import { ModulesService } from 'src/base/modules/modules.service'
 import { ModuleService } from 'src/common/base/module.service'
-import { QueueService } from 'src/common/services/queue.service'
 import { UserSettings } from '../../../interfaces/ru.interface'
 import { RUService } from '../../../utils/services/ru.service'
 
 import { add, format } from 'date-fns'
+import { QueueService } from 'src/base/queue/queue.service'
 
 export interface AutoRUSettings {
   cron: string
@@ -22,7 +22,7 @@ export class EnqueueService extends ModuleService {
     private modulesService: ModulesService,
     private schedulerRegistry: SchedulerRegistry,
     private queueService: QueueService,
-    private ruService: RUService
+    private ruService: RUService,
   ) {
     super()
   }
@@ -50,7 +50,7 @@ export class EnqueueService extends ModuleService {
   async getSettings() {
     return this.modulesService
       .findModuleSettings(this.module.slug, this.provider.slug)
-      .then((moduleSettings) => {
+      .then(moduleSettings => {
         const settings = moduleSettings.settings as AutoRUSettings
 
         return { ...moduleSettings, settings }
@@ -66,11 +66,11 @@ export class EnqueueService extends ModuleService {
 
     const modules = await this.modulesService.findEnabled(
       this.provider.slug,
-      this.module.slug
+      this.module.slug,
     )
 
     await Promise.all(
-      modules.map(async (moduleSettings) => {
+      modules.map(async moduleSettings => {
         const settings = moduleSettings.settings as UserSettings
 
         if (!moduleSettings.connection || !settings) {
@@ -78,7 +78,7 @@ export class EnqueueService extends ModuleService {
         }
 
         this.handleUser(moduleSettings.connection, settings)
-      })
+      }),
     )
   }
 
@@ -88,9 +88,9 @@ export class EnqueueService extends ModuleService {
     const meals = await this.getMeals(connection, settings)
 
     await Promise.all(
-      meals.map((meal) =>
-        this.queueService.enqueue(meal, connection, '/ufsm/ru/agendar')
-      )
+      meals.map(meal =>
+        this.queueService.enqueue(meal, connection, '/ufsm/ru/agendar'),
+      ),
     )
   }
 
@@ -110,15 +110,15 @@ export class EnqueueService extends ModuleService {
           day: day.getDay(),
         }
       })
-      .filter((day) => day.day !== 0)
+      .filter(day => day.day !== 0)
 
     const schedules = await Promise.all(
       settings.days
-        .filter((selectedDay) =>
-          days.some((day) => day.day === selectedDay.weekday)
+        .filter(selectedDay =>
+          days.some(day => day.day === selectedDay.weekday),
         )
-        .map(async (selectedDay) => {
-          const day = days.find((day) => day.day === selectedDay.weekday)
+        .map(async selectedDay => {
+          const day = days.find(day => day.day === selectedDay.weekday)
 
           const meals = await this.ruService
             .meals(
@@ -126,14 +126,17 @@ export class EnqueueService extends ModuleService {
                 day: format(day.date, 'dd/MM/yyyy'),
                 restaurant: selectedDay.restaurant,
               },
-              connection
+              connection,
             )
-            .then((meals) =>
-              meals.filter((meal) => selectedDay.meals.includes(meal.id))
+            .then(meals =>
+              meals.filter(meal => selectedDay.meals.includes(meal.id)),
             )
-            .catch((e) => {
-              console.log({ identifier: connection.identifier, error: e.message })
-              
+            .catch(e => {
+              console.log({
+                identifier: connection.identifier,
+                error: e.message,
+              })
+
               return []
             })
 
@@ -144,15 +147,15 @@ export class EnqueueService extends ModuleService {
           return {
             dateStart: format(day.date, 'yyyy-MM-dd HH:mm:ss'),
             restaurant: selectedDay.restaurant,
-            meals: meals.map((meal) => meal.id),
+            meals: meals.map(meal => meal.id),
           }
-        })
+        }),
     )
 
     const meals = this.ruService.groupMeals(schedules.filter(Boolean))
 
     if (settings.vegan) {
-      meals.forEach((meal) => {
+      meals.forEach(meal => {
         meal.vegan = true
       })
     }

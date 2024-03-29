@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common'
 
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { Queue } from '@uni-auto/shared/entities/queue.entity'
+import { QueueModule } from 'src/base/queue/queue.module'
 import { CustomModule } from 'src/common/base/custom.module'
 import { AutoRuController } from './auto_ru.controller'
 import { EnqueueService } from './providers/enqueue.service'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Queue])],
+  imports: [QueueModule],
   controllers: [AutoRuController],
   providers: [EnqueueService],
 })
