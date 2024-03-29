@@ -1,3 +1,4 @@
+import { PaginationState, SortingState } from '@tanstack/react-table'
 import axios, { AxiosError } from 'axios'
 
 export interface TokenPair {
@@ -113,6 +114,12 @@ export type Paginated<T> = {
     totalPages: number
     currentPage: number
   }
+}
+
+export type DataTableFilter = {
+  pagination: PaginationState
+  sorting: SortingState
+  query: string
 }
 
 export const api = axios.create({

@@ -13,6 +13,7 @@ import { differenceInCalendarDays } from 'date-fns'
 import { paginate } from 'nestjs-typeorm-paginate'
 import {
   DataTableFilter,
+  filterToWhere,
   paginationToPaging,
   sortToOrder,
 } from 'src/common/filters/data-table.filter'
@@ -111,8 +112,14 @@ export class ConnectionsService {
   }
 
   async getAll({ pagination, filter, sorting }: DataTableFilter<Connection>) {
+    const filterableFields = [
+      'user_displayName',
+      'profile_displayName',
+      'provider_name',
+    ]
+
     return paginate(this.connections, paginationToPaging(pagination), {
-      where: filter,
+      where: filterToWhere(filter, filterableFields),
       relations: {
         provider: true,
         user: true,

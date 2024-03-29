@@ -3,6 +3,7 @@ import {
   ConnectionModule,
   ConnectionProfile,
   ConnectionProfileHealth,
+  DataTableFilter,
   Paginated,
   api,
 } from '@/lib/api'
@@ -12,7 +13,6 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import { PaginationState, SortingState } from '@tanstack/react-table'
 
 export const useConnections = () => {
   return useQuery({
@@ -22,16 +22,18 @@ export const useConnections = () => {
   })
 }
 
-export const useAllConnections = (
-  pagination: PaginationState,
-  sorting: SortingState,
-) => {
+export const useAllConnections = ({
+  pagination,
+  sorting,
+  query,
+}: DataTableFilter) => {
   return useQuery({
-    queryKey: ['connections', pagination, sorting],
+    queryKey: ['connections', { pagination, sorting, query }],
     queryFn: () =>
       api
         .get<Paginated<Connection>>('/connections', {
           params: {
+            query,
             pagination: {
               page: pagination.pageIndex + 1,
               limit: pagination.pageSize,

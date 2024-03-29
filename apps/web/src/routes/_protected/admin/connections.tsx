@@ -15,6 +15,7 @@ export const Route = createFileRoute('/_protected/admin/connections')({
 })
 
 function ConnectionsComponent() {
+  const [query, setQuery] = React.useState<string>('')
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -22,7 +23,7 @@ function ConnectionsComponent() {
   const [sorting, setSorting] = React.useState<SortingState>([
     { id: 'profile_displayName', desc: false },
   ])
-  const connections = useAllConnections(pagination, sorting)
+  const connections = useAllConnections({ pagination, sorting, query })
 
   return (
     <div className="flex h-full w-full flex-col gap-3 p-4">
@@ -36,10 +37,18 @@ function ConnectionsComponent() {
           <PaginatedDataTable
             columns={columns}
             data={connections.data!}
-            pagination={pagination}
-            setPagination={setPagination}
-            sorting={sorting}
-            setSorting={setSorting}
+            query={{
+              value: query,
+              update: setQuery,
+            }}
+            pagination={{
+              value: pagination,
+              update: setPagination,
+            }}
+            sorting={{
+              value: sorting,
+              update: setSorting,
+            }}
           />
           <ScrollBar orientation="horizontal" />
           <ScrollBar orientation="vertical" />

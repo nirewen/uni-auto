@@ -13,6 +13,7 @@ export const Route = createFileRoute('/_protected/admin/users')({
 })
 
 function UsersComponent() {
+  const [query, setQuery] = React.useState<string>('')
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -20,7 +21,7 @@ function UsersComponent() {
   const [sorting, setSorting] = React.useState<SortingState>([
     { id: 'createdAt', desc: false },
   ])
-  const users = useUsers(pagination, sorting)
+  const users = useUsers({ pagination, sorting, query })
 
   return (
     <div className="flex h-full w-full flex-col gap-3 p-4">
@@ -34,10 +35,18 @@ function UsersComponent() {
           <PaginatedDataTable
             columns={columns}
             data={users.data!}
-            sorting={sorting}
-            setSorting={setSorting}
-            pagination={pagination}
-            setPagination={setPagination}
+            query={{
+              value: query,
+              update: setQuery,
+            }}
+            pagination={{
+              value: pagination,
+              update: setPagination,
+            }}
+            sorting={{
+              value: sorting,
+              update: setSorting,
+            }}
           />
           <ScrollBar orientation="horizontal" />
           <ScrollBar orientation="vertical" />

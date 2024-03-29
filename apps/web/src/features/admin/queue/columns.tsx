@@ -10,7 +10,7 @@ export const columns: ColumnDef<Queue>[] = [
   {
     accessorKey: 'status',
     header: '',
-    size: 1,
+    size: 56,
     cell: ({ row }) => <QueueEntryStatus status={row.original.status} />,
   },
   {

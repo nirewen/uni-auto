@@ -17,45 +17,80 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Paginated } from '@/lib/api'
+import { cn } from '@/lib/utils'
+import { Show } from '../util/show'
+import { DebouncedInput } from './input.debounced'
 import { Pagination } from './pagination'
 
-interface DataTableProps<TData, TValue> {
+type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[]
   data: Paginated<TData>
-  sorting: SortingState
-  setSorting: React.Dispatch<React.SetStateAction<SortingState>>
-  pagination: PaginationState
-  setPagination: React.Dispatch<React.SetStateAction<PaginationState>>
+  pagination?: {
+    value: PaginationState
+    update: React.Dispatch<React.SetStateAction<PaginationState>>
+  }
+  sorting?: {
+    value: SortingState
+    update: React.Dispatch<React.SetStateAction<SortingState>>
+  }
+  query?: {
+    value: string
+    update: React.Dispatch<React.SetStateAction<string>>
+  }
 }
 
 export function PaginatedDataTable<TData, TValue>({
   columns,
   data,
+  query,
   sorting,
-  setSorting,
   pagination,
-  setPagination,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data: data.items,
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualSorting: true,
-    onSortingChange: setSorting,
+    onSortingChange: sorting?.update,
     manualPagination: true,
     rowCount: data.meta.totalItems,
-    onPaginationChange: setPagination,
+    onPaginationChange: pagination?.update,
     state: {
-      sorting,
-      pagination,
+      sorting: sorting?.value,
+      pagination: pagination?.value,
+      globalFilter: query?.value,
+    },
+    defaultColumn: {
+      size: 0,
+      minSize: 0,
     },
   })
 
   return (
-    <div>
-      <Pagination table={table} setPagination={setPagination} />
+    <div className="p-1">
+      <Show when={!!query || !!pagination}>
+        <div className="flex items-center gap-2">
+          <Show when={!!query}>
+            <DebouncedInput
+              type="search"
+              placeholder="Pesquisar..."
+              value={query?.value ?? ''}
+              onChange={(value) => query?.update(value as string)}
+              className="flex-1"
+              debounce={500}
+            />
+          </Show>
+          <Show when={!!pagination}>
+            <Pagination
+              className={cn({ 'mr-auto': !!query })}
+              table={table}
+              setPagination={pagination!.update}
+            />
+          </Show>
+        </div>
+      </Show>
       <div className="rounded-md border">
-        <Table className="table-fixed">
+        <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -63,9 +98,7 @@ export function PaginatedDataTable<TData, TValue>({
                   return (
                     <TableHead
                       key={header.id}
-                      style={{
-                        width: header.getSize(),
-                      }}
+                      style={{ width: header.getSize() || undefined }}
                     >
                       {header.isPlaceholder
                         ? null

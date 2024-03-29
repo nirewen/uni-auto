@@ -1,18 +1,22 @@
-import { Paginated, Queue, api } from '@/lib/api'
+import { DataTableFilter, Paginated, Queue, api } from '@/lib/api'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 
-export const useQueue = (pagination: {
-  pageIndex: number
-  pageSize: number
-}) => {
+export const useQueue = ({ pagination, sorting, query }: DataTableFilter) => {
   return useQuery({
-    queryKey: ['queue', pagination],
+    queryKey: ['queue', { pagination, sorting, query }],
     queryFn: async () => {
       return api
         .get<Paginated<Queue>>('/queue', {
           params: {
-            page: pagination.pageIndex + 1,
-            limit: pagination.pageSize,
+            query,
+            pagination: {
+              page: pagination.pageIndex + 1,
+              limit: pagination.pageSize,
+            },
+            sorting: {
+              id: sorting[0].id,
+              desc: sorting[0].desc,
+            },
           },
         })
         .then((res) => res.data)

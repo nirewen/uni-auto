@@ -14,7 +14,6 @@ import { ReqUser } from 'src/common/decorators'
 import { LoggedIn } from 'src/common/decorators/logged-in.guard'
 import { Roles } from 'src/common/decorators/roles.decorator'
 import { SortingOptions } from 'src/common/filters/data-table.filter'
-import { FindOptionsWhere } from 'typeorm'
 import { UsersService } from './users.service'
 
 @Controller('/users')
@@ -26,7 +25,7 @@ export class UsersController {
 
   @Get()
   findAll(
-    @Query('query') filter: FindOptionsWhere<User>,
+    @Query('query') filter: string,
     @Query('pagination')
     pagination: IPaginationOptions = { page: 1, limit: 10 },
     @Query('sorting')

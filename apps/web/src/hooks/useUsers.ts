@@ -1,17 +1,14 @@
-import { Paginated, User, api } from '@/lib/api'
+import { DataTableFilter, Paginated, User, api } from '@/lib/api'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { PaginationState, SortingState } from '@tanstack/react-table'
 
-export const useUsers = (
-  pagination: PaginationState,
-  sorting: SortingState,
-) => {
+export const useUsers = ({ pagination, sorting, query }: DataTableFilter) => {
   return useQuery({
-    queryKey: ['users', pagination, sorting],
+    queryKey: ['users', { pagination, sorting, query }],
     queryFn: () =>
       api
         .get<Paginated<User>>('/users', {
           params: {
+            query,
             pagination: {
               page: pagination.pageIndex + 1,
               limit: pagination.pageSize,

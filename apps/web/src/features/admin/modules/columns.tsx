@@ -5,14 +5,13 @@ import { ColumnDef } from '@tanstack/react-table'
 export const columns: ColumnDef<Module>[] = [
   {
     accessorKey: 'enabled',
-    header: 'Ativo',
+    header: '',
     size: 1,
     cell: ({ row }) => <ActiveStatus active={row.original.enabled} />,
   },
   {
     accessorKey: 'name',
     header: 'Nome',
-    size: 2000,
   },
   {
     accessorKey: 'slug',

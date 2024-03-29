@@ -7,6 +7,7 @@ import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { paginate } from 'nestjs-typeorm-paginate'
 import {
   DataTableFilter,
+  filterToWhere,
   paginationToPaging,
   sortToOrder,
 } from 'src/common/filters/data-table.filter'
@@ -33,8 +34,10 @@ export class UsersService {
   }
 
   async findAll({ pagination, filter, sorting }: DataTableFilter<User>) {
+    const filterableFields = ['email', 'displayName']
+
     return paginate(this.users, paginationToPaging(pagination), {
-      where: filter,
+      where: filterToWhere(filter, filterableFields),
       relations: {
         connections: true,
       },

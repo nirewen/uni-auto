@@ -38,6 +38,10 @@ export function DataTable<TData, TValue>({
     state: {
       sorting,
     },
+    defaultColumn: {
+      size: 0,
+      minSize: 0,
+    },
   })
 
   return (
@@ -50,9 +54,7 @@ export function DataTable<TData, TValue>({
                 return (
                   <TableHead
                     key={header.id}
-                    style={{
-                      width: header.getSize(),
-                    }}
+                    style={{ width: header.getSize() || undefined }}
                   >
                     {header.isPlaceholder
                       ? null

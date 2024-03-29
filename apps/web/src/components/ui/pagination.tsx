@@ -6,11 +6,16 @@ import { Show } from '../util/show'
 import { Button } from './button'
 
 type PaginationProps = {
+  className: string
   table: Table<any>
   setPagination: React.Dispatch<React.SetStateAction<PaginationState>>
 }
 
-export function Pagination({ table, setPagination }: PaginationProps) {
+export function Pagination({
+  className,
+  table,
+  setPagination,
+}: PaginationProps) {
   const pageCount = table.getPageCount()
   const currentPage = table.getState().pagination.pageIndex
 
@@ -48,7 +53,9 @@ export function Pagination({ table, setPagination }: PaginationProps) {
   }
 
   return (
-    <div className="flex items-center justify-end space-x-2 py-2">
+    <div
+      className={cn('flex items-center justify-end space-x-2 py-2', className)}
+    >
       <Button
         variant="outline"
         className="w-10 px-0"
@@ -98,16 +105,18 @@ export function Pagination({ table, setPagination }: PaginationProps) {
           <MoreHorizontalIcon />
         </Button>
       </Show>
-      <Button
-        variant="outline"
-        className={cn('w-10 px-0', {
-          'bg-neutral-300 text-black': currentPage === pageCount - 1,
-        })}
-        size="sm"
-        onClick={() => table.lastPage()}
-      >
-        {pageCount}
-      </Button>
+      <Show when={pageCount > 1}>
+        <Button
+          variant="outline"
+          className={cn('w-10 px-0', {
+            'bg-neutral-300 text-black': currentPage === pageCount - 1,
+          })}
+          size="sm"
+          onClick={() => table.lastPage()}
+        >
+          {pageCount}
+        </Button>
+      </Show>
       <Button
         variant="outline"
         className="w-10 px-0"
