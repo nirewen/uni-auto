@@ -10,7 +10,7 @@ import { Show } from '@/components/util/show'
 import { DateSpan } from '@/components/util/table.util'
 import { User } from '@/lib/api'
 import { cn, nameToInitials } from '@/lib/utils'
-import { CalendarDaysIcon, TagIcon } from 'lucide-react'
+import { CalendarDaysIcon, QrCodeIcon } from 'lucide-react'
 
 type UserCardProps = {
   user: User
@@ -38,23 +38,25 @@ export function UserCard({ user, mini }: UserCardProps) {
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-fit">
-        <div className="flex space-x-4">
+        <div className="flex items-center space-x-4">
           <Avatar className="h-16 w-16">
             <AvatarImage className="object-cover" src={user.avatarUrl} />
             <AvatarFallback>{nameToInitials(user.displayName)}</AvatarFallback>
           </Avatar>
-          <div className="space-y-1">
+          <div className="flex flex-col gap-1">
             <h4 className="flex items-center gap-1 text-sm font-semibold">
-              <Copy content={user.id} icon={TagIcon} hideContent />
               {user.displayName}
             </h4>
             <p className="text-sm">{user.email}</p>
-            <div className="flex items-center pt-2">
+            <div className="flex items-center">
               <CalendarDaysIcon className="mr-2 h-4 w-4 opacity-70" />{' '}
               <span className="text-xs text-muted-foreground">
                 Atualizado em <DateSpan date={user.updatedAt} />
               </span>
             </div>
+          </div>
+          <div className="self-start">
+            <Copy content={user.id} icon={QrCodeIcon} hideContent />
           </div>
         </div>
       </PopoverContent>

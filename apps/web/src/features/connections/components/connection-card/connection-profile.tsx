@@ -11,7 +11,7 @@ import { useConnectionProfile } from '@/hooks/useConnections'
 import { Connection } from '@/lib/api'
 import { nameToInitials } from '@/lib/utils'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { CalendarDaysIcon, SettingsIcon, TagIcon } from 'lucide-react'
+import { CalendarDaysIcon, QrCodeIcon, SettingsIcon } from 'lucide-react'
 import {
   ConnectionProfileLoader,
   ConnectionProfileWideLoader,
@@ -72,26 +72,28 @@ export function ConnectionProfileCard({ connection }: ConnectionProfileProps) {
           <span className="truncate">{profile.displayName}</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-80">
-        <div className="flex space-x-4">
+      <PopoverContent align="start" className="w-fit">
+        <div className="flex items-center space-x-4">
           <Avatar className="h-16 w-16">
             <AvatarImage className="object-cover" src={profile.avatarUrl} />
             <AvatarFallback>
               {nameToInitials(profile.displayName)}
             </AvatarFallback>
           </Avatar>
-          <div className="space-y-1">
+          <div className="flex flex-col gap-1">
             <h4 className="flex gap-1 text-sm font-semibold">
-              <Copy content={connection.id} icon={TagIcon} hideContent />
-              <Copy content={connection.identifier} />
+              <Copy spanClassName="text-xs" content={connection.identifier} />
             </h4>
             <h4 className="text-sm font-semibold">{profile.displayName}</h4>
-            <div className="flex items-center pt-2">
+            <div className="flex items-center">
               <CalendarDaysIcon className="mr-2 h-4 w-4 opacity-70" />{' '}
               <span className="text-xs text-muted-foreground">
-                Atualizado em <DateSpan date={profile.updatedAt} />
+                Atualizado em <DateSpan date={connection.updatedAt} />
               </span>
             </div>
+          </div>
+          <div className="space-y-1 self-start">
+            <Copy content={connection.id} icon={QrCodeIcon} hideContent />
           </div>
         </div>
       </PopoverContent>

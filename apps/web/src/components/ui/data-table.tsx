@@ -63,7 +63,7 @@ export function DataTable<TData, TValue>({
     },
     defaultColumn: {
       size: 0,
-      minSize: 0,
+      minSize: -1,
     },
   })
 
@@ -95,10 +95,14 @@ export function DataTable<TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
+                  const size =
+                    header.getSize() < 0 ? 0 : header.getSize() || undefined
+
                   return (
                     <TableHead
                       key={header.id}
-                      style={{ width: header.getSize() || undefined }}
+                      className={cn({ 'px-0': header.getSize() < 0 })}
+                      style={{ width: size }}
                     >
                       {header.isPlaceholder
                         ? null

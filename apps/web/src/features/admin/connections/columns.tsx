@@ -10,8 +10,15 @@ export const columns: ColumnDef<Connection>[] = [
   {
     accessorKey: 'profile_displayName',
     size: 400,
-    header: ({ column }) => {
-      return <SortingHeader column={column}>Conexão</SortingHeader>
+    header: ({ column, table }) => {
+      return (
+        <div className="flex gap-2">
+          <SortingHeader column={column}>Nome</SortingHeader>
+          <SortingHeader column={table.getColumn('updatedAt')!}>
+            Atualizado em
+          </SortingHeader>
+        </div>
+      )
     },
     cell: ({ row }) => {
       return (
@@ -30,6 +37,12 @@ export const columns: ColumnDef<Connection>[] = [
       }
       return 0
     },
+  },
+  {
+    accessorKey: 'updatedAt',
+    header: '',
+    size: -1,
+    cell: '',
   },
   {
     accessorKey: 'provider',

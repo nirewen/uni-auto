@@ -21,7 +21,7 @@ function ConnectionsComponent() {
   const [filter, filterState] = useTableFilter()
   const [pagination, paginationState] = useTablePagination()
   const [sorting, sortingState] = useTableSorting([
-    { id: 'profile_displayName', desc: true },
+    { id: 'profile_displayName', desc: false },
   ])
   const query = useAllConnections(
     new TableQuery({ filter, pagination, sorting }),

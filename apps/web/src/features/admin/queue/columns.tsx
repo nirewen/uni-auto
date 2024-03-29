@@ -16,12 +16,12 @@ export const columns: ColumnDef<Queue>[] = [
   {
     accessorKey: 'connection',
     header: '',
-    size: 48,
+    size: 38,
     cell: ({ row }) => <UserCard mini user={row.original.connection.user!} />,
   },
   {
     accessorKey: 'data',
-    size: 150,
+    size: 114,
     header: 'Data',
     cell: ({ row }) => <JsonData object={row.original.data} />,
   },

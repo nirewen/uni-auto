@@ -46,6 +46,8 @@ export interface Connection {
   modules?: ModuleSettings[]
   type: string
   user?: User
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Provider {
