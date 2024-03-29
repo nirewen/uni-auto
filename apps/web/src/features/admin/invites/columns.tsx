@@ -20,15 +20,16 @@ export const columns: ColumnDef<InviteCode>[] = [
     accessorKey: 'code',
     header: 'Código',
     cell: ({ row }) => {
-      return <Copy content={row.original.code} />
+      return <Copy spanClassName="truncate" content={row.original.code} />
     },
   },
   {
     accessorKey: 'role',
+    size: 200,
     header: 'Papel',
     cell: ({ row }) => {
       return (
-        <span className="rounded-md bg-neutral-800 p-2 font-mono">
+        <span className="truncate rounded-md bg-neutral-800 p-2 font-mono">
           {row.original.role}
         </span>
       )
@@ -36,6 +37,7 @@ export const columns: ColumnDef<InviteCode>[] = [
   },
   {
     accessorKey: 'uses',
+    size: 100,
     header: 'Usos/Max',
     cell: ({ row }) => {
       return (
@@ -56,6 +58,7 @@ export const columns: ColumnDef<InviteCode>[] = [
   },
   {
     accessorKey: 'createdBy',
+    size: 130,
     header: () => <span className="text-nowrap">Criado por</span>,
     cell: ({ row }) => (
       <div className="flex items-center gap-1">
@@ -73,12 +76,8 @@ export const columns: ColumnDef<InviteCode>[] = [
     ),
   },
   {
-    accessorKey: 'usableBy',
-    header: () => <span className="text-nowrap">Usável por</span>,
-    cell: ({ row }) => <UserCard mini user={row.original.usableBy} />,
-  },
-  {
     accessorKey: 'createdAt',
+    size: 160,
     header: ({ column }) => (
       <SortingHeader column={column}>Criado em</SortingHeader>
     ),

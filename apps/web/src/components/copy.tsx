@@ -7,6 +7,7 @@ type CopyProps = {
   icon?: LucideIcon
   className?: string
   iconClassName?: string
+  spanClassName?: string
   content: string
   hideContent?: boolean
   onCopy?: () => void
@@ -16,6 +17,7 @@ export function Copy({
   icon: Icon = CopyIcon,
   className,
   iconClassName,
+  spanClassName,
   content,
   hideContent,
   onCopy,
@@ -39,17 +41,19 @@ export function Copy({
   return (
     <div
       className={cn(
-        'px-2 py-1 bg-neutral-800 rounded-md border text-nowrap border-neutral-700 flex gap-2 items-center cursor-pointer w-min',
+        'px-2 py-1 bg-neutral-800 rounded-md border text-nowrap border-neutral-700 flex gap-2 items-center cursor-pointer',
         className,
       )}
       onClick={copyToClipboard}
     >
-      <Show when={!hideContent}>{content}</Show>
+      <Show when={!hideContent}>
+        <span className={cn(spanClassName)}>{content}</span>
+      </Show>
       <Show when={!copied}>
-        <Icon className={cn('w-4 h-4', iconClassName)} />
+        <Icon className={cn('w-4 h-4 shrink-0', iconClassName)} />
       </Show>
       <Show when={copied}>
-        <CheckIcon className={cn('w-4 h-4', iconClassName)} />
+        <CheckIcon className={cn('w-4 h-4 shrink-0', iconClassName)} />
       </Show>
     </div>
   )

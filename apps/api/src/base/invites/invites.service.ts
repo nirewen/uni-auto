@@ -6,6 +6,12 @@ import {
 } from '@uni-auto/shared/entities/invite-code.entity'
 import { InviteUse } from '@uni-auto/shared/entities/invite-use.entity'
 import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
+import { paginate } from 'nestjs-typeorm-paginate'
+import {
+  DataTableFilter,
+  filterToWhere,
+  sortToOrder,
+} from 'src/common/filters/data-table.filter'
 import { OkResponse } from 'src/common/filters/ok.exception'
 import { Repository } from 'typeorm'
 import { UsersService } from '../users/users.service'
@@ -21,9 +27,20 @@ export class InviteService {
     private usersService: UsersService,
   ) {}
 
-  getInvites() {
-    return this.inviteRepository.find({
+  getInvites({ filter, pagination, sorting }: DataTableFilter<InviteCode>) {
+    const filterableFields = [
+      'code',
+      'role',
+      'uses_usedBy_displayName',
+      'usableBy_displayName',
+      'assignedTo_displayName',
+      'active',
+    ]
+
+    return paginate(this.inviteRepository, pagination, {
+      where: filterToWhere(filter, filterableFields),
       relations: ['createdBy', 'uses.usedBy', 'usableBy', 'assignedTo'],
+      order: sortToOrder(sorting),
     })
   }
 

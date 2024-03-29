@@ -9,13 +9,13 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: 'active',
     size: 1,
-    header: 'Status',
+    header: 'Cargo',
     cell: ({ row }) => <ActiveStatus active={row.original.active} />,
   },
   {
     accessorKey: 'role',
     size: 1,
-    header: 'Cargo',
+    header: '',
     cell: ({ row }) => <RoleIcon role={row.original.role} />,
   },
   {
@@ -42,6 +42,7 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: 'createdAt',
+    size: 160,
     header: ({ column }) => (
       <SortingHeader column={column}>Criado em</SortingHeader>
     ),
@@ -50,6 +51,7 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: 'updatedAt',
+    size: 160,
     header: ({ column }) => {
       return <SortingHeader column={column}>Atualizado em</SortingHeader>
     },

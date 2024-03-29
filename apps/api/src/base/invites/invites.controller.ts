@@ -1,12 +1,22 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common'
+import { InviteCode } from '@uni-auto/shared/entities/invite-code.entity'
 import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { RolesGuard } from 'src/auth/guards'
 import { ReqUser, Roles } from 'src/common/decorators'
 import { LoggedIn } from 'src/common/decorators/logged-in.guard'
+import { DataTableFilterDto } from 'src/common/dto/data-table.dto'
 import { CreateInviteDto } from './dto/create-invite.dto'
-import { InviteService } from './invite.service'
+import { InviteService } from './invites.service'
 
-@Controller('invite')
+@Controller('invites')
 @LoggedIn()
 @UseGuards(RolesGuard)
 @Roles(UserRole.ADMIN)
@@ -14,8 +24,10 @@ export class InviteController {
   constructor(private inviteService: InviteService) {}
 
   @Get()
-  getInvites() {
-    return this.inviteService.getInvites()
+  getInvites(
+    @Query() { filter, pagination, sorting }: DataTableFilterDto<InviteCode>,
+  ) {
+    return this.inviteService.getInvites({ filter, pagination, sorting })
   }
 
   @Post()

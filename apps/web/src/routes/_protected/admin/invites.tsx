@@ -1,17 +1,27 @@
-import { DataTable } from '@/components/ui/data-table'
+import { PaginatedDataTable } from '@/components/ui/data-table.paginated'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Show } from '@/components/util/show'
 import { columns } from '@/features/admin/invites/columns'
 import { useAllInvites } from '@/hooks/useInvites'
 import { createFileRoute } from '@tanstack/react-router'
+import { PaginationState, SortingState } from '@tanstack/react-table'
 import { Loader2Icon } from 'lucide-react'
+import React from 'react'
 
 export const Route = createFileRoute('/_protected/admin/invites')({
   component: InvitesComponent,
 })
 
 function InvitesComponent() {
-  const invites = useAllInvites()
+  const [query, setQuery] = React.useState<string>('')
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+  const [sorting, setSorting] = React.useState<SortingState>([
+    { id: 'createdAt', desc: true },
+  ])
+  const invites = useAllInvites({ pagination, sorting, query })
 
   return (
     <div className="flex h-full w-full flex-col gap-3 p-4">
@@ -22,15 +32,21 @@ function InvitesComponent() {
         fallback={<Loader2Icon className="m-auto h-8 w-8 animate-spin" />}
       >
         <ScrollArea className="h-full">
-          <DataTable
+          <PaginatedDataTable
             columns={columns}
             data={invites.data!}
-            initialSorting={[
-              {
-                id: 'createdAt',
-                desc: false,
-              },
-            ]}
+            query={{
+              value: query,
+              update: setQuery,
+            }}
+            pagination={{
+              value: pagination,
+              update: setPagination,
+            }}
+            sorting={{
+              value: sorting,
+              update: setSorting,
+            }}
           />
           <ScrollBar orientation="horizontal" />
           <ScrollBar orientation="vertical" />

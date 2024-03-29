@@ -33,7 +33,7 @@ export const columns: ColumnDef<Connection>[] = [
   {
     accessorKey: 'provider',
     header: 'Provedor',
-    size: 1,
+    size: 200,
     cell: ({ row }) => {
       return <ProviderCard provider={row.original.provider} />
     },
@@ -41,7 +41,7 @@ export const columns: ColumnDef<Connection>[] = [
   {
     accessorKey: 'type',
     header: 'Tipo',
-    size: 1,
+    size: 200,
     cell: ({ row }) => {
       return <ConnectionType type={row.original.type} />
     },

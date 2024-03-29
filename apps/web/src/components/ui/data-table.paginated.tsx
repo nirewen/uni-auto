@@ -90,7 +90,7 @@ export function PaginatedDataTable<TData, TValue>({
         </div>
       </Show>
       <div className="rounded-md border">
-        <Table>
+        <Table className="table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
