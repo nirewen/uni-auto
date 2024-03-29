@@ -4,6 +4,7 @@ import { FindOptionsWhere, Repository } from 'typeorm'
 
 import { ConfigService } from '@nestjs/config'
 import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
+import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate'
 
 @Injectable()
 export class UsersService {
@@ -26,11 +27,22 @@ export class UsersService {
     return this.users.create(user)
   }
 
-  async findAll(filter: FindOptionsWhere<User>) {
-    return this.users.find({
+  async findAll({
+    pagination,
+    filter,
+    sorting,
+  }: {
+    pagination: IPaginationOptions
+    filter: FindOptionsWhere<User>
+    sorting: { id: string; desc: string }
+  }) {
+    return paginate(this.users, pagination, {
       where: filter,
       relations: {
         connections: true,
+      },
+      order: {
+        [sorting.id]: sorting.desc === 'true' ? 'DESC' : 'ASC',
       },
     })
   }

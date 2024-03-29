@@ -7,17 +7,16 @@ import { ColumnDef } from '@tanstack/react-table'
 
 export const columns: ColumnDef<User>[] = [
   {
+    accessorKey: 'active',
+    size: 1,
+    header: 'Status',
+    cell: ({ row }) => <ActiveStatus active={row.original.active} />,
+  },
+  {
     accessorKey: 'role',
-    header: () => <span className="-mr-8">Cargo</span>,
-
-    cell: ({ row }) => {
-      return (
-        <div className="-mr-12 flex items-center gap-1">
-          <ActiveStatus active={row.original.active} />
-          <RoleIcon role={row.original.role} />
-        </div>
-      )
-    },
+    size: 1,
+    header: 'Cargo',
+    cell: ({ row }) => <RoleIcon role={row.original.role} />,
   },
   {
     accessorKey: 'displayName',

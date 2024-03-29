@@ -23,8 +23,12 @@ export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Get()
-  findAll(@Query() query: FindOptionsWhere<User>) {
-    return this.userService.findAll(query)
+  findAll(
+    @Query('query') filter: FindOptionsWhere<User>,
+    @Query('pagination') pagination: { page: number; limit: number },
+    @Query('sorting') sorting: { id: string; desc: string },
+  ) {
+    return this.userService.findAll({ pagination, filter, sorting })
   }
 
   @Get('@me')
