@@ -1,10 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { FindOptionsWhere, Repository } from 'typeorm'
+import { Repository } from 'typeorm'
 
 import { ConfigService } from '@nestjs/config'
 import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
-import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate'
+import { paginate } from 'nestjs-typeorm-paginate'
+import {
+  DataTableFilter,
+  paginationToPaging,
+  sortToOrder,
+} from 'src/common/filters/data-table.filter'
 
 @Injectable()
 export class UsersService {
@@ -27,23 +32,13 @@ export class UsersService {
     return this.users.create(user)
   }
 
-  async findAll({
-    pagination,
-    filter,
-    sorting,
-  }: {
-    pagination: IPaginationOptions
-    filter: FindOptionsWhere<User>
-    sorting: { id: string; desc: string }
-  }) {
-    return paginate(this.users, pagination, {
+  async findAll({ pagination, filter, sorting }: DataTableFilter<User>) {
+    return paginate(this.users, paginationToPaging(pagination), {
       where: filter,
       relations: {
         connections: true,
       },
-      order: {
-        [sorting.id]: sorting.desc === 'true' ? 'DESC' : 'ASC',
-      },
+      order: sortToOrder(sorting),
     })
   }
 

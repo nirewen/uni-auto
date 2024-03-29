@@ -10,6 +10,12 @@ import {
 } from '@uni-auto/shared/entities/connection.entity'
 import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { differenceInCalendarDays } from 'date-fns'
+import { paginate } from 'nestjs-typeorm-paginate'
+import {
+  DataTableFilter,
+  paginationToPaging,
+  sortToOrder,
+} from 'src/common/filters/data-table.filter'
 import { ProvidersService } from '../providers/providers.service'
 import { Payload } from './interfaces/payload.interface'
 import { UpdateSettingsDTO } from './interfaces/update-settings.dto'
@@ -104,13 +110,15 @@ export class ConnectionsService {
     return settings
   }
 
-  async getAll() {
-    return this.connections.find({
+  async getAll({ pagination, filter, sorting }: DataTableFilter<Connection>) {
+    return paginate(this.connections, paginationToPaging(pagination), {
+      where: filter,
       relations: {
         provider: true,
         user: true,
         profile: true,
       },
+      order: sortToOrder(sorting),
     })
   }
 

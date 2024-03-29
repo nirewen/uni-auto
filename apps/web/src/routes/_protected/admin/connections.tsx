@@ -1,19 +1,28 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { DataTable } from '@/components/ui/data-table'
 import { columns } from '@/features/admin/connections/columns'
 
+import { PaginatedDataTable } from '@/components/ui/data-table.paginated'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Show } from '@/components/util/show'
 import { useAllConnections } from '@/hooks/useConnections'
+import { PaginationState, SortingState } from '@tanstack/react-table'
 import { Loader2Icon } from 'lucide-react'
+import React from 'react'
 
 export const Route = createFileRoute('/_protected/admin/connections')({
   component: ConnectionsComponent,
 })
 
 function ConnectionsComponent() {
-  const connections = useAllConnections()
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+  const [sorting, setSorting] = React.useState<SortingState>([
+    { id: 'profile_displayName', desc: false },
+  ])
+  const connections = useAllConnections(pagination, sorting)
 
   return (
     <div className="flex h-full w-full flex-col gap-3 p-4">
@@ -24,15 +33,13 @@ function ConnectionsComponent() {
         fallback={<Loader2Icon className="m-auto h-8 w-8 animate-spin" />}
       >
         <ScrollArea className="h-full">
-          <DataTable
+          <PaginatedDataTable
             columns={columns}
             data={connections.data!}
-            initialSorting={[
-              {
-                id: 'profile',
-                desc: true,
-              },
-            ]}
+            pagination={pagination}
+            setPagination={setPagination}
+            sorting={sorting}
+            setSorting={setSorting}
           />
           <ScrollBar orientation="horizontal" />
           <ScrollBar orientation="vertical" />

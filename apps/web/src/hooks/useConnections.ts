@@ -3,9 +3,16 @@ import {
   ConnectionModule,
   ConnectionProfile,
   ConnectionProfileHealth,
+  Paginated,
   api,
 } from '@/lib/api'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
+import { PaginationState, SortingState } from '@tanstack/react-table'
 
 export const useConnections = () => {
   return useQuery({
@@ -15,11 +22,28 @@ export const useConnections = () => {
   })
 }
 
-export const useAllConnections = () => {
+export const useAllConnections = (
+  pagination: PaginationState,
+  sorting: SortingState,
+) => {
   return useQuery({
-    queryKey: ['all', 'connections'],
+    queryKey: ['connections', pagination, sorting],
     queryFn: () =>
-      api.get<Connection[]>('/connections').then((res) => res.data),
+      api
+        .get<Paginated<Connection>>('/connections', {
+          params: {
+            pagination: {
+              page: pagination.pageIndex + 1,
+              limit: pagination.pageSize,
+            },
+            sorting: {
+              id: sorting[0].id,
+              desc: sorting[0].desc,
+            },
+          },
+        })
+        .then((res) => res.data),
+    placeholderData: keepPreviousData,
   })
 }
 

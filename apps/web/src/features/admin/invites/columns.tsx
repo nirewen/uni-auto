@@ -12,14 +12,9 @@ import { ArrowRightIcon } from 'lucide-react'
 export const columns: ColumnDef<InviteCode>[] = [
   {
     accessorKey: 'enabled',
-    header: () => <span className="-mr-4">Ativo</span>,
-    cell: ({ row }) => {
-      return (
-        <div className="-mr-4 flex items-center justify-center gap-1">
-          <ActiveStatus active={row.original.active} />
-        </div>
-      )
-    },
+    size: 2,
+    header: 'Ativo',
+    cell: ({ row }) => <ActiveStatus active={row.original.active} />,
   },
   {
     accessorKey: 'code',

@@ -8,7 +8,7 @@ import { ProviderCard } from '../../connections/provider/provider-card'
 
 export const columns: ColumnDef<Connection>[] = [
   {
-    accessorKey: 'profile',
+    accessorKey: 'profile_displayName',
     header: ({ column }) => {
       return <SortingHeader column={column}>Conexão</SortingHeader>
     },
@@ -33,6 +33,7 @@ export const columns: ColumnDef<Connection>[] = [
   {
     accessorKey: 'provider',
     header: 'Provedor',
+    size: 1,
     cell: ({ row }) => {
       return <ProviderCard provider={row.original.provider} />
     },
@@ -40,6 +41,7 @@ export const columns: ColumnDef<Connection>[] = [
   {
     accessorKey: 'type',
     header: 'Tipo',
+    size: 1,
     cell: ({ row }) => {
       return <ConnectionType type={row.original.type} />
     },
