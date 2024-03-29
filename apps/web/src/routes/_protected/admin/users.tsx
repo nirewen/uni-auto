@@ -3,6 +3,7 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Show } from '@/components/util/show'
 import { columns } from '@/features/admin/users/columns'
 import { useUsers } from '@/hooks/useUsers'
+import { TableQuery } from '@/lib/api'
 import { createFileRoute } from '@tanstack/react-router'
 import { PaginationState, SortingState } from '@tanstack/react-table'
 import { Loader2Icon } from 'lucide-react'
@@ -13,7 +14,7 @@ export const Route = createFileRoute('/_protected/admin/users')({
 })
 
 function UsersComponent() {
-  const [query, setQuery] = React.useState<string>('')
+  const [filter, setFilter] = React.useState<string>('')
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -21,7 +22,7 @@ function UsersComponent() {
   const [sorting, setSorting] = React.useState<SortingState>([
     { id: 'createdAt', desc: false },
   ])
-  const users = useUsers({ pagination, sorting, query })
+  const users = useUsers(new TableQuery({ filter, pagination, sorting }))
 
   return (
     <div className="flex h-full w-full flex-col gap-3 p-4">
@@ -35,9 +36,9 @@ function UsersComponent() {
           <PaginatedDataTable
             columns={columns}
             data={users.data!}
-            query={{
-              value: query,
-              update: setQuery,
+            filter={{
+              value: filter,
+              update: setFilter,
             }}
             pagination={{
               value: pagination,

@@ -3,6 +3,7 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Show } from '@/components/util/show'
 import { columns } from '@/features/admin/invites/columns'
 import { useAllInvites } from '@/hooks/useInvites'
+import { TableQuery } from '@/lib/api'
 import { createFileRoute } from '@tanstack/react-router'
 import { PaginationState, SortingState } from '@tanstack/react-table'
 import { Loader2Icon } from 'lucide-react'
@@ -13,7 +14,7 @@ export const Route = createFileRoute('/_protected/admin/invites')({
 })
 
 function InvitesComponent() {
-  const [query, setQuery] = React.useState<string>('')
+  const [filter, setFilter] = React.useState<string>('')
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -21,7 +22,7 @@ function InvitesComponent() {
   const [sorting, setSorting] = React.useState<SortingState>([
     { id: 'createdAt', desc: true },
   ])
-  const invites = useAllInvites({ pagination, sorting, query })
+  const invites = useAllInvites(new TableQuery({ filter, pagination, sorting }))
 
   return (
     <div className="flex h-full w-full flex-col gap-3 p-4">
@@ -35,9 +36,9 @@ function InvitesComponent() {
           <PaginatedDataTable
             columns={columns}
             data={invites.data!}
-            query={{
-              value: query,
-              update: setQuery,
+            filter={{
+              value: filter,
+              update: setFilter,
             }}
             pagination={{
               value: pagination,

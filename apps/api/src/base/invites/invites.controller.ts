@@ -24,10 +24,8 @@ export class InviteController {
   constructor(private inviteService: InviteService) {}
 
   @Get()
-  getInvites(
-    @Query() { filter, pagination, sorting }: TableQueryDto<InviteCode>,
-  ) {
-    return this.inviteService.getInvites({ filter, pagination, sorting })
+  getInvites(@Query() query: TableQueryDto<InviteCode>) {
+    return this.inviteService.getInvites(query)
   }
 
   @Post()

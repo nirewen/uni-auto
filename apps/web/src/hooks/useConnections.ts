@@ -3,8 +3,8 @@ import {
   ConnectionModule,
   ConnectionProfile,
   ConnectionProfileHealth,
-  DataTableFilter,
   Paginated,
+  TableQuery,
   api,
 } from '@/lib/api'
 import {
@@ -22,28 +22,12 @@ export const useConnections = () => {
   })
 }
 
-export const useAllConnections = ({
-  pagination,
-  sorting,
-  query,
-}: DataTableFilter) => {
+export const useAllConnections = (params: TableQuery) => {
   return useQuery({
-    queryKey: ['connections', { pagination, sorting, query }],
+    queryKey: ['connections', params],
     queryFn: () =>
       api
-        .get<Paginated<Connection>>('/connections', {
-          params: {
-            query,
-            pagination: {
-              page: pagination.pageIndex + 1,
-              limit: pagination.pageSize,
-            },
-            sorting: {
-              id: sorting[0].id,
-              desc: sorting[0].desc,
-            },
-          },
-        })
+        .get<Paginated<Connection>>('/connections', { params })
         .then((res) => res.data),
     placeholderData: keepPreviousData,
   })

@@ -4,6 +4,13 @@ import { ConnectionModule } from '@uni-auto/shared/entities/connection-module.en
 
 import { ModuleSettings } from '@uni-auto/shared/entities/module-settings.entity'
 import { Module } from '@uni-auto/shared/entities/module.entity'
+import { paginate } from 'nestjs-typeorm-paginate'
+import { TableQueryDto } from 'src/common/dto/table-query.dto'
+import {
+  filterToWhere,
+  paginationToPaging,
+  sortToOrder,
+} from 'src/utils/table.util'
 import { Repository } from 'typeorm'
 import { ConnectionsService } from '../connections/connections.service'
 import { EnableModuleDTO } from './dto/enable-module.dto'
@@ -161,8 +168,13 @@ export class ModulesService {
     return settings
   }
 
-  async getAll() {
-    return this.moduleRepository.find()
+  async getAll({ pagination, filter, sorting }: TableQueryDto<Module>) {
+    const filterableFields = ['name', 'slug']
+
+    return paginate(this.moduleRepository, paginationToPaging(pagination), {
+      where: filterToWhere(filter, filterableFields),
+      order: sortToOrder(sorting),
+    })
   }
 
   async getModules(provider: string) {

@@ -116,10 +116,27 @@ export type Paginated<T> = {
   }
 }
 
-export type DataTableFilter = {
+export type TableQueryDto = {
+  filter: string
   pagination: PaginationState
   sorting: SortingState
-  query: string
+}
+export class TableQuery {
+  filter: string
+  pagination: { page: number; limit: number }
+  sorting: { id: string; desc: boolean }
+
+  constructor({ pagination, sorting, filter }: TableQueryDto) {
+    this.filter = filter
+    this.pagination = {
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+    }
+    this.sorting = {
+      id: sorting[0].id,
+      desc: sorting[0].desc,
+    }
+  }
 }
 
 export const api = axios.create({

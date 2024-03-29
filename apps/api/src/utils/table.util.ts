@@ -32,11 +32,11 @@ export const sortToOrder = (sorting: SortingOptions<any>) => {
   )
 }
 
-export const filterToWhere = (filter: string, filterableFields: string[]) => {
-  if (!filter) return
+export const filterToWhere = (query: string, filterableFields: string[]) => {
+  if (!query) return
 
   const or = filterableFields.map(field => ({
-    ...nestedObject(field, () => ILike(`%${filter}%`)),
+    ...nestedObject(field, () => ILike(`%${query}%`)),
   }))
 
   return or

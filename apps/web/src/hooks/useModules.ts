@@ -1,12 +1,20 @@
-import { ConnectionModule, Module, api } from '@/lib/api'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { ConnectionModule, Module, Paginated, TableQuery, api } from '@/lib/api'
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
-export const useAllModules = () => {
+export const useAllModules = (params: TableQuery) => {
   return useQuery({
-    queryKey: ['all', 'modules'],
+    queryKey: ['modules', params],
     queryFn: async () => {
-      return api.get<Module[]>(`/modules`).then((res) => res.data)
+      return api
+        .get<Paginated<Module>>(`/modules`, { params })
+        .then((res) => res.data)
     },
+    placeholderData: keepPreviousData,
   })
 }
 

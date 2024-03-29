@@ -6,6 +6,7 @@ import { PaginatedDataTable } from '@/components/ui/data-table.paginated'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Show } from '@/components/util/show'
 import { useAllConnections } from '@/hooks/useConnections'
+import { TableQuery } from '@/lib/api'
 import { PaginationState, SortingState } from '@tanstack/react-table'
 import { Loader2Icon } from 'lucide-react'
 import React from 'react'
@@ -15,7 +16,7 @@ export const Route = createFileRoute('/_protected/admin/connections')({
 })
 
 function ConnectionsComponent() {
-  const [query, setQuery] = React.useState<string>('')
+  const [filter, setFilter] = React.useState<string>('')
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -23,7 +24,9 @@ function ConnectionsComponent() {
   const [sorting, setSorting] = React.useState<SortingState>([
     { id: 'profile_displayName', desc: false },
   ])
-  const connections = useAllConnections({ pagination, sorting, query })
+  const connections = useAllConnections(
+    new TableQuery({ filter, pagination, sorting }),
+  )
 
   return (
     <div className="flex h-full w-full flex-col gap-3 p-4">
@@ -37,9 +40,9 @@ function ConnectionsComponent() {
           <PaginatedDataTable
             columns={columns}
             data={connections.data!}
-            query={{
-              value: query,
-              update: setQuery,
+            filter={{
+              value: filter,
+              update: setFilter,
             }}
             pagination={{
               value: pagination,

@@ -1,28 +1,12 @@
-import { DataTableFilter, InviteCode, Paginated, api } from '@/lib/api'
+import { InviteCode, Paginated, TableQuery, api } from '@/lib/api'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 
-export const useAllInvites = ({
-  pagination,
-  sorting,
-  query,
-}: DataTableFilter) => {
+export const useAllInvites = (params: TableQuery) => {
   return useQuery({
-    queryKey: ['invites', { pagination, sorting, query }],
+    queryKey: ['invites', params],
     queryFn: async () => {
       return api
-        .get<Paginated<InviteCode>>(`/invites`, {
-          params: {
-            query,
-            pagination: {
-              page: pagination.pageIndex + 1,
-              limit: pagination.pageSize,
-            },
-            sorting: {
-              id: sorting[0].id,
-              desc: sorting[0].desc,
-            },
-          },
-        })
+        .get<Paginated<InviteCode>>(`/invites`, { params })
         .then((res) => res.data)
     },
     placeholderData: keepPreviousData,

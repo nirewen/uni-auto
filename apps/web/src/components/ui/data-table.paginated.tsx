@@ -19,7 +19,7 @@ import {
 import { Paginated } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import { Show } from '../util/show'
-import { DebouncedInput } from './input.debounced'
+import { Input } from './input'
 import { Pagination } from './pagination'
 
 type DataTableProps<TData, TValue> = {
@@ -33,7 +33,7 @@ type DataTableProps<TData, TValue> = {
     value: SortingState
     update: React.Dispatch<React.SetStateAction<SortingState>>
   }
-  query?: {
+  filter?: {
     value: string
     update: React.Dispatch<React.SetStateAction<string>>
   }
@@ -42,7 +42,7 @@ type DataTableProps<TData, TValue> = {
 export function PaginatedDataTable<TData, TValue>({
   columns,
   data,
-  query,
+  filter,
   sorting,
   pagination,
 }: DataTableProps<TData, TValue>) {
@@ -58,7 +58,7 @@ export function PaginatedDataTable<TData, TValue>({
     state: {
       sorting: sorting?.value,
       pagination: pagination?.value,
-      globalFilter: query?.value,
+      globalFilter: filter?.value,
     },
     defaultColumn: {
       size: 0,
@@ -68,21 +68,20 @@ export function PaginatedDataTable<TData, TValue>({
 
   return (
     <div className="p-1">
-      <Show when={!!query || !!pagination}>
+      <Show when={!!filter || !!pagination}>
         <div className="flex items-center gap-2">
-          <Show when={!!query}>
-            <DebouncedInput
+          <Show when={!!filter}>
+            <Input
               type="search"
               placeholder="Pesquisar..."
-              value={query?.value ?? ''}
-              onChange={(value) => query?.update(value as string)}
+              value={filter?.value ?? ''}
+              onChange={(e) => filter?.update(e.target.value)}
               className="flex-1"
-              debounce={500}
             />
           </Show>
           <Show when={!!pagination}>
             <Pagination
-              className={cn({ 'mr-auto': !!query })}
+              className={cn({ 'mr-auto': !!filter })}
               table={table}
               setPagination={pagination!.update}
             />

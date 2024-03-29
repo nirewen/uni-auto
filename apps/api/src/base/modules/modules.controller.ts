@@ -5,11 +5,14 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common'
+import { Module } from '@uni-auto/shared/entities/module.entity'
 import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { RolesGuard } from 'src/auth/guards'
 import { ReqUser, Roles } from 'src/common/decorators'
+import { TableQueryDto } from 'src/common/dto/table-query.dto'
 import { EnableModuleDTO } from './dto/enable-module.dto'
 import { ModulesService } from './modules.service'
 
@@ -20,8 +23,8 @@ export class ModulesController {
   constructor(private readonly modulesService: ModulesService) {}
 
   @Get()
-  public getAll() {
-    return this.modulesService.getAll()
+  public getAll(@Query() query: TableQueryDto<Module>) {
+    return this.modulesService.getAll(query)
   }
 
   @Get(':provider')

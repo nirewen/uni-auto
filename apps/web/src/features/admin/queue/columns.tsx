@@ -10,13 +10,13 @@ export const columns: ColumnDef<Queue>[] = [
   {
     accessorKey: 'status',
     header: '',
-    size: 56,
+    size: 32,
     cell: ({ row }) => <QueueEntryStatus status={row.original.status} />,
   },
   {
     accessorKey: 'connection',
-    header: 'Usuário',
-    size: 1,
+    header: '',
+    size: 48,
     cell: ({ row }) => <UserCard mini user={row.original.connection.user!} />,
   },
   {

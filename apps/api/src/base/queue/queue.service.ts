@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Connection } from '@uni-auto/shared/entities/connection.entity'
 import { Queue } from '@uni-auto/shared/entities/queue.entity'
-import { Pagination, paginate } from 'nestjs-typeorm-paginate'
+import { paginate } from 'nestjs-typeorm-paginate'
 import { TableQueryDto } from 'src/common/dto/table-query.dto'
 import {
   filterToWhere,
@@ -28,11 +28,7 @@ export class QueueService {
     return this.queueRepository.save(queue)
   }
 
-  async getAllQueue({
-    pagination,
-    filter,
-    sorting,
-  }: TableQueryDto<Queue>): Promise<Pagination<Queue>> {
+  async getAllQueue({ pagination, filter, sorting }: TableQueryDto<Queue>) {
     const filterableFields = ['connection_user_displayName']
 
     return paginate(this.queueRepository, paginationToPaging(pagination), {
