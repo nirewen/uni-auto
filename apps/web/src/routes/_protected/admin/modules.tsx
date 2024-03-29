@@ -2,6 +2,7 @@ import { DataTable } from '@/components/ui/data-table'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Show } from '@/components/util/show'
 import { columns } from '@/features/admin/modules/columns'
+import useDebounce from '@/hooks/useDebounce'
 import { useAllModules } from '@/hooks/useModules'
 import { TableQuery } from '@/lib/api'
 import { createFileRoute } from '@tanstack/react-router'
@@ -14,14 +15,17 @@ export const Route = createFileRoute('/_protected/admin/modules')({
 })
 
 function ModulesComponent() {
-  const [filter, setFilter] = React.useState<string>('')
-  const [pagination, setPagination] = React.useState<PaginationState>({
+  const [filterState, setFilter] = React.useState<string>('')
+  const [paginationState, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
-  const [sorting, setSorting] = React.useState<SortingState>([
-    { id: 'name', desc: true },
+  const [sortingState, setSorting] = React.useState<SortingState>([
+    { id: 'createdAt', desc: true },
   ])
+  const filter = useDebounce(filterState, 500)
+  const pagination = useDebounce(paginationState, 500)
+  const sorting = useDebounce(sortingState, 500)
   const modules = useAllModules(new TableQuery({ filter, pagination, sorting }))
 
   return (
@@ -37,15 +41,15 @@ function ModulesComponent() {
             columns={columns}
             data={modules.data!}
             filter={{
-              value: filter,
+              value: filterState,
               update: setFilter,
             }}
             pagination={{
-              value: pagination,
+              value: paginationState,
               update: setPagination,
             }}
             sorting={{
-              value: sorting,
+              value: sortingState,
               update: setSorting,
             }}
           />

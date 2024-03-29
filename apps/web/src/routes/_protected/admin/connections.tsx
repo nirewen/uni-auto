@@ -6,6 +6,7 @@ import { DataTable } from '@/components/ui/data-table'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Show } from '@/components/util/show'
 import { useAllConnections } from '@/hooks/useConnections'
+import useDebounce from '@/hooks/useDebounce'
 import { TableQuery } from '@/lib/api'
 import { PaginationState, SortingState } from '@tanstack/react-table'
 import { Loader2Icon } from 'lucide-react'
@@ -16,14 +17,17 @@ export const Route = createFileRoute('/_protected/admin/connections')({
 })
 
 function ConnectionsComponent() {
-  const [filter, setFilter] = React.useState<string>('')
-  const [pagination, setPagination] = React.useState<PaginationState>({
+  const [filterState, setFilter] = React.useState<string>('')
+  const [paginationState, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
-  const [sorting, setSorting] = React.useState<SortingState>([
-    { id: 'profile_displayName', desc: false },
+  const [sortingState, setSorting] = React.useState<SortingState>([
+    { id: 'profile_displayName', desc: true },
   ])
+  const filter = useDebounce(filterState, 500)
+  const pagination = useDebounce(paginationState, 500)
+  const sorting = useDebounce(sortingState, 500)
   const connections = useAllConnections(
     new TableQuery({ filter, pagination, sorting }),
   )
@@ -41,15 +45,15 @@ function ConnectionsComponent() {
             columns={columns}
             data={connections.data!}
             filter={{
-              value: filter,
+              value: filterState,
               update: setFilter,
             }}
             pagination={{
-              value: pagination,
+              value: paginationState,
               update: setPagination,
             }}
             sorting={{
-              value: sorting,
+              value: sortingState,
               update: setSorting,
             }}
           />

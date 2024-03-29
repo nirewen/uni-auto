@@ -2,6 +2,7 @@ import { DataTable } from '@/components/ui/data-table'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Show } from '@/components/util/show'
 import { columns } from '@/features/admin/invites/columns'
+import useDebounce from '@/hooks/useDebounce'
 import { useAllInvites } from '@/hooks/useInvites'
 import { TableQuery } from '@/lib/api'
 import { createFileRoute } from '@tanstack/react-router'
@@ -14,14 +15,17 @@ export const Route = createFileRoute('/_protected/admin/invites')({
 })
 
 function InvitesComponent() {
-  const [filter, setFilter] = React.useState<string>('')
-  const [pagination, setPagination] = React.useState<PaginationState>({
+  const [filterState, setFilter] = React.useState<string>('')
+  const [paginationState, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
-  const [sorting, setSorting] = React.useState<SortingState>([
+  const [sortingState, setSorting] = React.useState<SortingState>([
     { id: 'createdAt', desc: true },
   ])
+  const filter = useDebounce(filterState, 500)
+  const pagination = useDebounce(paginationState, 500)
+  const sorting = useDebounce(sortingState, 500)
   const invites = useAllInvites(new TableQuery({ filter, pagination, sorting }))
 
   return (
@@ -37,15 +41,15 @@ function InvitesComponent() {
             columns={columns}
             data={invites.data!}
             filter={{
-              value: filter,
+              value: filterState,
               update: setFilter,
             }}
             pagination={{
-              value: pagination,
+              value: paginationState,
               update: setPagination,
             }}
             sorting={{
-              value: sorting,
+              value: sortingState,
               update: setSorting,
             }}
           />

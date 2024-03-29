@@ -14,16 +14,17 @@ export const Route = createFileRoute('/_protected/admin/queue')({
 })
 
 function QueueComponent() {
-  const [filterString, setFilter] = React.useState<string>('')
-  const [paginationFilter, setPagination] = React.useState<PaginationState>({
+  const [filterState, setFilter] = React.useState<string>('')
+  const [paginationState, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
-  const [sorting, setSorting] = React.useState<SortingState>([
+  const [sortingState, setSorting] = React.useState<SortingState>([
     { id: 'createdAt', desc: true },
   ])
-  const filter = useDebounce(filterString, 500)
-  const pagination = useDebounce(paginationFilter, 500)
+  const filter = useDebounce(filterState, 500)
+  const pagination = useDebounce(paginationState, 500)
+  const sorting = useDebounce(sortingState, 500)
   const queue = useQueue(new TableQuery({ filter, pagination, sorting }))
 
   return (
@@ -38,15 +39,15 @@ function QueueComponent() {
           columns={columns}
           data={queue.data!}
           filter={{
-            value: filterString,
+            value: filterState,
             update: setFilter,
           }}
           pagination={{
-            value: paginationFilter,
+            value: paginationState,
             update: setPagination,
           }}
           sorting={{
-            value: sorting,
+            value: sortingState,
             update: setSorting,
           }}
         />
