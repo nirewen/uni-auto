@@ -38,11 +38,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="uni-auto-theme">
-        <main className="flex w-full max-w-7xl flex-1 flex-col gap-2 p-2 dark:text-white md:m-auto md:max-h-[90vh]">
-          <AuthProvider>
-            <Outlet />
-          </AuthProvider>
-        </main>
+        <AuthProvider>
+          <Outlet />
+        </AuthProvider>
       </ThemeProvider>
       <Suspense>
         <TanStackRouterDevtools position="bottom-right" />

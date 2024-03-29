@@ -4,6 +4,7 @@ import { Loader2Icon } from 'lucide-react'
 import { TableQuery } from '@/lib/api'
 
 import { DataTable } from '@/components/ui/data-table'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Show } from '@/components/util/show'
 import { columns } from '@/features/admin/modules/columns'
 
@@ -22,23 +23,28 @@ function ModulesComponent() {
   const [sorting, sortingState] = useTableSorting([
     { id: 'enabled', desc: true },
   ])
-  const modules = useAllModules(new TableQuery({ filter, pagination, sorting }))
+
+  const query = useAllModules(new TableQuery({ filter, pagination, sorting }))
 
   return (
     <div className="flex h-full w-full flex-col gap-3 p-4">
       <h1 className="text-2xl font-bold">Módulos</h1>
       <p className="text-gray-500">Módulos da plataforma</p>
       <Show
-        when={!modules.isLoading && !!modules.data}
+        when={!query.isLoading && !!query.data}
         fallback={<Loader2Icon className="m-auto h-8 w-8 animate-spin" />}
       >
-        <DataTable
-          columns={columns}
-          data={modules.data!}
-          filter={filterState}
-          pagination={paginationState}
-          sorting={sortingState}
-        />
+        <ScrollArea>
+          <DataTable
+            columns={columns}
+            data={query.data!}
+            filter={filterState}
+            pagination={paginationState}
+            sorting={sortingState}
+          />
+          <ScrollBar orientation="horizontal" />
+          <ScrollBar orientation="vertical" />
+        </ScrollArea>
       </Show>
     </div>
   )
