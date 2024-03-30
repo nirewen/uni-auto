@@ -1,19 +1,23 @@
-import { ActiveStatus } from '@/components/active-status'
-import { Copy } from '@/components/copy'
+import { ColumnDef } from '@tanstack/react-table'
+import { ArrowRightIcon, InfinityIcon } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+
+import { InviteCode } from '@/lib/api'
+
+import { ActiveStatus } from '@/components/active-status'
+import { Copy } from '@/components/copy'
+import { DateSpan } from '@/components/table/date-span'
+import { SortingHeader } from '@/components/table/sorting-header'
 import { For } from '@/components/util/for'
 import { Show } from '@/components/util/show'
-import { DateSpan, SortingHeader } from '@/components/util/table.util'
 import { UserCard } from '@/features/connections/user/user-card'
 import { InviteUseCard } from '@/features/invites/invite-use'
-import { InviteCode } from '@/lib/api'
-import { ColumnDef } from '@tanstack/react-table'
-import { ArrowRightIcon, InfinityIcon } from 'lucide-react'
 
 export const columns: ColumnDef<InviteCode>[] = [
   {

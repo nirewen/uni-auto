@@ -1,11 +1,11 @@
 import { Copy } from '@/components/copy'
+import { DateSpan } from '@/components/table/date-span'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { DateSpan } from '@/components/util/table.util'
 import { InviteUse } from '@/lib/api'
 import { nameToInitials } from '@/lib/utils'
 import { CalendarDaysIcon, TagIcon } from 'lucide-react'

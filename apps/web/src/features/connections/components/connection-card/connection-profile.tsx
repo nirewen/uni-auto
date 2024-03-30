@@ -1,4 +1,5 @@
 import { Copy } from '@/components/copy'
+import { DateSpan } from '@/components/table/date-span'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -6,7 +7,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { DateSpan } from '@/components/util/table.util'
 import { useConnectionProfile } from '@/hooks/useConnections'
 import { Connection } from '@/lib/api'
 import { nameToInitials } from '@/lib/utils'

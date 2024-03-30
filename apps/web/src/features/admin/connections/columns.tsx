@@ -1,4 +1,4 @@
-import { SortingHeader } from '@/components/util/table.util'
+import { SortingHeader } from '@/components/table/sorting-header'
 import { ConnectionType } from '@/features/connections/components/connection-card/connection-type'
 import { UserCard } from '@/features/connections/user/user-card'
 import { Connection } from '@/lib/api'

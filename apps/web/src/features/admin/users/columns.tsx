@@ -1,5 +1,6 @@
 import { ActiveStatus } from '@/components/active-status'
-import { DateSpan, SortingHeader } from '@/components/util/table.util'
+import { DateSpan } from '@/components/table/date-span'
+import { SortingHeader } from '@/components/table/sorting-header'
 import { UserCard } from '@/features/connections/user/user-card'
 import { RoleIcon } from '@/features/connections/user/user-role'
 import { User } from '@/lib/api'

@@ -1,4 +1,5 @@
 import { Copy } from '@/components/copy'
+import { DateSpan } from '@/components/table/date-span'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -7,7 +8,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Show } from '@/components/util/show'
-import { DateSpan } from '@/components/util/table.util'
 import { User } from '@/lib/api'
 import { cn, nameToInitials } from '@/lib/utils'
 import { CalendarDaysIcon, QrCodeIcon } from 'lucide-react'
