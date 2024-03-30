@@ -1,8 +1,7 @@
 import { CardTitle } from '@/features/connections/components/[id]/module-section/card/card.title'
 import { DiscordUser, useCreatorDiscord } from '@/hooks/useCreator'
-import { api, refreshToken } from '@/lib/api'
+import { useConsumeInvite } from '@/hooks/useInvites'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -100,12 +99,11 @@ function ActivationHelper() {
 }
 
 const schema = z.object({
-  code: z.string().uuid({ message: 'Código de ativação inválido' }),
+  code: z.string(),
 })
 type FormValues = z.infer<typeof schema>
 
 export function Activation() {
-  const queryClient = useQueryClient()
   const {
     register,
     handleSubmit,
@@ -113,26 +111,10 @@ export function Activation() {
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
   })
-  const [invalid, setInvalid] = useState<string | null>(null)
+  const consume = useConsumeInvite()
 
-  async function onSubmit(formData: FormValues) {
-    try {
-      const { data } = await api.post(`/invite/use/${formData.code}`)
-
-      await refreshToken()
-
-      queryClient.invalidateQueries({ queryKey: ['token-user'] })
-      queryClient.invalidateQueries({ queryKey: ['connections'] })
-      queryClient.invalidateQueries({ queryKey: ['modules'] })
-    } catch (_e) {
-      if (_e instanceof AxiosError) {
-        setInvalid(_e.response?.data.message)
-
-        setTimeout(() => {
-          setInvalid(null)
-        }, 5000)
-      }
-    }
+  function onSubmit(formData: FormValues) {
+    consume.mutate(formData.code)
   }
 
   return (
@@ -158,7 +140,11 @@ export function Activation() {
             />
             <small className="h-4 text-red-400">{errors.code?.message}</small>
           </label>
-          {invalid && <p className="-mt-4 h-0 text-red-400">{invalid}</p>}
+          {consume.isError && consume.error instanceof AxiosError && (
+            <p className="-mt-4 h-0 text-red-400">
+              {consume.error.response?.data.message}
+            </p>
+          )}
         </form>
       </CardContent>
       <CardFooter className="justify-end gap-2">
