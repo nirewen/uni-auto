@@ -1,8 +1,8 @@
 import { ActiveStatus } from '@/components/active-status'
 import { DateSpan } from '@/components/table/date-span'
 import { SortingHeader } from '@/components/table/sorting-header'
-import { UserCard } from '@/features/connections/user/user-card'
-import { RoleIcon } from '@/features/connections/user/user-role'
+import { UserCard } from '@/features/users/user-card'
+import { RoleIcon } from '@/features/users/user-role'
 import { User } from '@/lib/api'
 import { ColumnDef } from '@tanstack/react-table'
 
@@ -28,7 +28,7 @@ export const columns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex gap-1">
-          <UserCard user={row.original} controls />
+          <UserCard user={row.original} />
         </div>
       )
     },

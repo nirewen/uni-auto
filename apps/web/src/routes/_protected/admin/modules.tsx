@@ -5,7 +5,7 @@ import { TableQuery } from '@/lib/api'
 
 import { Show } from '@/components/flow/show'
 import { DataTable } from '@/components/ui/data-table'
-import { columns } from '@/features/admin/modules/columns'
+import { columns } from '@/features/modules/table/columns'
 
 import { DataTableContext } from '@/context/data-table-context'
 import { useTableFilter } from '@/hooks/table/useTableFilter'

@@ -9,17 +9,19 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { User } from '@/lib/api'
-import { cn, nameToInitials } from '@/lib/utils'
+import { cn, nameToInitials, useTokenUser } from '@/lib/utils'
 import { CalendarDaysIcon, QrCodeIcon } from 'lucide-react'
 
 type UserCardProps = {
   user: User
   mini?: boolean
-  controls?: boolean
 }
 
-export function UserCard({ user, mini, controls = false }: UserCardProps) {
-  if (!user) return null
+export function UserCard({ user, mini }: UserCardProps) {
+  const { data: loggedUser } = useTokenUser()
+  if (!user || !loggedUser) return null
+
+  const controls = loggedUser.role === 'ADMIN'
 
   return (
     <Popover>

@@ -1,10 +1,10 @@
 import { SortingHeader } from '@/components/table/sorting-header'
 import { ConnectionType } from '@/features/connections/components/connection-card/connection-type'
-import { UserCard } from '@/features/connections/user/user-card'
+import { UserCard } from '@/features/users/user-card'
 import { Connection } from '@/lib/api'
 import { ColumnDef } from '@tanstack/react-table'
-import { ConnectionProfileCard } from '../../connections/components/connection-card/connection-profile'
-import { ProviderCard } from '../../connections/provider/provider-card'
+import { ConnectionProfileCard } from '../components/connection-card/connection-profile'
+import { ProviderCard } from '../provider/provider-card'
 
 export const columns: ColumnDef<Connection>[] = [
   {
@@ -23,7 +23,7 @@ export const columns: ColumnDef<Connection>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex gap-1">
-          <UserCard mini user={row.original.user!} controls />
+          <UserCard mini user={row.original.user!} />
           <ConnectionProfileCard connection={row.original} />
         </div>
       )

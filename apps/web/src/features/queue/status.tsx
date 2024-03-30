@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import { CheckIcon, Loader2Icon } from 'lucide-react'
-import { Show } from '../flow/show'
+import { Show } from '../../components/flow/show'
 
 type QueueEntryStatus = {
   status: string

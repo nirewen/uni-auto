@@ -16,9 +16,9 @@ import { For } from '@/components/flow/for'
 import { Show } from '@/components/flow/show'
 import { DateSpan } from '@/components/table/date-span'
 import { SortingHeader } from '@/components/table/sorting-header'
-import { UserCard } from '@/features/connections/user/user-card'
 import { InviteRole } from '@/features/invites/invite-role'
 import { InviteUseCard } from '@/features/invites/invite-use'
+import { UserCard } from '@/features/users/user-card'
 
 export const columns: ColumnDef<InviteCode>[] = [
   {
@@ -86,7 +86,7 @@ export const columns: ColumnDef<InviteCode>[] = [
                   }
                 >
                   {(use) => {
-                    return <InviteUseCard key={use.id} use={use} controls />
+                    return <InviteUseCard key={use.id} use={use} />
                   }}
                 </For>
               </div>
@@ -102,7 +102,7 @@ export const columns: ColumnDef<InviteCode>[] = [
     header: () => <span className="text-nowrap">Criado por</span>,
     cell: ({ row }) => (
       <div className="flex items-center gap-1">
-        <UserCard mini user={row.original.createdBy} controls />
+        <UserCard mini user={row.original.createdBy} />
         <Show
           when={
             row.original.assignedTo &&
@@ -110,7 +110,7 @@ export const columns: ColumnDef<InviteCode>[] = [
           }
         >
           <ArrowRightIcon className="h-4 w-4 text-neutral-500" />
-          <UserCard mini user={row.original.assignedTo} controls />
+          <UserCard mini user={row.original.assignedTo} />
         </Show>
       </div>
     ),

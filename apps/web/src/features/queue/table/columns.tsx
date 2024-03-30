@@ -1,9 +1,9 @@
 import { Copy } from '@/components/copy'
-import { JsonData } from '@/components/queue/json-data'
-import { QueueEntryStatus } from '@/components/queue/status'
 import { DateSpan } from '@/components/table/date-span'
 import { SortingHeader } from '@/components/table/sorting-header'
-import { UserCard } from '@/features/connections/user/user-card'
+import { JsonData } from '@/features/queue/json-data'
+import { QueueEntryStatus } from '@/features/queue/status'
+import { UserCard } from '@/features/users/user-card'
 import { Queue } from '@/lib/api'
 import { ColumnDef } from '@tanstack/react-table'
 
