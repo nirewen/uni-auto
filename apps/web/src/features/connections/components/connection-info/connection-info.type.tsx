@@ -1,6 +1,6 @@
 import { Loader2Icon, PuzzleIcon } from 'lucide-react'
 
-import { Show } from '@/components/util/show'
+import { Show } from '@/components/flow/show'
 
 import { ModuleSection } from '../[id]/module-section'
 import { ConnectionType } from '../connection-card/connection-type'

@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 import { CheckIcon, CopyIcon, LucideIcon } from 'lucide-react'
 import { useState } from 'react'
-import { Show } from './util/show'
+import { Show } from './flow/show'
 
 type CopyProps = {
   icon?: LucideIcon

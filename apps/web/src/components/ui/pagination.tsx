@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils'
 import { PaginationState, Table } from '@tanstack/react-table'
 import { ArrowLeftIcon, ArrowRightIcon, MoreHorizontalIcon } from 'lucide-react'
-import { For } from '../util/for'
-import { Show } from '../util/show'
+import { For } from '../flow/for'
+import { Show } from '../flow/show'
 import { Button } from './button'
 import {
   Select,

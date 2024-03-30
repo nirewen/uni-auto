@@ -1,7 +1,7 @@
 import { useDataTableContext } from '@/context/data-table-context'
 import { Loader2Icon, RotateCwIcon } from 'lucide-react'
+import { Show } from '../flow/show'
 import { Button } from '../ui/button'
-import { Show } from '../util/show'
 
 export function RefreshButton() {
   const { query, refresh } = useDataTableContext()

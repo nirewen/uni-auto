@@ -6,6 +6,7 @@ import { AxiosError } from 'axios'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { Show } from '../../components/flow/show'
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -31,7 +32,6 @@ import {
   HoverCardTrigger,
 } from '../../components/ui/hover-card'
 import { Input } from '../../components/ui/input'
-import { Show } from '../../components/util/show'
 
 type DiscordUserCardProps = {
   user: DiscordUser

@@ -16,8 +16,8 @@ import {
 import { useDataTableContext } from '@/context/data-table-context'
 import { Paginated } from '@/lib/api'
 import { cn } from '@/lib/utils'
+import { Show } from '../flow/show'
 import { RefreshButton } from '../table/refresh-button'
-import { Show } from '../util/show'
 import { Input } from './input'
 import { Pagination } from './pagination'
 

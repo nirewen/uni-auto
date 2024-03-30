@@ -3,8 +3,8 @@ import { Loader2Icon } from 'lucide-react'
 
 import { TableQuery } from '@/lib/api'
 
+import { Show } from '@/components/flow/show'
 import { DataTable } from '@/components/ui/data-table'
-import { Show } from '@/components/util/show'
 import { columns } from '@/features/admin/modules/columns'
 
 import { DataTableContext } from '@/context/data-table-context'

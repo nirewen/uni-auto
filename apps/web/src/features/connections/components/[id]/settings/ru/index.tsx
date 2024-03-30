@@ -14,6 +14,7 @@ import {
   iconLunch,
   iconPlasticFoodContainer,
 } from '@/assets/icons'
+import { For } from '@/components/flow/for'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import {
@@ -29,7 +30,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { For } from '@/components/util/for'
 
 interface RUSettingsProps {
   settings: Settings

@@ -1,7 +1,7 @@
 import { Column } from '@tanstack/react-table'
 import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from 'lucide-react'
+import { Show } from '../flow/show'
 import { Button } from '../ui/button'
-import { Show } from '../util/show'
 
 type SortingHeaderProps<T> = {
   column: Column<T, unknown>

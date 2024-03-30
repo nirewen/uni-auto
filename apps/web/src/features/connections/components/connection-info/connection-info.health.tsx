@@ -1,6 +1,6 @@
 import { HeartPulseIcon } from 'lucide-react'
 
-import { Show } from '@/components/util/show'
+import { Show } from '@/components/flow/show'
 
 import { ModuleSection } from '../[id]/module-section'
 import { ConnectionHealth } from '../connection-card/connection-health'
