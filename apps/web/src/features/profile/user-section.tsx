@@ -18,10 +18,10 @@ export function UserSection({ user }: UserSectionProps) {
     <ModuleSection.Root>
       <ModuleSection.Header>
         <ModuleSection.Icon>
-          <Avatar className="relative h-8 w-8 overflow-visible rounded-sm">
-            <AvatarImage src={user.avatarUrl} />
+          <Avatar className="relative h-8 w-8 overflow-visible">
+            <AvatarImage className="rounded-sm" src={user.avatarUrl} />
             <AvatarFallback>{nameToInitials(user.displayName)}</AvatarFallback>
-            <Avatar className="absolute -bottom-1 -right-1 h-4 w-4">
+            <Avatar className="absolute -bottom-1 -right-1 h-5 w-5">
               <AvatarImage
                 src={`https://www.google.com/s2/favicons?domain=${user.provider}.com&sz=24`}
               />
