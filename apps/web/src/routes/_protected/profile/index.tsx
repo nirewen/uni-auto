@@ -11,7 +11,7 @@ function ProfileComponent() {
   const user = useUser()
 
   return (
-    <div className="flex h-full flex-col gap-2 overflow-auto p-3">
+    <div className="flex flex-1 flex-col gap-2 overflow-auto p-3">
       <UserSection user={user.data} />
       <div className="mt-auto">
         <ProfileDangerZone />

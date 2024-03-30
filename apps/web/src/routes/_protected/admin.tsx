@@ -7,9 +7,9 @@ export const Route = createFileRoute('/_protected/admin')({
 
 function AdminLayoutComponent() {
   return (
-    <div className="flex h-full w-full flex-col-reverse overflow-hidden rounded-xl border border-neutral-800 sm:flex-row">
+    <div className="flex h-full w-full flex-col gap-2 overflow-hidden sm:flex-row">
       <Sidebar />
-      <div className="flex h-full w-full min-w-0 flex-col">
+      <div className="flex h-full w-full min-w-0 flex-col overflow-auto rounded-3xl border border-neutral-800">
         <Outlet />
       </div>
     </div>
