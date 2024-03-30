@@ -16,6 +16,7 @@ import {
 import { useDataTableContext } from '@/context/data-table-context'
 import { Paginated } from '@/lib/api'
 import { cn } from '@/lib/utils'
+import { RefreshButton } from '../table/refresh-button'
 import { Show } from '../util/show'
 import { Input } from './input'
 import { Pagination } from './pagination'
@@ -76,6 +77,7 @@ export function DataTable<TData, TValue>({
               setPagination={setPagination!}
             />
           </Show>
+          <RefreshButton />
         </div>
       </Show>
       <div className="flex flex-col overflow-auto rounded-md border">

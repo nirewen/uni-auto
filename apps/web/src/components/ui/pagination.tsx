@@ -70,7 +70,7 @@ export function Pagination({
       <Button
         variant="outline"
         className="w-10 px-0"
-        size="sm"
+        size="icon"
         onClick={() => table.previousPage()}
         disabled={!table.getCanPreviousPage()}
       >
@@ -81,7 +81,7 @@ export function Pagination({
         className={cn('px-0 w-10', {
           'bg-neutral-300 text-black': currentPage === 0,
         })}
-        size="sm"
+        size="icon"
         onClick={() => table.firstPage()}
       >
         1
@@ -100,7 +100,7 @@ export function Pagination({
                 className={cn('w-10 px-0', {
                   'bg-neutral-300 text-black': currentPage === pageNumber,
                 })}
-                size="sm"
+                size="icon"
                 onClick={() =>
                   setPagination((prev) => ({ ...prev, pageIndex: pageNumber }))
                 }
@@ -112,7 +112,7 @@ export function Pagination({
         }}
       </For>
       <Show when={showEllipsis('right')}>
-        <Button variant="outline" className="w-10 px-0" size="sm" disabled>
+        <Button variant="outline" className="w-10 px-0" size="icon" disabled>
           <MoreHorizontalIcon />
         </Button>
       </Show>
@@ -122,7 +122,7 @@ export function Pagination({
           className={cn('w-10 px-0', {
             'bg-neutral-300 text-black': currentPage === pageCount - 1,
           })}
-          size="sm"
+          size="icon"
           onClick={() => table.lastPage()}
         >
           {pageCount}
@@ -131,7 +131,7 @@ export function Pagination({
       <Button
         variant="outline"
         className="w-10 px-0"
-        size="sm"
+        size="icon"
         onClick={() => table.nextPage()}
         disabled={!table.getCanNextPage()}
       >
