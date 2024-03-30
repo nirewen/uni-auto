@@ -1,14 +1,10 @@
-export type ShowProps<T extends boolean | undefined> = {
-  when: T
+export type ShowProps = {
+  when: any
   fallback?: React.ReactNode
   children: React.ReactNode
 }
 
-export function Show<T extends boolean | undefined>({
-  when,
-  fallback = null,
-  children,
-}: ShowProps<T>) {
+export function Show({ when, fallback = null, children }: ShowProps) {
   if (!!when) {
     return <>{children}</>
   }

@@ -17,7 +17,6 @@ import { CreateInviteDto } from './dto/create-invite.dto'
 import { InviteService } from './invites.service'
 
 @Controller('invites')
-@LoggedIn()
 @UseGuards(RolesGuard)
 @Roles(UserRole.ADMIN)
 export class InviteController {
@@ -50,6 +49,7 @@ export class InviteController {
   }
 
   @Post('/use/:code')
+  @LoggedIn()
   @Roles(UserRole.USER)
   useInvite(@ReqUser() user: User, @Param('code') code: string) {
     return this.inviteService.useInvite(user, code)
