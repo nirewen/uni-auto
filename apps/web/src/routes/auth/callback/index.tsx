@@ -1,4 +1,4 @@
-import { useAuth } from '@/context/auth-provider'
+import { useAuth } from '@/hooks/auth-provider'
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect } from 'react'
 

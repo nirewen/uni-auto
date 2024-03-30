@@ -1,4 +1,4 @@
-import { useConnection } from '@/hooks/useConnections'
+import { useConnection } from '@/features/connections/hooks'
 import { Outlet, createFileRoute } from '@tanstack/react-router'
 import { Helmet } from 'react-helmet'
 

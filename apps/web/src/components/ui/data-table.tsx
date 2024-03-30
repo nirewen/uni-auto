@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useDataTableContext } from '@/context/data-table-context'
+import { useDataTableContext } from '@/hooks/data-table-context'
 import { Paginated } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import { Show } from '../flow/show'

@@ -13,7 +13,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { useConnection } from '@/hooks/useConnections'
+import { useConnection } from '@/features/connections/hooks'
 import { cn } from '@/lib/utils'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { Check, ChevronDown, PackageIcon } from 'lucide-react'

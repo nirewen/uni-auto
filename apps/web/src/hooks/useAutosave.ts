@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+
 import useDebounce from './useDebounce'
 
 export interface CommonProps<TData, TReturn> {
@@ -49,7 +50,7 @@ function useAutosave<TData, TReturn>({
         handleSave.current(valueOnCleanup.current)
       }
     },
-    [saveOnUnmount]
+    [saveOnUnmount],
   )
 
   return saved

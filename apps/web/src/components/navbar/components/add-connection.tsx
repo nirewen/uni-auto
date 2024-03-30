@@ -1,5 +1,8 @@
-import { Plus } from 'lucide-react'
 import * as React from 'react'
+
+import { Plus } from 'lucide-react'
+
+import { useNavigate } from '@tanstack/react-router'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -14,9 +17,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { useProviders } from '@/hooks/useProviders'
+import { useAllProviders } from '@/features/provider/hooks'
 import { cn } from '@/lib/utils'
-import { useNavigate } from '@tanstack/react-router'
 
 type AddConnectionProps = {
   size?: 'sm' | 'md' | 'lg'
@@ -26,7 +28,7 @@ type AddConnectionProps = {
 export function AddConnection({ size, className }: AddConnectionProps) {
   const [open, setOpen] = React.useState(false)
   const navigate = useNavigate()
-  const { data: providers, isLoading } = useProviders()
+  const { data: providers, isLoading } = useAllProviders()
 
   if (!providers || isLoading) return null
 

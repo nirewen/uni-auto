@@ -1,5 +1,5 @@
 import { ConnectionProfileWideCard } from '@/features/connections/components/connection-card/connection-profile'
-import { useConnection } from '@/hooks/useConnections'
+import { useConnection } from '@/features/connections/hooks'
 import {
   Navigate,
   Outlet,

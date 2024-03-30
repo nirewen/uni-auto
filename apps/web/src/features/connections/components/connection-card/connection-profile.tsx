@@ -7,8 +7,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { useConnectionProfile } from '@/hooks/useConnections'
-import { Connection } from '@/lib/api'
+import { useConnectionProfile } from '@/features/connections/hooks'
+import { Connection } from '@/features/connections/types'
 import { nameToInitials } from '@/lib/utils'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { CalendarDaysIcon, QrCodeIcon, SettingsIcon } from 'lucide-react'

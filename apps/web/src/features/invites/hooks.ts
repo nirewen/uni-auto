@@ -1,32 +1,21 @@
-import { InviteCode, Paginated, TableQuery, api, refreshToken } from '@/lib/api'
+import { TableQuery } from '@/lib/types'
 import {
   keepPreviousData,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
+
+import { refreshToken } from '@/lib/api'
 import { AxiosError } from 'axios'
+import * as service from './service'
 
-export const useAllInvites = (params: TableQuery) => {
-  return useQuery({
-    queryKey: ['invites', params],
-    queryFn: async () => {
-      return api
-        .get<Paginated<InviteCode>>(`/invites`, { params })
-        .then((res) => res.data)
-    },
-    placeholderData: keepPreviousData,
-  })
-}
-
-export const useConsumeInvite = () => {
+export function useConsumeInvite() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationKey: ['invites', 'consume'],
-    mutationFn: async (code: string) => {
-      return api.post(`/invites/use/${code}`).then((res) => res.data)
-    },
+    mutationFn: service.consumeInvite(),
     onSuccess: async () => {
       await refreshToken()
 
@@ -44,14 +33,20 @@ export const useConsumeInvite = () => {
   })
 }
 
-export const useMyInvites = (params: TableQuery) => {
+export function useAllInvites(params: TableQuery) {
+  return useQuery({
+    queryKey: ['invites', params],
+    queryFn: service.getAllInvites(params),
+    select: (res) => res.data,
+    placeholderData: keepPreviousData,
+  })
+}
+
+export function useMyInvites(params: TableQuery) {
   return useQuery({
     queryKey: ['invites/@me', params],
-    queryFn: async () => {
-      return api
-        .get<Paginated<InviteCode>>(`/invites/@me`, { params })
-        .then((res) => res.data)
-    },
+    queryFn: service.getMyInvites(params),
+    select: (res) => res.data,
     placeholderData: keepPreviousData,
   })
 }

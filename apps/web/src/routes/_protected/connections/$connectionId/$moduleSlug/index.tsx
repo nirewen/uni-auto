@@ -1,4 +1,4 @@
-import { useConnection } from '@/hooks/useConnections'
+import { useConnection } from '@/features/connections/hooks'
 import { createFileRoute } from '@tanstack/react-router'
 import { AutoRU } from './modules/-auto-ru'
 

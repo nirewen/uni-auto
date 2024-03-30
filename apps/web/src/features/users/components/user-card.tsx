@@ -8,9 +8,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { User } from '@/lib/api'
 import { cn, nameToInitials, useTokenUser } from '@/lib/utils'
 import { CalendarDaysIcon, QrCodeIcon } from 'lucide-react'
+import { User } from '../types'
 
 type UserCardProps = {
   user: User

@@ -1,6 +1,8 @@
-import { ActiveStatus } from '@/components/active-status'
-import { Module } from '@/lib/api'
 import { ColumnDef } from '@tanstack/react-table'
+
+import { ActiveStatus } from '@/components/active-status'
+
+import { Module } from '../types'
 
 export const columns: ColumnDef<Module>[] = [
   {

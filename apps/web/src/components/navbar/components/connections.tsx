@@ -19,7 +19,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { useConnectionHealth, useConnections } from '@/hooks/useConnections'
+import {
+  useConnectionHealth,
+  useConnections,
+} from '@/features/connections/hooks'
 import { cn, universityLogos } from '@/lib/utils'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { CableIcon, Check, ChevronDown } from 'lucide-react'

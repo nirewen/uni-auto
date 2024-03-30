@@ -1,5 +1,7 @@
-import { PaginationState } from '@tanstack/react-table'
 import React from 'react'
+
+import { PaginationState } from '@tanstack/react-table'
+
 import useDebounce from '../useDebounce'
 
 export const useTablePagination = () => {

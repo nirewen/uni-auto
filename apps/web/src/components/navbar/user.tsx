@@ -1,4 +1,4 @@
-import { useAuth } from '@/context/auth-provider'
+import { useAuth } from '@/hooks/auth-provider'
 import { cn } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
 import { LockIcon, LogInIcon, LogOutIcon, UserRoundIcon } from 'lucide-react'

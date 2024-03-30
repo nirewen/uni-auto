@@ -1,4 +1,4 @@
-import { useDataTableContext } from '@/context/data-table-context'
+import { useDataTableContext } from '@/hooks/data-table-context'
 import { Loader2Icon, RotateCwIcon } from 'lucide-react'
 import { Show } from '../flow/show'
 import { Button } from '../ui/button'

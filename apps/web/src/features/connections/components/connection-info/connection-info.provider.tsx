@@ -1,8 +1,7 @@
 import { GraduationCapIcon } from 'lucide-react'
 
-import { Provider } from '@/lib/api'
-
-import { ProviderCard } from '@/features/connections/provider/provider-card'
+import { ProviderCard } from '@/features/provider/components/provider-card'
+import { Provider } from '@/features/provider/types'
 import { ModuleSection } from '../[id]/module-section'
 import { ConnectionInfoLoader } from './connection-info.loader'
 

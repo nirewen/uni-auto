@@ -1,5 +1,5 @@
-import { Provider } from '@/lib/api'
 import { cn, universityLogos } from '@/lib/utils'
+import { Provider } from '../types'
 
 type ProviderCardProps = {
   provider: Provider

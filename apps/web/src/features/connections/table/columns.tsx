@@ -1,10 +1,13 @@
-import { SortingHeader } from '@/components/table/sorting-header'
-import { ConnectionType } from '@/features/connections/components/connection-card/connection-type'
-import { UserCard } from '@/features/users/user-card'
-import { Connection } from '@/lib/api'
 import { ColumnDef } from '@tanstack/react-table'
+
+import { SortingHeader } from '@/components/table/sorting-header'
+
+import { ConnectionType } from '@/features/connections/components/connection-card/connection-type'
+import { ProviderCard } from '@/features/provider/components/provider-card'
+import { UserCard } from '@/features/users/components/user-card'
+
 import { ConnectionProfileCard } from '../components/connection-card/connection-profile'
-import { ProviderCard } from '../provider/provider-card'
+import { Connection } from '../types'
 
 export const columns: ColumnDef<Connection>[] = [
   {

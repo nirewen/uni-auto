@@ -1,5 +1,5 @@
 import logo from '@/assets/Logo.svg'
-import { useAuth } from '@/context/auth-provider'
+import { useAuth } from '@/hooks/auth-provider'
 import { Navigate, createFileRoute } from '@tanstack/react-router'
 import { Form } from './-form'
 

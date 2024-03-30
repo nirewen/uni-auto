@@ -11,10 +11,10 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { ModuleSection } from '@/features/connections/components/[id]/module-section'
-import { useDeleteUser } from '@/hooks/useUser'
+import { useDeleteCurrentUser } from '../users/hooks'
 
 export function ProfileDangerZone() {
-  const { mutate: deleteUser } = useDeleteUser()
+  const { mutate: deleteUser } = useDeleteCurrentUser()
 
   return (
     <ModuleSection.Root>

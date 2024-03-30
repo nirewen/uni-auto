@@ -1,11 +1,14 @@
+import { ColumnDef } from '@tanstack/react-table'
+
 import { Copy } from '@/components/copy'
 import { DateSpan } from '@/components/table/date-span'
 import { SortingHeader } from '@/components/table/sorting-header'
-import { JsonData } from '@/features/queue/json-data'
-import { QueueEntryStatus } from '@/features/queue/status'
-import { UserCard } from '@/features/users/user-card'
-import { Queue } from '@/lib/api'
-import { ColumnDef } from '@tanstack/react-table'
+
+import { UserCard } from '@/features/users/components/user-card'
+
+import { JsonData } from '../components/json-data'
+import { QueueEntryStatus } from '../components/status'
+import { Queue } from '../types'
 
 export const columns: ColumnDef<Queue>[] = [
   {
@@ -18,9 +21,7 @@ export const columns: ColumnDef<Queue>[] = [
     accessorKey: 'connection',
     header: '',
     size: 38,
-    cell: ({ row }) => (
-      <UserCard mini user={row.original.connection.user!} controls />
-    ),
+    cell: ({ row }) => <UserCard mini user={row.original.connection.user!} />,
   },
   {
     accessorKey: 'data',

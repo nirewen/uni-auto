@@ -1,12 +1,11 @@
 import { CardTitle } from '@/features/connections/components/[id]/module-section/card/card.title'
 import { DiscordUser, useCreatorDiscord } from '@/hooks/useCreator'
-import { useConsumeInvite } from '@/hooks/useInvites'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AxiosError } from 'axios'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { Show } from '../../components/flow/show'
+import { Show } from '../../../components/flow/show'
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -16,22 +15,27 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '../../components/ui/alert-dialog'
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar'
-import { Button } from '../../components/ui/button'
+} from '../../../components/ui/alert-dialog'
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '../../../components/ui/avatar'
+import { Button } from '../../../components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-} from '../../components/ui/card'
+} from '../../../components/ui/card'
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from '../../components/ui/hover-card'
-import { Input } from '../../components/ui/input'
+} from '../../../components/ui/hover-card'
+import { Input } from '../../../components/ui/input'
+import { useConsumeInvite } from '../hooks'
 
 type DiscordUserCardProps = {
   user: DiscordUser

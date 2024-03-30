@@ -1,6 +1,7 @@
+import React from 'react'
+
 import { UseQueryResult } from '@tanstack/react-query'
 import { PaginationState, SortingState } from '@tanstack/react-table'
-import React from 'react'
 
 type TableContextProps<TData> = {
   query: UseQueryResult<TData, Error>

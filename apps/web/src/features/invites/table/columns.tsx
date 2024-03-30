@@ -1,6 +1,12 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowRightIcon, InfinityIcon } from 'lucide-react'
 
+import { ActiveStatus } from '@/components/active-status'
+import { Copy } from '@/components/copy'
+import { For } from '@/components/flow/for'
+import { Show } from '@/components/flow/show'
+import { DateSpan } from '@/components/table/date-span'
+import { SortingHeader } from '@/components/table/sorting-header'
 import { Button } from '@/components/ui/button'
 import {
   Popover,
@@ -8,17 +14,11 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 
-import { InviteCode } from '@/lib/api'
+import { InviteUseCard } from '@/features/invites/components/invite-use'
+import { UserCard } from '@/features/users/components/user-card'
 
-import { ActiveStatus } from '@/components/active-status'
-import { Copy } from '@/components/copy'
-import { For } from '@/components/flow/for'
-import { Show } from '@/components/flow/show'
-import { DateSpan } from '@/components/table/date-span'
-import { SortingHeader } from '@/components/table/sorting-header'
-import { InviteRole } from '@/features/invites/invite-role'
-import { InviteUseCard } from '@/features/invites/invite-use'
-import { UserCard } from '@/features/users/user-card'
+import { InviteRole } from '../components/invite-role'
+import { InviteCode } from '../types'
 
 export const columns: ColumnDef<InviteCode>[] = [
   {

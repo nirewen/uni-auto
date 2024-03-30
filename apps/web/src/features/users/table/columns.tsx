@@ -1,10 +1,12 @@
+import { ColumnDef } from '@tanstack/react-table'
+
 import { ActiveStatus } from '@/components/active-status'
 import { DateSpan } from '@/components/table/date-span'
 import { SortingHeader } from '@/components/table/sorting-header'
-import { UserCard } from '@/features/users/user-card'
-import { RoleIcon } from '@/features/users/user-role'
-import { User } from '@/lib/api'
-import { ColumnDef } from '@tanstack/react-table'
+
+import { UserCard } from '../components/user-card'
+import { RoleIcon } from '../components/user-role'
+import { User } from '../types'
 
 export const columns: ColumnDef<User>[] = [
   {

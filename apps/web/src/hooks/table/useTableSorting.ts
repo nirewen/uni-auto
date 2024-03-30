@@ -1,5 +1,7 @@
-import { SortingState } from '@tanstack/react-table'
 import React from 'react'
+
+import { SortingState } from '@tanstack/react-table'
+
 import useDebounce from '../useDebounce'
 
 export const useTableSorting = (

@@ -1,5 +1,8 @@
-import { Plus } from 'lucide-react'
 import * as React from 'react'
+
+import { Plus } from 'lucide-react'
+
+import { useNavigate, useParams } from '@tanstack/react-router'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -14,10 +17,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { useConnection } from '@/hooks/useConnections'
-import { useModules, useToggleModule } from '@/hooks/useModules'
+import { useConnection } from '@/features/connections/hooks'
+import {
+  useModulesByProvider,
+  useToggleModuleForConnection,
+} from '@/features/modules/hooks'
 import { cn } from '@/lib/utils'
-import { useNavigate, useParams } from '@tanstack/react-router'
 
 type AddModuleProps = {
   size?: 'sm' | 'md' | 'lg'
@@ -30,8 +35,10 @@ export function AddModule({ size, className }: AddModuleProps) {
   })
   const [open, setOpen] = React.useState(false)
   const { data } = useConnection(connectionId!)
-  const { data: modules, isLoading } = useModules(data?.provider.slug!)
-  const { mutate: toggle } = useToggleModule(connectionId!)
+  const { data: modules, isLoading } = useModulesByProvider(
+    data?.provider.slug!,
+  )
+  const { mutate: toggle } = useToggleModuleForConnection(connectionId!)
   const navigate = useNavigate()
 
   if (!modules || isLoading) return null

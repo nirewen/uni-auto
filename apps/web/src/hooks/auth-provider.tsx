@@ -1,8 +1,5 @@
 import React, { PropsWithChildren } from 'react'
 
-import { useUser } from '@/hooks/useUser'
-import { TokenPair, User } from '@/lib/api'
-import { useTokenUser } from '@/lib/utils'
 import {
   QueryObserverResult,
   RefetchOptions,
@@ -10,6 +7,11 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
+
+import { useCurrentUser } from '@/features/users/hooks'
+import { User } from '@/features/users/types'
+import { TokenPair } from '@/lib/types'
+import { useTokenUser } from '@/lib/utils'
 
 interface AuthContextProps {
   user?: User
@@ -25,7 +27,7 @@ interface AuthContextProps {
 export const AuthContext = React.createContext<AuthContextProps>(null!)
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const { data: user, refetch, isLoading } = useUser()
+  const { data: user, refetch, isLoading } = useCurrentUser()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { data: isAuthenticated } = useTokenUser()

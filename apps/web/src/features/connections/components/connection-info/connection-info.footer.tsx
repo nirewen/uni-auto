@@ -10,7 +10,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { useDeleteConnection } from '@/hooks/useConnections'
+import { useDeleteConnection } from '@/features/connections/hooks'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { ModuleSection } from '../[id]/module-section'
 

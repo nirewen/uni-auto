@@ -1,6 +1,7 @@
-import { Navigate, useNavigate, useParams } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { Balancer } from 'react-wrap-balancer'
+
+import { Navigate, useNavigate, useParams } from '@tanstack/react-router'
 
 import {
   Calendar,
@@ -32,12 +33,15 @@ import {
 } from '@/components/ui/tooltip'
 import { ModuleSection } from '@/features/connections/components/[id]/module-section'
 import { RUSettings } from '@/features/connections/components/[id]/settings/ru'
-import useAutosave from '@/hooks/useAutosave'
 import {
   useConnectionSettings,
   useMutateConnection,
-} from '@/hooks/useConnections'
-import { useDeleteModule, useToggleModule } from '@/hooks/useModules'
+} from '@/features/connections/hooks'
+import {
+  useDeleteModuleForConnection,
+  useToggleModuleForConnection,
+} from '@/features/modules/hooks'
+import useAutosave from '@/hooks/useAutosave'
 
 export type Settings = {
   days: Day[]
@@ -77,18 +81,21 @@ const cards = [
 ]
 
 export const AutoRU = () => {
-  const { connectionId } = useParams({
-    from: '/_protected/connections/$connectionId',
+  const { connectionId, moduleSlug } = useParams({
+    from: '/_protected/connections/$connectionId/$moduleSlug',
   })
   const navigate = useNavigate()
-  const { mutate, isPending } = useMutateConnection<Settings>(connectionId!)
+  const { mutate, isPending } = useMutateConnection<Settings>(
+    connectionId!,
+    moduleSlug,
+  )
   const {
     data,
     isLoading: isSettingsLoading,
     isError,
   } = useConnectionSettings<Settings>(connectionId!, 'auto-ru')
-  const { mutate: toggle } = useToggleModule(connectionId!)
-  const { mutate: deleteModule } = useDeleteModule(connectionId!)
+  const { mutate: toggle } = useToggleModuleForConnection(connectionId!)
+  const { mutate: deleteModule } = useDeleteModuleForConnection(connectionId!)
   const [settings, setSettings] = useState<Settings>()
 
   const saved = useAutosave({

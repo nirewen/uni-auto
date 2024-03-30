@@ -1,5 +1,6 @@
-import { sleep } from '@/lib/utils'
 import { useQuery } from '@tanstack/react-query'
+
+import { sleep } from '@/lib/utils'
 
 export type DiscordUser = {
   id: string

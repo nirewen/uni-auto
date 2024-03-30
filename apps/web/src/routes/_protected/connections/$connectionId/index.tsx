@@ -1,5 +1,8 @@
 import { ConnectionInfo } from '@/features/connections/components/connection-info'
-import { useConnection, useConnectionHealth } from '@/hooks/useConnections'
+import {
+  useConnection,
+  useConnectionHealth,
+} from '@/features/connections/hooks'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/connections/$connectionId/')({

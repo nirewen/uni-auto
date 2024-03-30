@@ -1,17 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Loader2Icon } from 'lucide-react'
 
-import { TableQuery } from '@/lib/api'
-
 import { Show } from '@/components/flow/show'
 import { DataTable } from '@/components/ui/data-table'
 import { columns } from '@/features/modules/table/columns'
 
-import { DataTableContext } from '@/context/data-table-context'
+import { useAllModules } from '@/features/modules/hooks'
+import { DataTableContext } from '@/hooks/data-table-context'
 import { useTableFilter } from '@/hooks/table/useTableFilter'
 import { useTablePagination } from '@/hooks/table/useTablePagination'
 import { useTableSorting } from '@/hooks/table/useTableSorting'
-import { useAllModules } from '@/hooks/useModules'
+import { TableQuery } from '@/lib/types'
 
 export const Route = createFileRoute('/_protected/admin/modules')({
   component: ModulesComponent,
