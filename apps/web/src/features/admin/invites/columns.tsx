@@ -1,5 +1,11 @@
 import { ActiveStatus } from '@/components/active-status'
 import { Copy } from '@/components/copy'
+import { Button } from '@/components/ui/button'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { For } from '@/components/util/for'
 import { Show } from '@/components/util/show'
 import { DateSpan, SortingHeader } from '@/components/util/table.util'
@@ -7,7 +13,7 @@ import { UserCard } from '@/features/connections/user/user-card'
 import { InviteUseCard } from '@/features/invites/invite-use'
 import { InviteCode } from '@/lib/api'
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowRightIcon } from 'lucide-react'
+import { ArrowRightIcon, InfinityIcon } from 'lucide-react'
 
 export const columns: ColumnDef<InviteCode>[] = [
   {
@@ -44,22 +50,39 @@ export const columns: ColumnDef<InviteCode>[] = [
   },
   {
     accessorKey: 'uses',
-    size: 100,
+    size: 130,
     header: 'Usos/Max',
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-2">
-          <span>
-            {row.original.uses.length}/{row.original.maxUses}
-          </span>
-          <div className="flex -space-x-3">
-            <For each={row.original.uses}>
-              {(use) => {
-                return <InviteUseCard key={use.id} use={use} />
-              }}
-            </For>
-          </div>
-        </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="sm" className="gap-1 text-nowrap">
+              <span>{row.original.uses.length} de</span>
+              <span>
+                {row.original.maxUses > 0 ? (
+                  row.original.maxUses
+                ) : (
+                  <InfinityIcon className="h-4 w-4" />
+                )}
+              </span>
+              <span>usos</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start">
+            <div className="flex flex-col gap-2">
+              <span className="text-sm">
+                Usuários que utilizaram esse código
+              </span>
+              <div className="flex -space-x-3">
+                <For each={row.original.uses}>
+                  {(use) => {
+                    return <InviteUseCard key={use.id} use={use} />
+                  }}
+                </For>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
       )
     },
   },
