@@ -21,9 +21,9 @@ export function Sidebar() {
   ] as const
 
   return (
-    <div className="flex w-min flex-col bg-neutral-900 p-2 md:w-1/4">
+    <div className="flex flex-col bg-neutral-900 p-2 sm:w-min md:w-1/4">
       <ScrollArea>
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-row justify-around gap-1 sm:flex-col sm:justify-normal">
           <For each={links}>
             {(link, i) => (
               <Link

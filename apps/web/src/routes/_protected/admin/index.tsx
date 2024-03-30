@@ -14,7 +14,7 @@ export const Route = createFileRoute('/_protected/admin/')({
 
 function DashboardComponent() {
   return (
-    <div className="px-8 py-4">
+    <div className="p-4">
       <h1 className="text-2xl font-bold">Dashboard</h1>
       <p className="text-gray-500">Bem-vindo ao painel de administração</p>
     </div>

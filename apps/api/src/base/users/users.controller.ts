@@ -38,6 +38,11 @@ export class UsersController {
     return this.userService.findOneById(id)
   }
 
+  @Delete('@me')
+  deleteMe(@ReqUser() user: User) {
+    return this.userService.remove(user.id)
+  }
+
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.userService.remove(id)

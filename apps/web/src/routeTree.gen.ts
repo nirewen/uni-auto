@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as ProtectedImport } from './routes/_protected'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthIndexImport } from './routes/auth/index'
+import { Route as ProtectedProfileImport } from './routes/_protected/profile'
 import { Route as ProtectedConnectionsImport } from './routes/_protected/connections'
 import { Route as ProtectedAdminImport } from './routes/_protected/admin'
 import { Route as AuthLoginIndexImport } from './routes/auth/login/index'
@@ -21,6 +22,7 @@ import { Route as AuthCallbackIndexImport } from './routes/auth/callback/index'
 import { Route as ProtectedProfileIndexImport } from './routes/_protected/profile/index'
 import { Route as ProtectedConnectionsIndexImport } from './routes/_protected/connections/index'
 import { Route as ProtectedAdminIndexImport } from './routes/_protected/admin/index'
+import { Route as ProtectedProfileInvitesImport } from './routes/_protected/profile/invites'
 import { Route as ProtectedConnectionsConnectionIdImport } from './routes/_protected/connections/$connectionId'
 import { Route as ProtectedAdminUsersImport } from './routes/_protected/admin/users'
 import { Route as ProtectedAdminQueueImport } from './routes/_protected/admin/queue'
@@ -49,6 +51,11 @@ const AuthIndexRoute = AuthIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ProtectedProfileRoute = ProtectedProfileImport.update({
+  path: '/profile',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+
 const ProtectedConnectionsRoute = ProtectedConnectionsImport.update({
   path: '/connections',
   getParentRoute: () => ProtectedRoute,
@@ -70,8 +77,8 @@ const AuthCallbackIndexRoute = AuthCallbackIndexImport.update({
 } as any)
 
 const ProtectedProfileIndexRoute = ProtectedProfileIndexImport.update({
-  path: '/profile/',
-  getParentRoute: () => ProtectedRoute,
+  path: '/',
+  getParentRoute: () => ProtectedProfileRoute,
 } as any)
 
 const ProtectedConnectionsIndexRoute = ProtectedConnectionsIndexImport.update({
@@ -82,6 +89,11 @@ const ProtectedConnectionsIndexRoute = ProtectedConnectionsIndexImport.update({
 const ProtectedAdminIndexRoute = ProtectedAdminIndexImport.update({
   path: '/',
   getParentRoute: () => ProtectedAdminRoute,
+} as any)
+
+const ProtectedProfileInvitesRoute = ProtectedProfileInvitesImport.update({
+  path: '/invites',
+  getParentRoute: () => ProtectedProfileRoute,
 } as any)
 
 const ProtectedConnectionsConnectionIdRoute =
@@ -159,6 +171,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedConnectionsImport
       parentRoute: typeof ProtectedImport
     }
+    '/_protected/profile': {
+      preLoaderRoute: typeof ProtectedProfileImport
+      parentRoute: typeof ProtectedImport
+    }
     '/auth/': {
       preLoaderRoute: typeof AuthIndexImport
       parentRoute: typeof rootRoute
@@ -187,6 +203,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedConnectionsConnectionIdImport
       parentRoute: typeof ProtectedConnectionsImport
     }
+    '/_protected/profile/invites': {
+      preLoaderRoute: typeof ProtectedProfileInvitesImport
+      parentRoute: typeof ProtectedProfileImport
+    }
     '/_protected/admin/': {
       preLoaderRoute: typeof ProtectedAdminIndexImport
       parentRoute: typeof ProtectedAdminImport
@@ -197,7 +217,7 @@ declare module '@tanstack/react-router' {
     }
     '/_protected/profile/': {
       preLoaderRoute: typeof ProtectedProfileIndexImport
-      parentRoute: typeof ProtectedImport
+      parentRoute: typeof ProtectedProfileImport
     }
     '/auth/callback/': {
       preLoaderRoute: typeof AuthCallbackIndexImport
@@ -249,7 +269,10 @@ export const routeTree = rootRoute.addChildren([
       ProtectedConnectionsIndexRoute,
       ProtectedConnectionsNewUfsmIndexRoute,
     ]),
-    ProtectedProfileIndexRoute,
+    ProtectedProfileRoute.addChildren([
+      ProtectedProfileInvitesRoute,
+      ProtectedProfileIndexRoute,
+    ]),
   ]),
   AuthIndexRoute,
   AuthCallbackIndexRoute,
