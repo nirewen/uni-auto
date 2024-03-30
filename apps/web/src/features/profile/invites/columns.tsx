@@ -17,14 +17,25 @@ import { SortingHeader } from '@/components/table/sorting-header'
 import { For } from '@/components/util/for'
 import { Show } from '@/components/util/show'
 import { UserCard } from '@/features/connections/user/user-card'
+import { InviteRole } from '@/features/invites/invite-role'
 import { InviteUseCard } from '@/features/invites/invite-use'
 
 export const columns: ColumnDef<InviteCode>[] = [
   {
     accessorKey: 'enabled',
     header: '',
-    size: 1,
+    size: -1,
     cell: ({ row }) => <ActiveStatus active={row.original.active} />,
+  },
+  {
+    accessorKey: 'role',
+    size: 70,
+    header: 'Função',
+    cell: ({ row }) => (
+      <div className="flex justify-end">
+        <InviteRole role={row.original.role} />
+      </div>
+    ),
   },
   {
     accessorKey: 'code',
@@ -37,18 +48,6 @@ export const columns: ColumnDef<InviteCode>[] = [
           spanClassName="truncate"
           content={row.original.code}
         />
-      )
-    },
-  },
-  {
-    accessorKey: 'role',
-    size: 170,
-    header: 'Papel',
-    cell: ({ row }) => {
-      return (
-        <span className="truncate rounded-md bg-neutral-800 p-2 font-mono">
-          {row.original.role}
-        </span>
       )
     },
   },
