@@ -39,6 +39,7 @@ export class UsersController {
   }
 
   @Delete('@me')
+  @Roles(UserRole.USER)
   deleteMe(@ReqUser() user: User) {
     return this.userService.remove(user.id)
   }

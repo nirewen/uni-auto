@@ -8,7 +8,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { InviteUse } from '@/lib/api'
-import { nameToInitials, useTokenUser } from '@/lib/utils'
+import { getGhostUser, nameToInitials, useTokenUser } from '@/lib/utils'
 import { CalendarDaysIcon, QrCodeIcon } from 'lucide-react'
 
 type InviteUseProps = {
@@ -20,6 +20,8 @@ export function InviteUseCard({ use }: InviteUseProps) {
   if (!use || !loggedUser) return null
 
   const controls = loggedUser.role === 'ADMIN'
+
+  if (!use.usedBy) use.usedBy = getGhostUser()
 
   return (
     <Popover>

@@ -11,8 +11,11 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { ModuleSection } from '@/features/connections/components/[id]/module-section'
+import { useDeleteUser } from '@/hooks/useUser'
 
 export function ProfileDangerZone() {
+  const { mutate: deleteUser } = useDeleteUser()
+
   return (
     <ModuleSection.Root>
       <ModuleSection.Body>
@@ -45,8 +48,7 @@ export function ProfileDangerZone() {
                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={() => {
-                    // deleteConnection()
-                    // navigate({ to: '/connections' })
+                    deleteUser()
                   }}
                 >
                   Excluir

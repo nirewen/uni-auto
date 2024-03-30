@@ -50,6 +50,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     queryClient.invalidateQueries({
       queryKey: ['token-user'],
     })
+    queryClient.invalidateQueries({
+      queryKey: ['user'],
+    })
 
     navigate({ to: '/auth/login' })
   }

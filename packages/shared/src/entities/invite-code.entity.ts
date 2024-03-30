@@ -42,13 +42,22 @@ export class InviteCode {
   @UpdateDateColumn()
   usedAt: Date
 
-  @ManyToOne(() => User, user => user.createdInvites, { cascade: false })
+  @ManyToOne(() => User, user => user.createdInvites, {
+    cascade: false,
+    onDelete: 'CASCADE',
+  })
   createdBy: User
 
-  @ManyToOne(() => User, user => user.assignedInvites, { cascade: false })
+  @ManyToOne(() => User, user => user.assignedInvites, {
+    cascade: false,
+    onDelete: 'SET NULL',
+  })
   assignedTo: User
 
-  @ManyToOne(() => User, user => user.usableInvites, { cascade: false })
+  @ManyToOne(() => User, user => user.usableInvites, {
+    cascade: false,
+    onDelete: 'SET NULL',
+  })
   usableBy: User
 
   @OneToMany(() => InviteUse, use => use.invite, { cascade: false })

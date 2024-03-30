@@ -15,7 +15,10 @@ export class InviteUse {
   @ManyToOne(() => InviteCode, invite => invite.uses, { cascade: false })
   invite: InviteCode
 
-  @ManyToOne(() => User, user => user.usedInvites, { cascade: false })
+  @ManyToOne(() => User, user => user.usedInvites, {
+    cascade: false,
+    onDelete: 'SET NULL',
+  })
   usedBy: User
 
   @CreateDateColumn()

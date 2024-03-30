@@ -1,3 +1,4 @@
+import { useAuth } from '@/context/auth-provider'
 import { User, api } from '@/lib/api'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
@@ -8,11 +9,16 @@ export const useUser = () => {
   })
 }
 
-export const useMutateUser = () => {
+export const useDeleteUser = () => {
+  const { signOut } = useAuth()
+
   return useMutation({
     mutationKey: ['user'],
-    mutationFn: (data: { password: string }) => {
-      return api.patch<User>('/users/@me', data).then((res) => res.data)
+    mutationFn: () => {
+      return api.delete<User>('/users/@me').then((res) => res.data)
+    },
+    onSuccess: () => {
+      signOut()
     },
   })
 }

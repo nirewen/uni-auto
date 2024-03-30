@@ -29,7 +29,9 @@ export class Connection {
   @ManyToOne(() => Provider, provider => provider.connections)
   provider: Provider
 
-  @ManyToOne(() => User, user => user.connections)
+  @ManyToOne(() => User, user => user.connections, {
+    onDelete: 'CASCADE',
+  })
   user: User
 
   @Column()
