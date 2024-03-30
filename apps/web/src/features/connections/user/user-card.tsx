@@ -15,9 +15,10 @@ import { CalendarDaysIcon, QrCodeIcon } from 'lucide-react'
 type UserCardProps = {
   user: User
   mini?: boolean
+  controls?: boolean
 }
 
-export function UserCard({ user, mini }: UserCardProps) {
+export function UserCard({ user, mini, controls = false }: UserCardProps) {
   if (!user) return null
 
   return (
@@ -39,7 +40,11 @@ export function UserCard({ user, mini }: UserCardProps) {
       </PopoverTrigger>
       <PopoverContent align="start" className="w-fit">
         <div className="flex items-center space-x-4">
-          <Avatar className="h-16 w-16">
+          <Avatar
+            className={cn('h-12 w-12', {
+              'w-16 h-16': controls,
+            })}
+          >
             <AvatarImage className="object-cover" src={user.avatarUrl} />
             <AvatarFallback>{nameToInitials(user.displayName)}</AvatarFallback>
           </Avatar>
@@ -48,16 +53,20 @@ export function UserCard({ user, mini }: UserCardProps) {
               {user.displayName}
             </h4>
             <p className="text-sm">{user.email}</p>
-            <div className="flex items-center">
-              <CalendarDaysIcon className="mr-2 h-4 w-4 opacity-70" />{' '}
-              <span className="text-xs text-muted-foreground">
-                Atualizado em <DateSpan date={user.updatedAt} />
-              </span>
+            <Show when={controls}>
+              <div className="flex items-center">
+                <CalendarDaysIcon className="mr-2 h-4 w-4 opacity-70" />{' '}
+                <span className="text-xs text-muted-foreground">
+                  Atualizado em <DateSpan date={user.updatedAt} />
+                </span>
+              </div>
+            </Show>
+          </div>
+          <Show when={controls}>
+            <div className="self-start">
+              <Copy content={user.id} icon={QrCodeIcon} hideContent />
             </div>
-          </div>
-          <div className="self-start">
-            <Copy content={user.id} icon={QrCodeIcon} hideContent />
-          </div>
+          </Show>
         </div>
       </PopoverContent>
     </Popover>

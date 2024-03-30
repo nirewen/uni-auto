@@ -87,7 +87,7 @@ export const columns: ColumnDef<InviteCode>[] = [
                   }
                 >
                   {(use) => {
-                    return <InviteUseCard key={use.id} use={use} controls />
+                    return <InviteUseCard key={use.id} use={use} />
                   }}
                 </For>
               </div>
@@ -103,7 +103,7 @@ export const columns: ColumnDef<InviteCode>[] = [
     header: () => <span className="text-nowrap">Criado por</span>,
     cell: ({ row }) => (
       <div className="flex items-center gap-1">
-        <UserCard mini user={row.original.createdBy} controls />
+        <UserCard mini user={row.original.createdBy} />
         <Show
           when={
             row.original.assignedTo &&
@@ -111,7 +111,7 @@ export const columns: ColumnDef<InviteCode>[] = [
           }
         >
           <ArrowRightIcon className="h-4 w-4 text-neutral-500" />
-          <UserCard mini user={row.original.assignedTo} controls />
+          <UserCard mini user={row.original.assignedTo} />
         </Show>
       </div>
     ),

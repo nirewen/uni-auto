@@ -23,7 +23,7 @@ export const columns: ColumnDef<Connection>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex gap-1">
-          <UserCard mini user={row.original.user!} />
+          <UserCard mini user={row.original.user!} controls />
           <ConnectionProfileCard connection={row.original} />
         </div>
       )

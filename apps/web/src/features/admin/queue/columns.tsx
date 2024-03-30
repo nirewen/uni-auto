@@ -18,7 +18,9 @@ export const columns: ColumnDef<Queue>[] = [
     accessorKey: 'connection',
     header: '',
     size: 38,
-    cell: ({ row }) => <UserCard mini user={row.original.connection.user!} />,
+    cell: ({ row }) => (
+      <UserCard mini user={row.original.connection.user!} controls />
+    ),
   },
   {
     accessorKey: 'data',

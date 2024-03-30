@@ -41,6 +41,31 @@ export class InviteService {
     })
   }
 
+  getMyInvites(
+    user: User,
+    { filter, pagination, sorting }: TableQueryDto<InviteCode>,
+  ) {
+    const filterableFields = [
+      'code',
+      'role',
+      'uses_usedBy_displayName',
+      'usableBy_displayName',
+      'assignedTo_displayName',
+      'active',
+    ]
+
+    return paginate(this.inviteRepository, pagination, {
+      where: {
+        ...filterToWhere(filter, filterableFields),
+        assignedTo: {
+          id: user.id,
+        },
+      },
+      relations: ['createdBy', 'uses.usedBy', 'usableBy', 'assignedTo'],
+      order: sortToOrder(sorting),
+    })
+  }
+
   validateInvite(user: User, invite: InviteCode) {
     if (!invite) {
       throw new BadRequestException('Invalid invite code')

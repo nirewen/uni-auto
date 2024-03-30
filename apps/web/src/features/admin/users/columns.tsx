@@ -28,7 +28,7 @@ export const columns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex gap-1">
-          <UserCard user={row.original} />
+          <UserCard user={row.original} controls />
         </div>
       )
     },

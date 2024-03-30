@@ -24,11 +24,13 @@ import { Pagination } from './pagination'
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[]
   data: Paginated<TData>
+  emptyMessage?: string
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  emptyMessage = 'Nenhum resultado',
 }: DataTableProps<TData, TValue>) {
   const {
     filter: [filter, setFilter],
@@ -130,7 +132,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {emptyMessage}
                 </TableCell>
               </TableRow>
             )}

@@ -28,6 +28,15 @@ export class InviteController {
     return this.inviteService.getInvites(query)
   }
 
+  @Get('@me')
+  @Roles(UserRole.USER)
+  getMyInvites(
+    @ReqUser() user: User,
+    @Query() query: TableQueryDto<InviteCode>,
+  ) {
+    return this.inviteService.getMyInvites(user, query)
+  }
+
   @Post()
   createInvite(
     @ReqUser() user: User,

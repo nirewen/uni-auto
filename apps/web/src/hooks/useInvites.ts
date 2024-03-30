@@ -12,3 +12,15 @@ export const useAllInvites = (params: TableQuery) => {
     placeholderData: keepPreviousData,
   })
 }
+
+export const useMyInvites = (params: TableQuery) => {
+  return useQuery({
+    queryKey: ['invites/@me', params],
+    queryFn: async () => {
+      return api
+        .get<Paginated<InviteCode>>(`/invites/@me`, { params })
+        .then((res) => res.data)
+    },
+    placeholderData: keepPreviousData,
+  })
+}

@@ -6,15 +6,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { Show } from '@/components/util/show'
 import { InviteUse } from '@/lib/api'
 import { nameToInitials } from '@/lib/utils'
-import { CalendarDaysIcon, TagIcon } from 'lucide-react'
+import { CalendarDaysIcon, QrCodeIcon } from 'lucide-react'
 
 type InviteUseProps = {
   use: InviteUse
+  controls?: boolean
 }
 
-export function InviteUseCard({ use }: InviteUseProps) {
+export function InviteUseCard({ use, controls = false }: InviteUseProps) {
   if (!use) return null
 
   return (
@@ -28,7 +30,7 @@ export function InviteUseCard({ use }: InviteUseProps) {
         </Avatar>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-fit">
-        <div className="flex space-x-4">
+        <div className="flex items-center space-x-4">
           <Avatar className="h-16 w-16">
             <AvatarImage className="object-cover" src={use.usedBy.avatarUrl} />
             <AvatarFallback>
@@ -37,7 +39,6 @@ export function InviteUseCard({ use }: InviteUseProps) {
           </Avatar>
           <div className="space-y-1">
             <h4 className="flex items-center gap-1 text-sm font-semibold">
-              <Copy content={use.usedBy.id} icon={TagIcon} hideContent />
               {use.usedBy.displayName}
             </h4>
             <p className="text-sm">{use.usedBy.email}</p>
@@ -48,6 +49,11 @@ export function InviteUseCard({ use }: InviteUseProps) {
               </span>
             </div>
           </div>
+          <Show when={controls}>
+            <div className="self-start">
+              <Copy content={use.usedBy.id} icon={QrCodeIcon} hideContent />
+            </div>
+          </Show>
         </div>
       </PopoverContent>
     </Popover>
