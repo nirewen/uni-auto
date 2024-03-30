@@ -7,6 +7,7 @@ import { DataTable } from '@/components/ui/data-table'
 import { Show } from '@/components/util/show'
 import { columns } from '@/features/admin/users/columns'
 
+import { DataTableContext } from '@/context/data-table-context'
 import { useTableFilter } from '@/hooks/table/useTableFilter'
 import { useTablePagination } from '@/hooks/table/useTablePagination'
 import { useTableSorting } from '@/hooks/table/useTableSorting'
@@ -31,13 +32,17 @@ function UsersComponent() {
         when={!query.isLoading && !!query.data}
         fallback={<Loader2Icon className="m-auto h-8 w-8 animate-spin" />}
       >
-        <DataTable
-          columns={columns}
-          data={query.data!}
-          filter={filterState}
-          pagination={paginationState}
-          sorting={sortingState}
-        />
+        <DataTableContext.Provider
+          value={{
+            query,
+            filter: filterState,
+            pagination: paginationState,
+            sorting: sortingState,
+            refresh: () => query.refetch(),
+          }}
+        >
+          <DataTable columns={columns} data={query.data!} />
+        </DataTableContext.Provider>
       </Show>
     </div>
   )

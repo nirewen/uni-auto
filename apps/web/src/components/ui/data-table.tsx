@@ -1,12 +1,9 @@
 import {
   ColumnDef,
-  PaginationState,
-  SortingState,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import React from 'react'
 
 import {
   Table,
@@ -16,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useDataTableContext } from '@/context/data-table-context'
 import { Paginated } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import { Show } from '../util/show'
@@ -25,27 +23,17 @@ import { Pagination } from './pagination'
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[]
   data: Paginated<TData>
-  filter: readonly [string, React.Dispatch<React.SetStateAction<string>>]
-  pagination: readonly [
-    PaginationState,
-    React.Dispatch<React.SetStateAction<PaginationState>>,
-  ]
-  sorting: readonly [
-    SortingState,
-    React.Dispatch<React.SetStateAction<SortingState>>,
-  ]
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  filter: filterState,
-  sorting: sortingState,
-  pagination: paginationState,
 }: DataTableProps<TData, TValue>) {
-  const [filter, setFilter] = filterState
-  const [sorting, setSorting] = sortingState
-  const [pagination, setPagination] = paginationState
+  const {
+    filter: [filter, setFilter],
+    sorting: [sorting, setSorting],
+    pagination: [pagination, setPagination],
+  } = useDataTableContext()
 
   const table = useReactTable({
     data: data.items,
