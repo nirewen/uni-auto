@@ -50,10 +50,10 @@ export function Copy({
         <span className={cn(spanClassName)}>{content}</span>
       </Show>
       <Show when={!copied}>
-        <Icon className={cn('w-4 h-4 shrink-0', iconClassName)} />
+        <Icon className={cn('w-4 h-4 shrink-0 ml-auto', iconClassName)} />
       </Show>
       <Show when={copied}>
-        <CheckIcon className={cn('w-4 h-4 shrink-0', iconClassName)} />
+        <CheckIcon className={cn('w-4 h-4 shrink-0 ml-auto', iconClassName)} />
       </Show>
     </div>
   )
