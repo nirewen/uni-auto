@@ -11,7 +11,7 @@ import { AxiosError } from 'axios'
 import * as service from './service'
 
 export function useConsumeInvite() {
-  const { mutate: refreshToken } = useRefreshToken()
+  const { mutateAsync: refreshToken } = useRefreshToken()
   const queryClient = useQueryClient()
 
   return useMutation({

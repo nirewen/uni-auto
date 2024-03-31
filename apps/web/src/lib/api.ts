@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useRefreshToken } from '@/hooks/useAuth'
 
 export function useAxios() {
-  const { mutate: refreshToken } = useRefreshToken()
+  const { mutateAsync: refreshToken } = useRefreshToken()
 
   const api = axios.create({
     baseURL: '/api',
@@ -27,7 +27,7 @@ export function useAxios() {
       ) {
         originalRequest._alreadyRefreshed = true
 
-        refreshToken()
+        await refreshToken()
 
         return api(originalRequest)
       }
