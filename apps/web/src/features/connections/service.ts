@@ -25,14 +25,17 @@ export function getConnectionById(connectionId: string) {
   return () => api.get<Connection>(`/connections/${connectionId}`)
 }
 
-export function updateConnectionModuleSettings<Settings>(
-  module: string,
-  connectionId: string,
-) {
+export function updateConnectionModuleSettings<Settings>({
+  connectionId,
+  moduleSlug,
+}: {
+  connectionId: string
+  moduleSlug: string
+}) {
   const api = useAxios()
 
   return (settings: Settings) =>
-    api.patch(`/connections/${module}/settings`, {
+    api.patch(`/connections/${moduleSlug}/settings`, {
       connectionId,
       settings,
     })

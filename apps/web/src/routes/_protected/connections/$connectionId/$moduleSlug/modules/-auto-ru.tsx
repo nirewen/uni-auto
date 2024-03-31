@@ -35,7 +35,7 @@ import { ModuleSection } from '@/features/connections/components/[id]/module-sec
 import { RUSettings } from '@/features/connections/components/[id]/settings/ru'
 import {
   useConnectionSettings,
-  useMutateConnection,
+  useUpdateConnectionModuleSettings,
 } from '@/features/connections/hooks'
 import {
   useDeleteModuleForConnection,
@@ -85,7 +85,7 @@ export const AutoRU = () => {
     from: '/_protected/connections/$connectionId/$moduleSlug',
   })
   const navigate = useNavigate()
-  const { mutate, isPending } = useMutateConnection<Settings>(
+  const { mutate, isPending } = useUpdateConnectionModuleSettings<Settings>(
     connectionId!,
     moduleSlug,
   )

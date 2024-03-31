@@ -34,16 +34,16 @@ export function useConnection(connectionId: string) {
   })
 }
 
-export function useMutateConnection<Settings>(
+export function useUpdateConnectionModuleSettings<Settings>(
   connectionId: string,
   moduleSlug: string,
 ) {
   return useMutation({
-    mutationKey: ['modules', 'auto-ru', 'settings'],
-    mutationFn: service.updateConnectionModuleSettings(
+    mutationKey: ['modules', moduleSlug, 'settings'],
+    mutationFn: service.updateConnectionModuleSettings({
       connectionId,
       moduleSlug,
-    ),
+    }),
   })
 }
 
