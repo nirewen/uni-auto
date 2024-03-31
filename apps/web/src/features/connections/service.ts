@@ -74,3 +74,7 @@ export function getConnectionHealth(connectionId: string) {
   return () =>
     api.get<ConnectionProfileHealth>(`/connections/${connectionId}/health`)
 }
+
+export function getAvatarUrl(connectionId: string) {
+  return `/api/connections/${connectionId}/avatar?size=64`
+}

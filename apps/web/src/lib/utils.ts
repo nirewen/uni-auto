@@ -21,7 +21,7 @@ export const nameToInitials = (name: string) => {
 }
 
 export const getGhostUser = (): User => ({
-  id: '0',
+  id: 'gh0st4cc-th1s-uu1d-1s4n-1nv4l1d0uu1d',
   displayName: 'ghost',
   email: 'ghost@domain.com',
   role: 'USER',

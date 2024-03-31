@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useAuth } from '@/hooks/useAuth'
-import { cn, nameToInitials } from '@/lib/utils'
+import { cn, getGhostUser, nameToInitials } from '@/lib/utils'
 import { CalendarDaysIcon, QrCodeIcon } from 'lucide-react'
 import { User } from '../types'
 
@@ -20,7 +20,8 @@ type UserCardProps = {
 
 export function UserCard({ user, mini }: UserCardProps) {
   const { user: loggedUser } = useAuth()
-  if (!user || !loggedUser) return null
+  if (!user || !loggedUser)
+    return <UserCard mini={mini} user={getGhostUser()} />
 
   const controls = loggedUser.role === 'ADMIN'
 
@@ -60,7 +61,7 @@ export function UserCard({ user, mini }: UserCardProps) {
               <div className="flex items-center">
                 <CalendarDaysIcon className="mr-2 h-4 w-4 opacity-70" />{' '}
                 <span className="text-xs text-muted-foreground">
-                  Atualizado em <DateSpan date={user.updatedAt} />
+                  Atualizado em: <DateSpan date={user.updatedAt} />
                 </span>
               </div>
             </Show>

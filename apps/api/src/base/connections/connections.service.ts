@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import Jimp from 'jimp'
 import { Repository } from 'typeorm'
 
 import { ConnectionModule } from '@uni-auto/shared/entities/connection-module.entity'
@@ -18,6 +19,7 @@ import {
   sortToOrder,
 } from 'src/utils/table.util'
 import { ProvidersService } from '../providers/providers.service'
+import { AvatarQueryDto } from './interfaces/avatar-query.dto'
 import { Payload } from './interfaces/payload.interface'
 import { UpdateSettingsDTO } from './interfaces/update-settings.dto'
 
@@ -176,6 +178,10 @@ export class ConnectionsService {
     const connection = await this.findConnection(id)
     const profile = connection.profile ?? this.connectionProfiles.create()
 
+    if (connection.user.id !== user.id && user.role !== UserRole.ADMIN) {
+      throw new BadRequestException('Invalid connection id')
+    }
+
     if (
       (connection.user.id === user.id &&
         differenceInCalendarDays(profile.updatedAt ?? 0, new Date()) < 0) ||
@@ -199,6 +205,28 @@ export class ConnectionsService {
     }
 
     return profile
+  }
+
+  async getProfileAvatar(
+    user: User,
+    id: string,
+    { forced, size, raw }: AvatarQueryDto,
+  ) {
+    const profile = await this.getProfile(user, id, forced)
+
+    size = isNaN(size) ? 256 : size
+
+    const [, data] = profile.avatarUrl.split('data:image/png;base64,')
+    const img = Buffer.from(data, 'base64')
+
+    if (raw) {
+      return img
+    }
+
+    const avatar = await Jimp.read(img)
+    avatar.cover(size, size)
+
+    return avatar.getBufferAsync(Jimp.MIME_PNG)
   }
 
   async getHealth(user: User, id: string) {

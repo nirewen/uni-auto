@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { Connection } from './connection.entity'
+import { Exclude } from 'class-transformer'
 
 @Entity({ name: 'connection_profile' })
 export class ConnectionProfile {
@@ -17,6 +18,7 @@ export class ConnectionProfile {
   displayName: string
 
   @Column()
+  @Exclude()
   avatarUrl: string
 
   @OneToOne(() => Connection, connection => connection.profile, {

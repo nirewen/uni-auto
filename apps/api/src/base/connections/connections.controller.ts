@@ -6,14 +6,18 @@ import {
   Param,
   Patch,
   Query,
+  Res,
   UseGuards,
 } from '@nestjs/common'
+import { Response } from 'express'
+
 import { Connection } from '@uni-auto/shared/entities/connection.entity'
 import { User, UserRole } from '@uni-auto/shared/entities/user.entity'
 import { RolesGuard } from 'src/auth/guards'
 import { ReqUser, Roles } from 'src/common/decorators'
 import { TableQueryDto } from 'src/common/dto/table-query.dto'
 import { ConnectionsService } from './connections.service'
+import { AvatarQueryDto } from './interfaces/avatar-query.dto'
 import { UpdateSettingsDTO } from './interfaces/update-settings.dto'
 
 @Controller('connections')
@@ -67,6 +71,22 @@ export class ConnectionsController {
     @Query('forced') forced: boolean = false,
   ) {
     return this.connectionsService.getProfile(user, id, forced)
+  }
+
+  @Get('/:id/avatar')
+  public async getProfileAvatar(
+    @Res() res: Response,
+    @ReqUser() user: User,
+    @Param('id') id: string,
+    @Query() query: AvatarQueryDto,
+  ) {
+    const img = await this.connectionsService.getProfileAvatar(user, id, query)
+
+    res.writeHead(200, {
+      'Content-Type': 'image/png',
+      'Content-Length': img.length,
+    })
+    res.end(img)
   }
 
   @Get('/:id/health')
