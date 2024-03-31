@@ -27,9 +27,10 @@ import { cn } from '@/lib/utils'
 type AddModuleProps = {
   size?: 'sm' | 'md' | 'lg'
   className?: string
+  onAdd: () => void
 }
 
-export function AddModule({ size, className }: AddModuleProps) {
+export function AddModule({ size, className, onAdd }: AddModuleProps) {
   const { connectionId } = useParams({
     from: '/_protected/connections/$connectionId',
   })
@@ -38,7 +39,7 @@ export function AddModule({ size, className }: AddModuleProps) {
   const { data: modules, isLoading } = useModulesByProvider(
     data?.provider.slug!,
   )
-  const { mutate: toggle } = useToggleModuleForConnection(connectionId!)
+  const { mutateAsync: toggle } = useToggleModuleForConnection(connectionId!)
   const navigate = useNavigate()
 
   if (!modules || isLoading) return null
@@ -78,20 +79,21 @@ export function AddModule({ size, className }: AddModuleProps) {
               <CommandItem
                 key={module.id}
                 onSelect={() => {
+                  setOpen(false)
+
                   toggle({
                     slug: module.slug,
                     enabled: true,
+                  }).then(() => {
+                    onAdd()
+                    navigate({
+                      to: `/connections/$connectionId/$moduleSlug`,
+                      params: {
+                        connectionId: connectionId,
+                        moduleSlug: module.slug,
+                      },
+                    })
                   })
-
-                  navigate({
-                    to: `/connections/$connectionId/$moduleSlug`,
-                    params: {
-                      connectionId: connectionId,
-                      moduleSlug: module.slug,
-                    },
-                  })
-
-                  setOpen(false)
                 }}
               >
                 {module.name}

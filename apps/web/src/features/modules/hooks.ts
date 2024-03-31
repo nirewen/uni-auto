@@ -32,17 +32,11 @@ export function useToggleModuleForConnection(connectionId: string) {
   return useMutation({
     mutationKey: ['modules', connectionId],
     mutationFn: service.toggleModuleForConnection(connectionId),
-    onMutate: async ({ slug }) => {
-      await Promise.all([
-        queryClient.refetchQueries({
-          queryKey: ['connection', connectionId],
-          exact: true,
-        }),
-        queryClient.refetchQueries({
-          queryKey: ['connections', connectionId, slug, 'settings'],
-          exact: true,
-        }),
-      ])
+    onMutate: async () => {
+      await queryClient.refetchQueries({
+        queryKey: ['connection', connectionId],
+        exact: true,
+      })
     },
   })
 }

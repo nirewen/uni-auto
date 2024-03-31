@@ -111,6 +111,7 @@ export function Modules() {
               <AddModule
                 size="md"
                 className="-mx-2 -my-1 h-8 flex-1 justify-start rounded-sm border-none bg-transparent"
+                onAdd={() => setOpen(false)}
               />
             </CommandItem>
           </CommandGroup>
