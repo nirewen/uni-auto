@@ -10,7 +10,6 @@ export const Route = createFileRoute('/auth/login/')({
 function LoginRoute() {
   const { isAuthenticated } = useAuth()
 
-  console.log('isAuthenticated', isAuthenticated)
   if (isAuthenticated) {
     return <Navigate to="/" replace />
   }

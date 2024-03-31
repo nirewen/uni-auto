@@ -5,6 +5,7 @@ import { ThemeProvider } from '../components/theme-provider'
 
 import { AuthProvider } from '../hooks/useAuth'
 
+import { Navbar } from '@/components/navbar'
 import { Toaster } from '@/components/ui/toaster'
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 
@@ -40,13 +41,16 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="uni-auto-theme">
         <AuthProvider>
-          <Outlet />
+          <main className="flex max-h-full w-full max-w-7xl flex-1 flex-col gap-2 p-2 dark:text-white md:m-auto md:py-8">
+            <Navbar />
+            <Outlet />
+          </main>
         </AuthProvider>
+        <Suspense>
+          <TanStackRouterDevtools position="bottom-right" />
+        </Suspense>
+        <Toaster />
       </ThemeProvider>
-      <Suspense>
-        <TanStackRouterDevtools position="bottom-right" />
-      </Suspense>
-      <Toaster />
     </QueryClientProvider>
   )
 }

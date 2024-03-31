@@ -19,12 +19,7 @@ export function useAxios() {
       const originalRequest = error.config
       const alreadyRefreshed = originalRequest._alreadyRefreshed
 
-      if (
-        error.response?.status === 401 &&
-        !alreadyRefreshed &&
-        !originalRequest.url?.includes('/login') &&
-        window.location.pathname !== '/auth/login'
-      ) {
+      if (error.response?.status === 401 && !alreadyRefreshed) {
         originalRequest._alreadyRefreshed = true
 
         await refreshToken()

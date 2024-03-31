@@ -17,7 +17,7 @@ export type LoggedInUserProps = {
 }
 
 export function LoggedInUser({ className }: LoggedInUserProps) {
-  const { signOut, user } = useAuth()
+  const { signOut, user, isAuthenticated } = useAuth()
   const navigate = useNavigate()
   const actions = {
     profile: () => navigate({ to: '/profile/' }),
@@ -25,13 +25,21 @@ export function LoggedInUser({ className }: LoggedInUserProps) {
     signOut,
   }
 
-  if (!user) {
+  function loginWithProvider(provider: string) {
+    window.location.pathname = `/api/auth/${provider}/login`
+  }
+
+  if (!isAuthenticated || !user) {
     return (
       <Button
-        className="ml-auto flex h-auto rounded-full border-neutral-800 bg-neutral-900 p-3"
+        className={cn(
+          'flex h-auto rounded-full border-neutral-800 bg-neutral-900 p-4',
+          className,
+        )}
         variant="outline"
+        onClick={() => loginWithProvider('google')}
       >
-        <LogInIcon className="h-7 w-7" />
+        <LogInIcon className="h-5 w-5" />
       </Button>
     )
   }

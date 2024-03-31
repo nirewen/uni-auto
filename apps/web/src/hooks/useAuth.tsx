@@ -1,10 +1,10 @@
 import React, { PropsWithChildren } from 'react'
 
-import { useCurrentUser } from '@/features/users/hooks'
+import { useLoggedInUser } from '@/features/users/hooks'
 import { User } from '@/features/users/types'
 import { TokenPair } from '@/lib/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useRouterState } from '@tanstack/react-router'
 import axios, { AxiosError } from 'axios'
 
 interface AuthContextProps {
@@ -17,16 +17,21 @@ interface AuthContextProps {
 export const AuthContext = React.createContext<AuthContextProps>(null!)
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const { data: user, isLoading } = useCurrentUser()
+  const query = useLoggedInUser()
   const { mutate: logout } = useLogout()
+  const isAuthenticated = query.isSuccess && !query.isError && !query.isLoading
+
+  React.useEffect(() => {
+    query.refetch()
+  }, [])
 
   return (
     <AuthContext.Provider
       value={{
-        user,
+        user: query.data,
+        isLoading: query.isLoading,
+        isAuthenticated,
         signOut: logout,
-        isLoading: isLoading && !!user,
-        isAuthenticated: !!user,
       }}
     >
       {children}
@@ -39,6 +44,7 @@ export function useAuth() {
 }
 
 export function useLogout() {
+  const router = useRouterState()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
@@ -47,7 +53,8 @@ export function useLogout() {
     mutationFn: () =>
       axios.post<{ user: User; tokens: TokenPair }>('/api/auth/logout'),
     onSuccess: () => {
-      navigate({ to: '/auth/login' })
+      if (router.location.pathname !== '/') navigate({ to: '/' })
+
       queryClient.clear()
     },
   })
