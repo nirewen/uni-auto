@@ -1,8 +1,8 @@
 import { Sidebar } from '@/features/admin/sidebar'
 import { useAuth } from '@/hooks/useAuth'
-import { Outlet, createFileRoute } from '@tanstack/react-router'
+import { Outlet, createLazyFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_protected/admin')({
+export const Route = createLazyFileRoute('/_protected/admin')({
   component: AdminLayoutComponent,
 })
 

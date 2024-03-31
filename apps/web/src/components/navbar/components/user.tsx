@@ -2,15 +2,15 @@ import { useAuth } from '@/hooks/useAuth'
 import { cn } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
 import { LockIcon, LogInIcon, LogOutIcon, UserRoundIcon } from 'lucide-react'
-import { Show } from '../flow/show'
-import { Button } from '../ui/button'
+import { Show } from '../../flow/show'
+import { Button } from '../../ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu'
+} from '../../ui/dropdown-menu'
 
 export type LoggedInUserProps = {
   className?: string
