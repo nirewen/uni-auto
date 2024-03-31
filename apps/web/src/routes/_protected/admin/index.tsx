@@ -1,15 +1,7 @@
-import { getTokenUser } from '@/lib/utils'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/admin/')({
   component: DashboardComponent,
-  beforeLoad: async () => {
-    const user = getTokenUser()
-
-    if (!user || user.role !== 'ADMIN') {
-      window.history.back()
-    }
-  },
 })
 
 function DashboardComponent() {

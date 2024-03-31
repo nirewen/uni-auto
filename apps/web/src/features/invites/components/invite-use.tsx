@@ -1,3 +1,5 @@
+import { CalendarDaysIcon, QrCodeIcon } from 'lucide-react'
+
 import { Copy } from '@/components/copy'
 import { Show } from '@/components/flow/show'
 import { DateSpan } from '@/components/table/date-span'
@@ -7,16 +9,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { InviteUse } from '@/lib/api'
-import { getGhostUser, nameToInitials, useTokenUser } from '@/lib/utils'
-import { CalendarDaysIcon, QrCodeIcon } from 'lucide-react'
+import { useAuth } from '@/hooks/useAuth'
+import { getGhostUser, nameToInitials } from '@/lib/utils'
+import { InviteUse } from '../types'
 
 type InviteUseProps = {
   use: InviteUse
 }
 
 export function InviteUseCard({ use }: InviteUseProps) {
-  const { data: loggedUser } = useTokenUser()
+  const { user: loggedUser } = useAuth()
   if (!use || !loggedUser) return null
 
   const controls = loggedUser.role === 'ADMIN'

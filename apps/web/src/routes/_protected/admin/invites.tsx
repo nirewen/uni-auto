@@ -6,10 +6,10 @@ import { DataTable } from '@/components/ui/data-table'
 import { columns } from '@/features/invites/table/columns'
 
 import { useAllInvites } from '@/features/invites/hooks'
-import { DataTableContext } from '@/hooks/data-table-context'
 import { useTableFilter } from '@/hooks/table/useTableFilter'
 import { useTablePagination } from '@/hooks/table/useTablePagination'
 import { useTableSorting } from '@/hooks/table/useTableSorting'
+import { DataTableContext } from '@/hooks/useDataTable'
 import { TableQuery } from '@/lib/types'
 
 export const Route = createFileRoute('/_protected/admin/invites')({

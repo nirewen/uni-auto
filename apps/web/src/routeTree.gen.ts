@@ -18,7 +18,6 @@ import { Route as ProtectedImport } from './routes/_protected'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthIndexImport } from './routes/auth/index'
 import { Route as AuthLoginIndexImport } from './routes/auth/login/index'
-import { Route as AuthCallbackIndexImport } from './routes/auth/callback/index'
 import { Route as ProtectedProfileIndexImport } from './routes/_protected/profile/index'
 import { Route as ProtectedConnectionsIndexImport } from './routes/_protected/connections/index'
 import { Route as ProtectedAdminIndexImport } from './routes/_protected/admin/index'
@@ -87,11 +86,6 @@ const ProtectedAdminLazyRoute = ProtectedAdminLazyImport.update({
 
 const AuthLoginIndexRoute = AuthLoginIndexImport.update({
   path: '/login/',
-  getParentRoute: () => AuthRoute,
-} as any)
-
-const AuthCallbackIndexRoute = AuthCallbackIndexImport.update({
-  path: '/callback/',
   getParentRoute: () => AuthRoute,
 } as any)
 
@@ -242,10 +236,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedProfileIndexImport
       parentRoute: typeof ProtectedProfileLazyImport
     }
-    '/auth/callback/': {
-      preLoaderRoute: typeof AuthCallbackIndexImport
-      parentRoute: typeof AuthImport
-    }
     '/auth/login/': {
       preLoaderRoute: typeof AuthLoginIndexImport
       parentRoute: typeof AuthImport
@@ -297,11 +287,7 @@ export const routeTree = rootRoute.addChildren([
       ProtectedProfileIndexRoute,
     ]),
   ]),
-  AuthRoute.addChildren([
-    AuthIndexRoute,
-    AuthCallbackIndexRoute,
-    AuthLoginIndexRoute,
-  ]),
+  AuthRoute.addChildren([AuthIndexRoute, AuthLoginIndexRoute]),
 ])
 
 /* prettier-ignore-end */

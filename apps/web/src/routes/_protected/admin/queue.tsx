@@ -6,10 +6,10 @@ import { DataTable } from '@/components/ui/data-table'
 import { columns } from '@/features/queue/table/columns'
 
 import { useAllQueueEntries } from '@/features/queue/hooks'
-import { DataTableContext } from '@/hooks/data-table-context'
 import { useTableFilter } from '@/hooks/table/useTableFilter'
 import { useTablePagination } from '@/hooks/table/useTablePagination'
 import { useTableSorting } from '@/hooks/table/useTableSorting'
+import { DataTableContext } from '@/hooks/useDataTable'
 import { TableQuery } from '@/lib/types'
 
 export const Route = createFileRoute('/_protected/admin/queue')({

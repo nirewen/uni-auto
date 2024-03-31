@@ -3,7 +3,7 @@ import React, { Suspense } from 'react'
 
 import { ThemeProvider } from '../components/theme-provider'
 
-import { AuthProvider } from '../hooks/auth-provider'
+import { AuthProvider } from '../hooks/useAuth'
 
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 

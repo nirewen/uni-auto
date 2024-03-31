@@ -21,4 +21,4 @@ export const DataTableContext = React.createContext<TableContextProps<any>>(
   null!,
 )
 
-export const useDataTableContext = () => React.useContext(DataTableContext)
+export const useDataTable = () => React.useContext(DataTableContext)

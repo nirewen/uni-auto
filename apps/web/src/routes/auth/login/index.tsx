@@ -1,5 +1,5 @@
 import logo from '@/assets/Logo.svg'
-import { useAuth } from '@/hooks/auth-provider'
+import { useAuth } from '@/hooks/useAuth'
 import { Navigate, createFileRoute } from '@tanstack/react-router'
 import { Form } from './-form'
 
@@ -10,6 +10,7 @@ export const Route = createFileRoute('/auth/login/')({
 function LoginRoute() {
   const { isAuthenticated } = useAuth()
 
+  console.log('isAuthenticated', isAuthenticated)
   if (isAuthenticated) {
     return <Navigate to="/" replace />
   }

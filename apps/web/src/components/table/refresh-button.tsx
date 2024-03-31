@@ -1,10 +1,12 @@
-import { useDataTableContext } from '@/hooks/data-table-context'
 import { Loader2Icon, RotateCwIcon } from 'lucide-react'
+
+import { useDataTable } from '@/hooks/useDataTable'
 import { Show } from '../flow/show'
 import { Button } from '../ui/button'
 
 export function RefreshButton() {
-  const { query, refresh } = useDataTableContext()
+  const { query, refresh } = useDataTable()
+
   return (
     <Button onClick={refresh} variant="outline" size="icon">
       <Show when={query.isLoading || query.isRefetching}>

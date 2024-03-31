@@ -1,4 +1,4 @@
-import { api } from '@/lib/api'
+import { useAxios } from '@/lib/api'
 import { Paginated, TableQuery } from '@/lib/types'
 import {
   Connection,
@@ -8,14 +8,20 @@ import {
 } from './types'
 
 export function getCurrentUserConnections() {
+  const api = useAxios()
+
   return () => api.get<Connection[]>('/connections/@me')
 }
 
 export function getAllConnections(params: TableQuery) {
+  const api = useAxios()
+
   return () => api.get<Paginated<Connection>>('/connections', { params })
 }
 
 export function getConnectionById(connectionId: string) {
+  const api = useAxios()
+
   return () => api.get<Connection>(`/connections/${connectionId}`)
 }
 
@@ -23,6 +29,8 @@ export function updateConnectionModuleSettings<Settings>(
   module: string,
   connectionId: string,
 ) {
+  const api = useAxios()
+
   return (settings: Settings) =>
     api.patch(`/connections/${module}/settings`, {
       connectionId,
@@ -31,6 +39,8 @@ export function updateConnectionModuleSettings<Settings>(
 }
 
 export function deleteConnectionById(connectionId: string) {
+  const api = useAxios()
+
   return () => api.delete(`/connections/${connectionId}`)
 }
 
@@ -38,6 +48,8 @@ export function getConnectionSettings<Settings>(
   connectionId: string,
   module: string,
 ) {
+  const api = useAxios()
+
   return () =>
     api.get<ConnectionModule<Settings>>(
       `/connections/${connectionId}/${module}/settings`,
@@ -45,6 +57,8 @@ export function getConnectionSettings<Settings>(
 }
 
 export function getConnectionProfile(connectionId: string, forced?: boolean) {
+  const api = useAxios()
+
   return () =>
     api.get<ConnectionProfile>(`/connections/${connectionId}/profile`, {
       params: { forced },
@@ -52,6 +66,8 @@ export function getConnectionProfile(connectionId: string, forced?: boolean) {
 }
 
 export function getConnectionHealth(connectionId: string) {
+  const api = useAxios()
+
   return () =>
     api.get<ConnectionProfileHealth>(`/connections/${connectionId}/health`)
 }

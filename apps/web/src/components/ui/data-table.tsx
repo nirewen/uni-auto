@@ -13,8 +13,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useDataTableContext } from '@/hooks/data-table-context'
-import { Paginated } from '@/lib/api'
+import { useDataTable } from '@/hooks/useDataTable'
+import { Paginated } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { Show } from '../flow/show'
 import { RefreshButton } from '../table/refresh-button'
@@ -36,7 +36,7 @@ export function DataTable<TData, TValue>({
     filter: [filter, setFilter],
     sorting: [sorting, setSorting],
     pagination: [pagination, setPagination],
-  } = useDataTableContext()
+  } = useDataTable()
 
   const table = useReactTable({
     data: data.items,

@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   Post,
@@ -8,11 +7,12 @@ import {
   UseGuards,
 } from '@nestjs/common'
 
+import { ConfigService } from '@nestjs/config'
 import { User } from '@uni-auto/shared/entities/user.entity'
 import { Response } from 'express'
 import { UsersService } from 'src/base/users/users.service'
-import { Public, ReqUser } from 'src/common/decorators'
-import { Payload } from './auth.interface'
+import { Cookies, Public, ReqUser } from 'src/common/decorators'
+import { JwtSign, Payload } from './auth.interface'
 import { AuthService } from './auth.service'
 import { JwtRefreshGuard } from './guards'
 import { GoogleAuthGuard } from './guards/google-auth.guard'
@@ -22,7 +22,19 @@ export class AuthController {
   constructor(
     private auth: AuthService,
     private users: UsersService,
+    private config: ConfigService,
   ) {}
+
+  private writeCookies(res: Response, tokens: JwtSign) {
+    res.cookie('access_token', tokens.access_token, {
+      httpOnly: true,
+      secure: true,
+    })
+    res.cookie('refresh_token', tokens.refresh_token, {
+      httpOnly: true,
+      secure: true,
+    })
+  }
 
   @Public()
   @Get('/google/login')
@@ -35,14 +47,9 @@ export class AuthController {
   public handleGoogleRedirect(@Res() res: Response, @ReqUser() user: User) {
     const tokens = this.auth.jwtSign(user)
 
-    const url = new URL(process.env.FRONTEND_URL)
-    url.pathname = '/auth/callback'
-    url.search = new URLSearchParams({
-      access_token: tokens.access_token,
-      refresh_token: tokens.refresh_token,
-    }).toString()
+    this.writeCookies(res, tokens)
 
-    res.redirect(url.toString())
+    res.redirect(this.config.get('api.frontendUrl'))
   }
 
   @Public()
@@ -51,7 +58,7 @@ export class AuthController {
   public async refreshToken(
     @Res() res: Response,
     @ReqUser() payload: Payload,
-    @Body('refresh_token') token: string,
+    @Cookies('refresh_token') token: string,
   ) {
     if (!token || !this.auth.validateRefreshToken(payload, token)) {
       throw new UnauthorizedException('InvalidRefreshToken')
@@ -61,6 +68,17 @@ export class AuthController {
 
     const tokens = this.auth.jwtSign(user)
 
-    res.json({ user, tokens })
+    this.writeCookies(res, tokens)
+
+    res.json(user)
+  }
+
+  @Public()
+  @Post('/logout')
+  public async logout(@Res() res: Response) {
+    res.clearCookie('access_token')
+    res.clearCookie('refresh_token')
+
+    res.json({ message: 'Logged out' })
   }
 }

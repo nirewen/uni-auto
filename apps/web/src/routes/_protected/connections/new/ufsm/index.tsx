@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-import { api } from '@/lib/api'
+import { useAxios } from '@/lib/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 
@@ -42,6 +42,8 @@ function UFSM() {
   const navigate = useNavigate()
 
   async function onSubmit(formData: FormValues) {
+    const api = useAxios()
+
     try {
       const { data } = await api.post('/ufsm/connect', {
         login: formData.login,
@@ -54,8 +56,10 @@ function UFSM() {
       })
 
       Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['connections'], }),
-        queryClient.invalidateQueries({ queryKey: ['connections', data.id, 'health'], }),
+        queryClient.invalidateQueries({ queryKey: ['connections'] }),
+        queryClient.invalidateQueries({
+          queryKey: ['connections', data.id, 'health'],
+        }),
       ])
     } catch (_e) {
       if (_e instanceof AxiosError) {

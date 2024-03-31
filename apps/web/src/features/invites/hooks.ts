@@ -6,11 +6,12 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import { refreshToken } from '@/lib/api'
+import { useRefreshToken } from '@/hooks/useAuth'
 import { AxiosError } from 'axios'
 import * as service from './service'
 
 export function useConsumeInvite() {
+  const { mutate: refreshToken } = useRefreshToken()
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -19,7 +20,7 @@ export function useConsumeInvite() {
     onSuccess: async () => {
       await refreshToken()
 
-      queryClient.invalidateQueries({ queryKey: ['token-user'] })
+      queryClient.invalidateQueries({ queryKey: ['user'] })
       queryClient.invalidateQueries({ queryKey: ['connections'] })
       queryClient.invalidateQueries({ queryKey: ['modules'] })
     },

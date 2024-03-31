@@ -4,6 +4,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common'
 import { NestFactory, Reflector } from '@nestjs/core'
+
+import cookieParser from 'cookie-parser'
 import { WinstonModule } from 'nest-winston'
 import * as winston from 'winston'
 
@@ -31,6 +33,7 @@ async function bootstrap() {
   })
 
   const globalPrefix = 'api'
+  app.use(cookieParser())
   app.setGlobalPrefix(globalPrefix)
   app.useGlobalPipes(new ValidationPipe({ transform: true }))
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)))

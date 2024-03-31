@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
 
-import { useAuth } from '@/hooks/auth-provider'
+import { useAuth } from '@/hooks/useAuth'
 import { TableQuery } from '@/lib/types'
 import * as service from './service'
 

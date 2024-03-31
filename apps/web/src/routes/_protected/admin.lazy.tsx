@@ -1,4 +1,5 @@
 import { Sidebar } from '@/features/admin/sidebar'
+import { useAuth } from '@/hooks/useAuth'
 import { Outlet, createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/admin')({
@@ -6,6 +7,12 @@ export const Route = createFileRoute('/_protected/admin')({
 })
 
 function AdminLayoutComponent() {
+  const { user } = useAuth()
+
+  if (!user || user.role !== 'ADMIN') {
+    return history.back()
+  }
+
   return (
     <div className="flex h-full w-full flex-col gap-2 overflow-hidden sm:flex-row">
       <Sidebar />

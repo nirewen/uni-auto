@@ -5,17 +5,15 @@ import { Loader2 } from 'lucide-react'
 import { Show } from '@/components/flow/show'
 import { Navbar } from '@/components/navbar'
 import { Activation } from '@/features/invites/components/activation-form'
-import { useAuth } from '@/hooks/auth-provider'
-import { useTokenUser } from '@/lib/utils'
+import { useAuth } from '@/hooks/useAuth'
 
 export const Route = createFileRoute('/_protected')({
   component: LayoutComponent,
 })
 
 function LayoutComponent() {
-  const { isLoading, isAuthenticated } = useAuth()
+  const { user, isLoading, isAuthenticated } = useAuth()
   const router = useRouterState()
-  const user = useTokenUser()
 
   if (isLoading || !isAuthenticated) {
     return <Loader2 className="m-auto h-8 w-8 animate-spin" />
@@ -26,9 +24,9 @@ function LayoutComponent() {
       <Navbar />
       <Show
         when={
-          user.data &&
+          user &&
           isAuthenticated &&
-          !user.data.active &&
+          !user.active &&
           !router.location.pathname.startsWith('/profile')
         }
       >
@@ -36,7 +34,7 @@ function LayoutComponent() {
       </Show>
       <Show
         when={
-          (user.data && isAuthenticated && user.data.active) ||
+          (user && isAuthenticated && user.active) ||
           router.location.pathname.startsWith('/profile')
         }
       >

@@ -22,6 +22,7 @@ export const config = {
     deviceIdPrefix: process.env['UFSM_DEVICE_ID_PREFIX'],
   },
   api: {
+    frontendUrl: process.env['FRONTEND_URL'],
     baseUrl: process.env['API_BASE_URL'],
     accessToken: process.env['API_ACCESS_TOKEN'],
   },
