@@ -12,8 +12,9 @@ import { QueueService } from './queue.service'
     HttpModule.registerAsync({
       useFactory: (config: ConfigService) => ({
         baseURL: config.get('api.baseUrl'),
+        withCredentials: true,
         headers: {
-          Authorization: `Bearer ${config.get('api.accessToken')}`,
+          Cookie: `access_token=${config.get('api.accessToken')}`,
         },
       }),
       inject: [ConfigService],

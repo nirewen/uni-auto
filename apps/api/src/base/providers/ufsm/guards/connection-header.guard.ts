@@ -21,7 +21,7 @@ export class ConnectionHeaderGuard implements CanActivate {
     const connectionId = request.headers['connection-id']
     const authorization = request.headers.authorization
 
-    if (authorization.startsWith('Basic ')) {
+    if (authorization?.startsWith('Basic ')) {
       return true
     }
 
