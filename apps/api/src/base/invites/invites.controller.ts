@@ -28,6 +28,7 @@ export class InviteController {
   }
 
   @Get('@me')
+  @LoggedIn()
   @Roles(UserRole.USER)
   getMyInvites(
     @ReqUser() user: User,
