@@ -14,9 +14,11 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/auth'
-import { Route as ProtectedImport } from './routes/_protected'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthIndexImport } from './routes/auth/index'
+import { Route as ProtectedProfileImport } from './routes/_protected/profile'
+import { Route as ProtectedConnectionsImport } from './routes/_protected/connections'
+import { Route as ProtectedAdminImport } from './routes/_protected/admin'
 import { Route as AuthLoginIndexImport } from './routes/auth/login/index'
 import { Route as ProtectedProfileIndexImport } from './routes/_protected/profile/index'
 import { Route as ProtectedConnectionsIndexImport } from './routes/_protected/connections/index'
@@ -29,27 +31,25 @@ import { Route as ProtectedAdminModulesImport } from './routes/_protected/admin/
 import { Route as ProtectedAdminInvitesImport } from './routes/_protected/admin/invites'
 import { Route as ProtectedAdminConnectionsImport } from './routes/_protected/admin/connections'
 import { Route as ProtectedConnectionsConnectionIdIndexImport } from './routes/_protected/connections/$connectionId/index'
-import { Route as ProtectedConnectionsConnectionIdModuleSlugImport } from './routes/_protected/connections/$connectionId/$moduleSlug'
 import { Route as ProtectedConnectionsNewUfsmIndexImport } from './routes/_protected/connections/new/ufsm/index'
 import { Route as ProtectedConnectionsConnectionIdModuleSlugIndexImport } from './routes/_protected/connections/$connectionId/$moduleSlug/index'
 
 // Create Virtual Routes
 
-const ProtectedProfileLazyImport = createFileRoute('/_protected/profile')()
-const ProtectedConnectionsLazyImport = createFileRoute(
-  '/_protected/connections',
+const ProtectedLazyImport = createFileRoute('/_protected')()
+const ProtectedConnectionsConnectionIdModuleSlugLazyImport = createFileRoute(
+  '/_protected/connections/$connectionId/$moduleSlug',
 )()
-const ProtectedAdminLazyImport = createFileRoute('/_protected/admin')()
 
 // Create/Update Routes
 
+const ProtectedLazyRoute = ProtectedLazyImport.update({
+  id: '/_protected',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/_protected.lazy').then((d) => d.Route))
+
 const AuthRoute = AuthImport.update({
   path: '/auth',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ProtectedRoute = ProtectedImport.update({
-  id: '/_protected',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -63,26 +63,20 @@ const AuthIndexRoute = AuthIndexImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
-const ProtectedProfileLazyRoute = ProtectedProfileLazyImport.update({
+const ProtectedProfileRoute = ProtectedProfileImport.update({
   path: '/profile',
-  getParentRoute: () => ProtectedRoute,
-} as any).lazy(() =>
-  import('./routes/_protected/profile.lazy').then((d) => d.Route),
-)
+  getParentRoute: () => ProtectedLazyRoute,
+} as any)
 
-const ProtectedConnectionsLazyRoute = ProtectedConnectionsLazyImport.update({
+const ProtectedConnectionsRoute = ProtectedConnectionsImport.update({
   path: '/connections',
-  getParentRoute: () => ProtectedRoute,
-} as any).lazy(() =>
-  import('./routes/_protected/connections.lazy').then((d) => d.Route),
-)
+  getParentRoute: () => ProtectedLazyRoute,
+} as any)
 
-const ProtectedAdminLazyRoute = ProtectedAdminLazyImport.update({
+const ProtectedAdminRoute = ProtectedAdminImport.update({
   path: '/admin',
-  getParentRoute: () => ProtectedRoute,
-} as any).lazy(() =>
-  import('./routes/_protected/admin.lazy').then((d) => d.Route),
-)
+  getParentRoute: () => ProtectedLazyRoute,
+} as any)
 
 const AuthLoginIndexRoute = AuthLoginIndexImport.update({
   path: '/login/',
@@ -91,53 +85,53 @@ const AuthLoginIndexRoute = AuthLoginIndexImport.update({
 
 const ProtectedProfileIndexRoute = ProtectedProfileIndexImport.update({
   path: '/',
-  getParentRoute: () => ProtectedProfileLazyRoute,
+  getParentRoute: () => ProtectedProfileRoute,
 } as any)
 
 const ProtectedConnectionsIndexRoute = ProtectedConnectionsIndexImport.update({
   path: '/',
-  getParentRoute: () => ProtectedConnectionsLazyRoute,
+  getParentRoute: () => ProtectedConnectionsRoute,
 } as any)
 
 const ProtectedAdminIndexRoute = ProtectedAdminIndexImport.update({
   path: '/',
-  getParentRoute: () => ProtectedAdminLazyRoute,
+  getParentRoute: () => ProtectedAdminRoute,
 } as any)
 
 const ProtectedProfileInvitesRoute = ProtectedProfileInvitesImport.update({
   path: '/invites',
-  getParentRoute: () => ProtectedProfileLazyRoute,
+  getParentRoute: () => ProtectedProfileRoute,
 } as any)
 
 const ProtectedConnectionsConnectionIdRoute =
   ProtectedConnectionsConnectionIdImport.update({
     path: '/$connectionId',
-    getParentRoute: () => ProtectedConnectionsLazyRoute,
+    getParentRoute: () => ProtectedConnectionsRoute,
   } as any)
 
 const ProtectedAdminUsersRoute = ProtectedAdminUsersImport.update({
   path: '/users',
-  getParentRoute: () => ProtectedAdminLazyRoute,
+  getParentRoute: () => ProtectedAdminRoute,
 } as any)
 
 const ProtectedAdminQueueRoute = ProtectedAdminQueueImport.update({
   path: '/queue',
-  getParentRoute: () => ProtectedAdminLazyRoute,
+  getParentRoute: () => ProtectedAdminRoute,
 } as any)
 
 const ProtectedAdminModulesRoute = ProtectedAdminModulesImport.update({
   path: '/modules',
-  getParentRoute: () => ProtectedAdminLazyRoute,
+  getParentRoute: () => ProtectedAdminRoute,
 } as any)
 
 const ProtectedAdminInvitesRoute = ProtectedAdminInvitesImport.update({
   path: '/invites',
-  getParentRoute: () => ProtectedAdminLazyRoute,
+  getParentRoute: () => ProtectedAdminRoute,
 } as any)
 
 const ProtectedAdminConnectionsRoute = ProtectedAdminConnectionsImport.update({
   path: '/connections',
-  getParentRoute: () => ProtectedAdminLazyRoute,
+  getParentRoute: () => ProtectedAdminRoute,
 } as any)
 
 const ProtectedConnectionsConnectionIdIndexRoute =
@@ -146,22 +140,26 @@ const ProtectedConnectionsConnectionIdIndexRoute =
     getParentRoute: () => ProtectedConnectionsConnectionIdRoute,
   } as any)
 
-const ProtectedConnectionsConnectionIdModuleSlugRoute =
-  ProtectedConnectionsConnectionIdModuleSlugImport.update({
+const ProtectedConnectionsConnectionIdModuleSlugLazyRoute =
+  ProtectedConnectionsConnectionIdModuleSlugLazyImport.update({
     path: '/$moduleSlug',
     getParentRoute: () => ProtectedConnectionsConnectionIdRoute,
-  } as any)
+  } as any).lazy(() =>
+    import(
+      './routes/_protected/connections/$connectionId/$moduleSlug.lazy'
+    ).then((d) => d.Route),
+  )
 
 const ProtectedConnectionsNewUfsmIndexRoute =
   ProtectedConnectionsNewUfsmIndexImport.update({
     path: '/new/ufsm/',
-    getParentRoute: () => ProtectedConnectionsLazyRoute,
+    getParentRoute: () => ProtectedConnectionsRoute,
   } as any)
 
 const ProtectedConnectionsConnectionIdModuleSlugIndexRoute =
   ProtectedConnectionsConnectionIdModuleSlugIndexImport.update({
     path: '/',
-    getParentRoute: () => ProtectedConnectionsConnectionIdModuleSlugRoute,
+    getParentRoute: () => ProtectedConnectionsConnectionIdModuleSlugLazyRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -172,25 +170,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/_protected': {
-      preLoaderRoute: typeof ProtectedImport
-      parentRoute: typeof rootRoute
-    }
     '/auth': {
       preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
     }
+    '/_protected': {
+      preLoaderRoute: typeof ProtectedLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/_protected/admin': {
-      preLoaderRoute: typeof ProtectedAdminLazyImport
-      parentRoute: typeof ProtectedImport
+      preLoaderRoute: typeof ProtectedAdminImport
+      parentRoute: typeof ProtectedLazyImport
     }
     '/_protected/connections': {
-      preLoaderRoute: typeof ProtectedConnectionsLazyImport
-      parentRoute: typeof ProtectedImport
+      preLoaderRoute: typeof ProtectedConnectionsImport
+      parentRoute: typeof ProtectedLazyImport
     }
     '/_protected/profile': {
-      preLoaderRoute: typeof ProtectedProfileLazyImport
-      parentRoute: typeof ProtectedImport
+      preLoaderRoute: typeof ProtectedProfileImport
+      parentRoute: typeof ProtectedLazyImport
     }
     '/auth/': {
       preLoaderRoute: typeof AuthIndexImport
@@ -198,50 +196,50 @@ declare module '@tanstack/react-router' {
     }
     '/_protected/admin/connections': {
       preLoaderRoute: typeof ProtectedAdminConnectionsImport
-      parentRoute: typeof ProtectedAdminLazyImport
+      parentRoute: typeof ProtectedAdminImport
     }
     '/_protected/admin/invites': {
       preLoaderRoute: typeof ProtectedAdminInvitesImport
-      parentRoute: typeof ProtectedAdminLazyImport
+      parentRoute: typeof ProtectedAdminImport
     }
     '/_protected/admin/modules': {
       preLoaderRoute: typeof ProtectedAdminModulesImport
-      parentRoute: typeof ProtectedAdminLazyImport
+      parentRoute: typeof ProtectedAdminImport
     }
     '/_protected/admin/queue': {
       preLoaderRoute: typeof ProtectedAdminQueueImport
-      parentRoute: typeof ProtectedAdminLazyImport
+      parentRoute: typeof ProtectedAdminImport
     }
     '/_protected/admin/users': {
       preLoaderRoute: typeof ProtectedAdminUsersImport
-      parentRoute: typeof ProtectedAdminLazyImport
+      parentRoute: typeof ProtectedAdminImport
     }
     '/_protected/connections/$connectionId': {
       preLoaderRoute: typeof ProtectedConnectionsConnectionIdImport
-      parentRoute: typeof ProtectedConnectionsLazyImport
+      parentRoute: typeof ProtectedConnectionsImport
     }
     '/_protected/profile/invites': {
       preLoaderRoute: typeof ProtectedProfileInvitesImport
-      parentRoute: typeof ProtectedProfileLazyImport
+      parentRoute: typeof ProtectedProfileImport
     }
     '/_protected/admin/': {
       preLoaderRoute: typeof ProtectedAdminIndexImport
-      parentRoute: typeof ProtectedAdminLazyImport
+      parentRoute: typeof ProtectedAdminImport
     }
     '/_protected/connections/': {
       preLoaderRoute: typeof ProtectedConnectionsIndexImport
-      parentRoute: typeof ProtectedConnectionsLazyImport
+      parentRoute: typeof ProtectedConnectionsImport
     }
     '/_protected/profile/': {
       preLoaderRoute: typeof ProtectedProfileIndexImport
-      parentRoute: typeof ProtectedProfileLazyImport
+      parentRoute: typeof ProtectedProfileImport
     }
     '/auth/login/': {
       preLoaderRoute: typeof AuthLoginIndexImport
       parentRoute: typeof AuthImport
     }
     '/_protected/connections/$connectionId/$moduleSlug': {
-      preLoaderRoute: typeof ProtectedConnectionsConnectionIdModuleSlugImport
+      preLoaderRoute: typeof ProtectedConnectionsConnectionIdModuleSlugLazyImport
       parentRoute: typeof ProtectedConnectionsConnectionIdImport
     }
     '/_protected/connections/$connectionId/': {
@@ -250,11 +248,11 @@ declare module '@tanstack/react-router' {
     }
     '/_protected/connections/$connectionId/$moduleSlug/': {
       preLoaderRoute: typeof ProtectedConnectionsConnectionIdModuleSlugIndexImport
-      parentRoute: typeof ProtectedConnectionsConnectionIdModuleSlugImport
+      parentRoute: typeof ProtectedConnectionsConnectionIdModuleSlugLazyImport
     }
     '/_protected/connections/new/ufsm/': {
       preLoaderRoute: typeof ProtectedConnectionsNewUfsmIndexImport
-      parentRoute: typeof ProtectedConnectionsLazyImport
+      parentRoute: typeof ProtectedConnectionsImport
     }
   }
 }
@@ -263,8 +261,9 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  ProtectedRoute.addChildren([
-    ProtectedAdminLazyRoute.addChildren([
+  AuthRoute.addChildren([AuthIndexRoute, AuthLoginIndexRoute]),
+  ProtectedLazyRoute.addChildren([
+    ProtectedAdminRoute.addChildren([
       ProtectedAdminConnectionsRoute,
       ProtectedAdminInvitesRoute,
       ProtectedAdminModulesRoute,
@@ -272,9 +271,9 @@ export const routeTree = rootRoute.addChildren([
       ProtectedAdminUsersRoute,
       ProtectedAdminIndexRoute,
     ]),
-    ProtectedConnectionsLazyRoute.addChildren([
+    ProtectedConnectionsRoute.addChildren([
       ProtectedConnectionsConnectionIdRoute.addChildren([
-        ProtectedConnectionsConnectionIdModuleSlugRoute.addChildren([
+        ProtectedConnectionsConnectionIdModuleSlugLazyRoute.addChildren([
           ProtectedConnectionsConnectionIdModuleSlugIndexRoute,
         ]),
         ProtectedConnectionsConnectionIdIndexRoute,
@@ -282,12 +281,11 @@ export const routeTree = rootRoute.addChildren([
       ProtectedConnectionsIndexRoute,
       ProtectedConnectionsNewUfsmIndexRoute,
     ]),
-    ProtectedProfileLazyRoute.addChildren([
+    ProtectedProfileRoute.addChildren([
       ProtectedProfileInvitesRoute,
       ProtectedProfileIndexRoute,
     ]),
   ]),
-  AuthRoute.addChildren([AuthIndexRoute, AuthLoginIndexRoute]),
 ])
 
 /* prettier-ignore-end */

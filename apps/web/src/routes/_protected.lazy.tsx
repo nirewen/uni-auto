@@ -1,4 +1,8 @@
-import { Outlet, createFileRoute, useRouterState } from '@tanstack/react-router'
+import {
+  Outlet,
+  createLazyFileRoute,
+  useRouterState,
+} from '@tanstack/react-router'
 
 import { Loader2 } from 'lucide-react'
 
@@ -6,7 +10,7 @@ import { Show } from '@/components/flow/show'
 import { Activation } from '@/features/invites/components/activation-form'
 import { useAuth } from '@/hooks/useAuth'
 
-export const Route = createFileRoute('/_protected')({
+export const Route = createLazyFileRoute('/_protected')({
   component: LayoutComponent,
 })
 

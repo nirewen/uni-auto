@@ -1,8 +1,8 @@
 import { useConnection } from '@/features/connections/hooks'
-import { Outlet, createFileRoute } from '@tanstack/react-router'
+import { Outlet, createLazyFileRoute } from '@tanstack/react-router'
 import { Helmet } from 'react-helmet'
 
-export const Route = createFileRoute(
+export const Route = createLazyFileRoute(
   '/_protected/connections/$connectionId/$moduleSlug',
 )({
   component: ModuleSlugLayoutComponent,

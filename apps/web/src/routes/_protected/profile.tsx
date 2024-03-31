@@ -1,7 +1,8 @@
-import { Sidebar } from '@/features/profile/sidebar'
-import { Outlet, createLazyFileRoute } from '@tanstack/react-router'
+import { Outlet, createFileRoute } from '@tanstack/react-router'
 
-export const Route = createLazyFileRoute('/_protected/profile')({
+import { Sidebar } from '@/features/profile/sidebar'
+
+export const Route = createFileRoute('/_protected/profile')({
   component: ProfileLayoutComponent,
 })
 

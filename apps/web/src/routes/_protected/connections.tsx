@@ -1,7 +1,8 @@
-import { Outlet, createLazyFileRoute } from '@tanstack/react-router'
 import { Helmet } from 'react-helmet'
 
-export const Route = createLazyFileRoute('/_protected/connections')({
+import { Outlet, createFileRoute } from '@tanstack/react-router'
+
+export const Route = createFileRoute('/_protected/connections')({
   component: LayoutComponent,
 })
 
