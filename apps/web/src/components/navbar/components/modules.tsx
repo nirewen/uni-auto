@@ -7,6 +7,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from '@/components/ui/command'
 import {
   Popover,
@@ -16,7 +17,7 @@ import {
 import { useConnection } from '@/features/connections/hooks'
 import { cn } from '@/lib/utils'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { Check, ChevronDown, PackageIcon } from 'lucide-react'
+import { ChevronDown, PackageIcon } from 'lucide-react'
 import { useState } from 'react'
 import { AddModule } from './add-module'
 
@@ -77,44 +78,50 @@ export function Modules() {
           />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
+      <PopoverContent className="w-64 p-0" align="start">
         <Command>
           <CommandInput placeholder="Selecione o módulo..." />
-          <CommandEmpty>Nenhum módulo encontrado.</CommandEmpty>
-          <CommandGroup>
-            <For each={modules}>
-              {(module) => (
-                <CommandItem
-                  key={module.id}
-                  onSelect={() => {
-                    setOpen(false)
-                    navigate({
-                      to: '/connections/$connectionId/$moduleSlug',
-                      params: {
-                        connectionId: connection.data!.id,
-                        moduleSlug: module.slug,
-                      },
-                    })
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      'mr-2 h-4 w-4',
-                      connectionId === module.id ? 'opacity-100' : 'opacity-0',
-                    )}
-                  />
-                  {module.name}
-                </CommandItem>
-              )}
-            </For>
-            <CommandItem>
-              <AddModule
-                size="md"
-                className="-mx-2 -my-1 h-8 flex-1 justify-start rounded-sm border-none bg-transparent"
-                onAdd={() => setOpen(false)}
-              />
-            </CommandItem>
-          </CommandGroup>
+          <CommandList>
+            <CommandEmpty>Nenhum módulo encontrado.</CommandEmpty>
+            <CommandGroup>
+              <For each={modules}>
+                {(module) => (
+                  <CommandItem
+                    key={module.id}
+                    className="flex h-auto cursor-pointer select-none items-center justify-between gap-2 text-ellipsis rounded-full border-neutral-800 bg-neutral-900 p-2 text-left text-sm"
+                    onSelect={() => {
+                      setOpen(false)
+                      navigate({
+                        to: '/connections/$connectionId/$moduleSlug',
+                        params: {
+                          connectionId: connection.data!.id,
+                          moduleSlug: module.slug,
+                        },
+                      })
+                    }}
+                  >
+                    <div className="h-9 w-9 rounded-full bg-neutral-800">
+                      <img
+                        className="h-9 w-9 min-w-9 rounded-full bg-neutral-800"
+                        src={`/img/${module.slug}.png`}
+                        alt={`Ícone para ${module.name}`}
+                      />
+                    </div>
+                    <div className="flex flex-1 flex-col leading-4">
+                      <strong>{module.name}</strong>
+                    </div>
+                  </CommandItem>
+                )}
+              </For>
+              <CommandItem className="mt-1">
+                <AddModule
+                  size="md"
+                  className="-mx-2 -my-1 h-8 flex-1 justify-start rounded-sm border-none bg-transparent"
+                  onAdd={() => setOpen(false)}
+                />
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
         </Command>
       </PopoverContent>
     </Popover>

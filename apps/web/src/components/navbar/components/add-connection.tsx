@@ -11,6 +11,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from '@/components/ui/command'
 import {
   Popover,
@@ -18,7 +19,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useAllProviders } from '@/features/provider/hooks'
-import { cn } from '@/lib/utils'
+import { cn, universityLogos } from '@/lib/utils'
 
 type AddConnectionProps = {
   size?: 'sm' | 'md' | 'lg'
@@ -58,28 +59,36 @@ export function AddConnection({ size, className }: AddConnectionProps) {
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
+      <PopoverContent className="w-64 p-0">
         <Command>
           <CommandInput placeholder="Selecione a conexão..." />
-          <CommandEmpty>Nenhuma conexão encontrada.</CommandEmpty>
-          <CommandGroup>
-            {providers.map((provider) => (
-              <CommandItem
-                key={provider.id}
-                onSelect={() => {
-                  if (provider.slug === 'ufsm') {
-                    navigate({
-                      to: '/connections/new/ufsm',
-                    })
-                  }
+          <CommandList>
+            <CommandEmpty>Nenhuma conexão encontrada.</CommandEmpty>
+            <CommandGroup>
+              {providers.map((provider) => (
+                <CommandItem
+                  key={provider.id}
+                  className="gap-2"
+                  onSelect={() => {
+                    if (provider.slug === 'ufsm') {
+                      navigate({
+                        to: '/connections/new/ufsm',
+                      })
+                    }
 
-                  setOpen(false)
-                }}
-              >
-                {provider.name}
-              </CommandItem>
-            ))}
-          </CommandGroup>
+                    setOpen(false)
+                  }}
+                >
+                  <img
+                    className="h-5 w-5 min-w-5 rounded-full bg-neutral-800"
+                    src={universityLogos[provider.slug ?? 'none']}
+                    alt={`Logo da ${provider.name}`}
+                  />
+                  {provider.name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
         </Command>
       </PopoverContent>
     </Popover>

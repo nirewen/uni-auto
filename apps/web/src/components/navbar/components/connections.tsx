@@ -7,6 +7,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from '@/components/ui/command'
 import {
   Popover,
@@ -25,7 +26,7 @@ import {
 } from '@/features/connections/hooks'
 import { cn, universityLogos } from '@/lib/utils'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { CableIcon, Check, ChevronDown } from 'lucide-react'
+import { CableIcon, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 import { AddConnection } from './add-connection'
 
@@ -115,42 +116,45 @@ export function Connections() {
           />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
+      <PopoverContent className="w-64 p-0" align="start">
         <Command>
           <CommandInput placeholder="Selecione a conexão..." />
-          <CommandEmpty>No framework found.</CommandEmpty>
-          <CommandGroup>
-            <For each={connections}>
-              {(connection) => (
-                <CommandItem
-                  key={connection.id}
-                  onSelect={() => {
-                    setOpen(false)
-                    navigate({
-                      to: '/connections/$connectionId/',
-                      params: { connectionId: connection.id },
-                    })
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      'mr-2 h-4 w-4',
-                      connectionId === connection.id
-                        ? 'opacity-100'
-                        : 'opacity-0',
-                    )}
-                  />
-                  {connection.identifier} - {connection.provider.name}
-                </CommandItem>
-              )}
-            </For>
-            <CommandItem>
-              <AddConnection
-                size="md"
-                className="-mx-2 -my-1 h-8 flex-1 justify-start rounded-sm border-none bg-transparent"
-              />
-            </CommandItem>
-          </CommandGroup>
+          <CommandList>
+            <CommandEmpty>Nenhuma conexão encontrada</CommandEmpty>
+            <CommandGroup>
+              <For each={connections}>
+                {(connection) => (
+                  <CommandItem
+                    key={connection.id}
+                    className="flex h-auto cursor-pointer select-none items-center justify-between gap-2 text-ellipsis rounded-full border-neutral-800 bg-neutral-900 p-2 text-left text-sm"
+                    onSelect={() => {
+                      setOpen(false)
+                      navigate({
+                        to: '/connections/$connectionId/',
+                        params: { connectionId: connection.id },
+                      })
+                    }}
+                  >
+                    <img
+                      className="h-9 w-9 min-w-9 rounded-full bg-neutral-800"
+                      src={universityLogos[connection?.provider.slug ?? 'none']}
+                      alt={`Logo da ${connection?.provider.name}`}
+                    />
+                    <div className="flex flex-1 flex-col leading-4">
+                      <strong>{connection?.identifier}</strong>
+                      <span>{connection?.provider.name}</span>
+                    </div>
+                  </CommandItem>
+                )}
+              </For>
+              <CommandItem className="mt-1">
+                <AddConnection
+                  size="md"
+                  className="-mx-2 -my-1 h-8 flex-1 justify-start rounded-sm border-none bg-transparent"
+                />
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
         </Command>
       </PopoverContent>
     </Popover>

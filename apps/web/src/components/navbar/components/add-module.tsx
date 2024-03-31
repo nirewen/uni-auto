@@ -11,12 +11,14 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from '@/components/ui/command'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useConnection } from '@/features/connections/hooks'
 import {
   useModulesByProvider,
@@ -35,14 +37,18 @@ export function AddModule({ size, className, onAdd }: AddModuleProps) {
     from: '/_protected/connections/$connectionId',
   })
   const [open, setOpen] = React.useState(false)
-  const { data } = useConnection(connectionId!)
+  const { data } = useConnection(connectionId)
   const { data: modules, isLoading } = useModulesByProvider(
     data?.provider.slug!,
   )
-  const { mutateAsync: toggle } = useToggleModuleForConnection(connectionId!)
+  const { mutateAsync: toggle } = useToggleModuleForConnection(connectionId)
   const navigate = useNavigate()
 
-  if (!modules || isLoading) return null
+  if (!modules || isLoading) return <Skeleton className="h-8 w-full" />
+
+  const availableModules = modules.filter((module) => {
+    return !data?.modules?.some((m) => m.module.slug === module.slug)
+  })
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -70,36 +76,38 @@ export function AddModule({ size, className, onAdd }: AddModuleProps) {
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
+      <PopoverContent className="w-64 p-0">
         <Command>
           <CommandInput placeholder="Selecione o módulo..." />
           <CommandEmpty>Nenhum módulo encontrado.</CommandEmpty>
-          <CommandGroup>
-            {modules.map((module) => (
-              <CommandItem
-                key={module.id}
-                onSelect={() => {
-                  setOpen(false)
+          <CommandList>
+            <CommandGroup>
+              {availableModules.map((module) => (
+                <CommandItem
+                  key={module.id}
+                  onSelect={() => {
+                    setOpen(false)
 
-                  toggle({
-                    slug: module.slug,
-                    enabled: true,
-                  }).then(() => {
-                    onAdd()
-                    navigate({
-                      to: `/connections/$connectionId/$moduleSlug`,
-                      params: {
-                        connectionId: connectionId,
-                        moduleSlug: module.slug,
-                      },
+                    toggle({
+                      slug: module.slug,
+                      enabled: true,
+                    }).then(() => {
+                      onAdd()
+                      navigate({
+                        to: `/connections/$connectionId/$moduleSlug`,
+                        params: {
+                          connectionId: connectionId,
+                          moduleSlug: module.slug,
+                        },
+                      })
                     })
-                  })
-                }}
-              >
-                {module.name}
-              </CommandItem>
-            ))}
-          </CommandGroup>
+                  }}
+                >
+                  {module.name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
         </Command>
       </PopoverContent>
     </Popover>
