@@ -5,6 +5,7 @@ import { ThemeProvider } from '../components/theme-provider'
 
 import { AuthProvider } from '../hooks/useAuth'
 
+import { Toaster } from '@/components/ui/toaster'
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 
 const queryClient = new QueryClient({
@@ -45,6 +46,7 @@ function App() {
       <Suspense>
         <TanStackRouterDevtools position="bottom-right" />
       </Suspense>
+      <Toaster />
     </QueryClientProvider>
   )
 }

@@ -1,3 +1,5 @@
+import { toast } from 'sonner'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,7 +18,9 @@ import { ModuleSection } from '../[id]/module-section'
 
 export function ConnectionInfoFooter() {
   const params = useParams({ from: '/_protected/connections/$connectionId' })
-  const { mutate: deleteConnection } = useDeleteConnection(params.connectionId)
+  const { mutateAsync: deleteConnection } = useDeleteConnection(
+    params.connectionId,
+  )
   const navigate = useNavigate()
 
   return (
@@ -50,9 +54,16 @@ export function ConnectionInfoFooter() {
                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={() => {
-                    deleteConnection()
-
-                    navigate({ to: '/connections' })
+                    toast.promise(
+                      deleteConnection().then(() => {
+                        navigate({ to: '/connections' })
+                      }),
+                      {
+                        loading: 'Excluindo conexão...',
+                        success: 'Conexão excluída com sucesso!',
+                        error: 'Ocorreu um erro ao excluir a conexão',
+                      },
+                    )
                   }}
                 >
                   Excluir
