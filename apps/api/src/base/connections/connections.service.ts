@@ -50,7 +50,7 @@ export class ConnectionsService {
     connection.provider = provider
     connection.identifier = data.identifier
     connection.token = data.token
-    connection.user = user
+    connection.user = { id: user.id } as User
     connection.type = ConnectionType.STANDARD
 
     return this.connections.save(connection)

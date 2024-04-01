@@ -40,27 +40,24 @@ function UFSM() {
   })
   const [invalid, setInvalid] = useState<string | null>(null)
   const navigate = useNavigate()
+  const api = useAxios()
 
   async function onSubmit(formData: FormValues) {
-    const api = useAxios()
-
     try {
       const { data } = await api.post('/ufsm/connect', {
         login: formData.login,
         senha: formData.senha,
       })
 
-      navigate({
+      await queryClient.invalidateQueries({ queryKey: ['connections'] })
+      await queryClient.invalidateQueries({
+        queryKey: ['connections', data.id, 'health'],
+      })
+
+      await navigate({
         to: `/connections/$connectionId/`,
         params: { connectionId: data.id },
       })
-
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['connections'] }),
-        queryClient.invalidateQueries({
-          queryKey: ['connections', data.id, 'health'],
-        }),
-      ])
     } catch (_e) {
       if (_e instanceof AxiosError) {
         setInvalid(_e.response?.data.message)
@@ -81,10 +78,7 @@ function UFSM() {
             alt=""
           />
         </div>
-        <form
-          className="flex w-full flex-col gap-2"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form className="flex w-full flex-col gap-2">
           <label className="flex flex-col gap-1">
             <span className="text-sm">CPF ou Matrícula</span>
             <Input
@@ -105,7 +99,7 @@ function UFSM() {
             />
             <small className="h-4 text-red-400">{errors.senha?.message}</small>
           </label>
-          <Button className="mt-4 w-full" type="submit">
+          <Button className="mt-4 w-full" onClick={handleSubmit(onSubmit)}>
             Adicionar conexão
           </Button>
           {invalid && <p className="-mt-2 h-0 text-red-400">{invalid}</p>}
