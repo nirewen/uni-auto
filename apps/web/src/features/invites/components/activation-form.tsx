@@ -1,34 +1,15 @@
-import { CardTitle } from '@/features/connections/components/[id]/module-section/card/card.title'
-import { DiscordUser, useCreatorDiscord } from '@/hooks/useCreator'
+import { ModuleSection } from '@/features/connections/components/[id]/module-section'
+import { DiscordUser } from '@/hooks/useCreator'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AxiosError } from 'axios'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { Show } from '../../../components/flow/show'
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '../../../components/ui/alert-dialog'
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from '../../../components/ui/avatar'
 import { Button } from '../../../components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-} from '../../../components/ui/card'
 import {
   HoverCard,
   HoverCardContent,
@@ -65,43 +46,6 @@ function DiscordUserCard({ user }: DiscordUserCardProps) {
   )
 }
 
-function ActivationHelper() {
-  const [open, setOpen] = useState(false)
-  const creatorDiscord = useCreatorDiscord(open)
-
-  return (
-    <AlertDialog open={open}>
-      <AlertDialogTrigger asChild>
-        <Button variant="outline" onClick={() => setOpen((v) => !v)}>
-          Não tenho um código
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Código de ativação</AlertDialogTitle>
-          <AlertDialogDescription asChild>
-            <div>
-              Você pode pedir um código de ativação para um amigo que já usa a
-              plataforma.
-              <Show when={!creatorDiscord.isLoading && !!creatorDiscord.data}>
-                <div>
-                  ...Ou pedir diretamente ao criador do site, no Discord:
-                  <DiscordUserCard user={creatorDiscord.data!} />
-                </div>
-              </Show>
-            </div>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => setOpen((v) => false)}>
-            Ok, entendi
-          </AlertDialogCancel>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  )
-}
-
 const schema = z.object({
   code: z.string(),
 })
@@ -122,12 +66,16 @@ export function Activation() {
   }
 
   return (
-    <Card className="max-w-[32rem] self-center">
-      <CardHeader>
-        <CardTitle>Ativação da conta</CardTitle>
-        <CardDescription>Sua conta não está ativada.</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <ModuleSection.Root className="w-full self-center">
+      <ModuleSection.Header>
+        <div className="flex flex-col">
+          <ModuleSection.Title>Ativação da conta</ModuleSection.Title>
+          <ModuleSection.Subtitle>
+            Sua conta não está ativada.
+          </ModuleSection.Subtitle>
+        </div>
+      </ModuleSection.Header>
+      <ModuleSection.Body>
         <form className="flex flex-col gap-4">
           <span>
             Para usar a plataforma, ative sua conta informando o código de
@@ -137,7 +85,7 @@ export function Activation() {
             <span className="text-sm">Código de ativação</span>
             <Input
               type="text"
-              className="bg-neutral-900 bg-opacity-60"
+              className="bg-neutral-950 bg-opacity-60"
               inputClassName="bg-transparent"
               placeholder="AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE"
               {...register('code')}
@@ -150,13 +98,12 @@ export function Activation() {
             </p>
           )}
         </form>
-      </CardContent>
-      <CardFooter className="justify-end gap-2">
-        <ActivationHelper />
+      </ModuleSection.Body>
+      <ModuleSection.Footer className="justify-end gap-2">
         <Button type="submit" onClick={handleSubmit(onSubmit)}>
           Ativar conta
         </Button>
-      </CardFooter>
-    </Card>
+      </ModuleSection.Footer>
+    </ModuleSection.Root>
   )
 }

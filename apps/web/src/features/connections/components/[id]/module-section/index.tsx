@@ -1,5 +1,6 @@
 import { Card } from './card'
 import { ModuleSectionBody } from './module-section.body'
+import { ModuleSectionFooter } from './module-section.footer'
 import { ModuleSectionHeader } from './module-section.header'
 import { ModuleSectionIcon } from './module-section.icon'
 import { ModuleSectionOptions } from './module-section.options'
@@ -12,6 +13,7 @@ export const ModuleSection = {
   Header: ModuleSectionHeader,
   Icon: ModuleSectionIcon,
   Body: ModuleSectionBody,
+  Footer: ModuleSectionFooter,
   Title: ModuleSectionTitle,
   Subtitle: ModuleSectionSubtitle,
   Options: ModuleSectionOptions,
