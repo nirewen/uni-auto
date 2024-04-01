@@ -1,5 +1,6 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from '@/hooks/useAuth'
-import { cn } from '@/lib/utils'
+import { cn, nameToInitials } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
 import { LockIcon, LogInIcon, LogOutIcon, UserRoundIcon } from 'lucide-react'
 import { Show } from '../../flow/show'
@@ -54,11 +55,10 @@ export function LoggedInUser({ className }: LoggedInUserProps) {
           )}
           variant="outline"
         >
-          <img
-            src={user.avatarUrl}
-            alt={user.displayName}
-            className="h-9 w-9 min-w-9 rounded-full"
-          />
+          <Avatar className="h-9 w-9">
+            <AvatarImage src={user.avatarUrl} />
+            <AvatarFallback>{nameToInitials(user.displayName)}</AvatarFallback>
+          </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
