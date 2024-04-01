@@ -6,17 +6,13 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import { useAuth } from '@/hooks/useAuth'
 import * as service from './service'
 
 export function useConnections() {
-  const { isAuthenticated } = useAuth()
-
   return useQuery({
     queryKey: ['connections'],
     queryFn: service.getCurrentUserConnections(),
     select: (res) => res.data,
-    enabled: isAuthenticated,
   })
 }
 

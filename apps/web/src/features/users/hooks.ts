@@ -4,15 +4,6 @@ import { useAuth } from '@/hooks/useAuth'
 import { TableQuery } from '@/lib/types'
 import * as service from './service'
 
-export function useLoggedInUser() {
-  return useQuery({
-    queryKey: ['user'],
-    queryFn: service.getLoggedInUser(),
-    select: (res) => res.data,
-    enabled: false,
-  })
-}
-
 export function useCurrentUser() {
   return useQuery({
     queryKey: ['user'],

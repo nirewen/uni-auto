@@ -4,8 +4,11 @@ import { useAxios } from '@/lib/api'
 import { Paginated, TableQuery } from '@/lib/types'
 import { User } from './types'
 
-export function getLoggedInUser() {
-  return () => axios.get<User>('/api/users/@me')
+export function isUserLoggedIn() {
+  return axios
+    .head('/api/users/@me')
+    .then(() => true)
+    .catch(() => false)
 }
 
 export function getCurrentUser() {

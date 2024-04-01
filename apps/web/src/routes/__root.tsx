@@ -7,15 +7,8 @@ import { AuthProvider } from '../hooks/useAuth'
 
 import { Navbar } from '@/components/navbar'
 import { Toaster } from '@/components/ui/toaster'
+import * as userService from '@/features/users/service'
 import { Outlet, createRootRoute } from '@tanstack/react-router'
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-})
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === 'production'
@@ -31,12 +24,24 @@ const TanStackRouterDevtools =
 
 export const Route = createRootRoute({
   component: App,
+  loader: () => userService.isUserLoggedIn(),
   notFoundComponent: () => {
     return <p>Not Found (on root route)</p>
   },
 })
 
 function App() {
+  const data = Route.useLoaderData()
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+        enabled: data,
+      },
+    },
+  })
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="uni-auto-theme">
