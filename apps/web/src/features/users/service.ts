@@ -8,7 +8,12 @@ export function isUserLoggedIn() {
   return axios
     .head('/api/users/@me')
     .then(() => true)
-    .catch(() => false)
+    .catch(() =>
+      axios
+        .post('/api/auth/refresh')
+        .then(() => true)
+        .catch(() => false),
+    )
 }
 
 export function getCurrentUser() {
