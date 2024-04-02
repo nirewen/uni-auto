@@ -25,9 +25,9 @@ import { ConnectionType } from '@uni-auto/shared/entities/connection.entity'
 import { User } from '@uni-auto/shared/entities/user.entity'
 import { differenceInDays, format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { ProviderProfileOptions } from 'src/base/providers/providers.service'
 import { Carteira } from '../../dto/carteira.dto'
 import { Credentials } from '../../interfaces/credentials.interface'
-import { ProviderProfileOptions } from 'src/base/providers/providers.service'
 
 @Injectable()
 export class APIService {
@@ -163,6 +163,11 @@ export class APIService {
       })
 
     const notifications = this.responseToNtfyPayloads(data)
+
+    Logger.log({
+      identifier: credentials.identifier,
+      notifications,
+    })
 
     await Promise.all(
       notifications.map(async notification =>
