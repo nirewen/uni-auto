@@ -13,13 +13,10 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as AuthImport } from './routes/auth'
 import { Route as IndexImport } from './routes/index'
-import { Route as AuthIndexImport } from './routes/auth/index'
 import { Route as ProtectedProfileImport } from './routes/_protected/profile'
 import { Route as ProtectedConnectionsImport } from './routes/_protected/connections'
 import { Route as ProtectedAdminImport } from './routes/_protected/admin'
-import { Route as AuthLoginIndexImport } from './routes/auth/login/index'
 import { Route as ProtectedProfileIndexImport } from './routes/_protected/profile/index'
 import { Route as ProtectedConnectionsIndexImport } from './routes/_protected/connections/index'
 import { Route as ProtectedAdminIndexImport } from './routes/_protected/admin/index'
@@ -48,19 +45,9 @@ const ProtectedLazyRoute = ProtectedLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/_protected.lazy').then((d) => d.Route))
 
-const AuthRoute = AuthImport.update({
-  path: '/auth',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
-} as any)
-
-const AuthIndexRoute = AuthIndexImport.update({
-  path: '/',
-  getParentRoute: () => AuthRoute,
 } as any)
 
 const ProtectedProfileRoute = ProtectedProfileImport.update({
@@ -76,11 +63,6 @@ const ProtectedConnectionsRoute = ProtectedConnectionsImport.update({
 const ProtectedAdminRoute = ProtectedAdminImport.update({
   path: '/admin',
   getParentRoute: () => ProtectedLazyRoute,
-} as any)
-
-const AuthLoginIndexRoute = AuthLoginIndexImport.update({
-  path: '/login/',
-  getParentRoute: () => AuthRoute,
 } as any)
 
 const ProtectedProfileIndexRoute = ProtectedProfileIndexImport.update({
@@ -170,10 +152,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/auth': {
-      preLoaderRoute: typeof AuthImport
-      parentRoute: typeof rootRoute
-    }
     '/_protected': {
       preLoaderRoute: typeof ProtectedLazyImport
       parentRoute: typeof rootRoute
@@ -189,10 +167,6 @@ declare module '@tanstack/react-router' {
     '/_protected/profile': {
       preLoaderRoute: typeof ProtectedProfileImport
       parentRoute: typeof ProtectedLazyImport
-    }
-    '/auth/': {
-      preLoaderRoute: typeof AuthIndexImport
-      parentRoute: typeof AuthImport
     }
     '/_protected/admin/connections': {
       preLoaderRoute: typeof ProtectedAdminConnectionsImport
@@ -234,10 +208,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedProfileIndexImport
       parentRoute: typeof ProtectedProfileImport
     }
-    '/auth/login/': {
-      preLoaderRoute: typeof AuthLoginIndexImport
-      parentRoute: typeof AuthImport
-    }
     '/_protected/connections/$connectionId/$moduleSlug': {
       preLoaderRoute: typeof ProtectedConnectionsConnectionIdModuleSlugLazyImport
       parentRoute: typeof ProtectedConnectionsConnectionIdImport
@@ -261,7 +231,6 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  AuthRoute.addChildren([AuthIndexRoute, AuthLoginIndexRoute]),
   ProtectedLazyRoute.addChildren([
     ProtectedAdminRoute.addChildren([
       ProtectedAdminConnectionsRoute,
