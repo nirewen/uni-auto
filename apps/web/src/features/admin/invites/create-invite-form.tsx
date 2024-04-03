@@ -28,8 +28,11 @@ import {
 import { Switch } from '@/components/ui/switch'
 import { useAllUsers } from '@/features/users/hooks'
 
+import { Show } from '@/components/flow/show'
 import { useCreateInvite } from '@/features/invites/hooks'
 import { useAuth } from '@/hooks/useAuth'
+import { AxiosError } from 'axios'
+import { useState } from 'react'
 import { UsersList } from './users-list'
 
 const inviteRoles = ['ACCOUNT_ACTIVATION'] as const
@@ -47,6 +50,8 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>
 
 export function CreateInviteForm() {
+  const [open, setOpen] = useState(false)
+  const [error, setError] = useState<string>()
   const { user } = useAuth()
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -61,16 +66,28 @@ export function CreateInviteForm() {
   const users = useAllUsers()
   const createInvite = useCreateInvite()
 
-  function onSubmit(data: FormValues) {
+  async function onSubmit(data: FormValues) {
     let o = Object.fromEntries(
       Object.entries(data).filter(([_, v]) => v != null),
     )
 
-    createInvite.mutate(o)
+    createInvite
+      .mutateAsync(o)
+      .then(() => {
+        form.reset()
+        form.setValue('code', crypto.randomUUID())
+
+        setOpen(false)
+      })
+      .catch((e) => {
+        if (e instanceof AxiosError) {
+          setError(e.response?.data.message)
+        }
+      })
   }
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button>Novo convite</Button>
       </PopoverTrigger>
@@ -207,6 +224,9 @@ export function CreateInviteForm() {
                 )}
               />
             </div>
+            <Show when={createInvite.isError}>
+              <FormMessage>{error}</FormMessage>
+            </Show>
             <Button type="submit">Criar</Button>
           </form>
         </Form>

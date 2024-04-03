@@ -137,6 +137,14 @@ export class InviteService {
   }
 
   async createInvite(dto: CreateInviteDto) {
+    const invite = await this.inviteRepository.findOne({
+      where: { code: dto.code },
+    })
+
+    if (invite) {
+      throw new BadRequestException('Invite code already exists')
+    }
+
     const user = await this.usersService.findOneById(dto.createdBy)
     const usableBy = await this.usersService.findOneById(dto.usableBy)
     const assignedTo = await this.usersService.findOneById(dto.assignedTo)
@@ -145,7 +153,7 @@ export class InviteService {
       throw new BadRequestException('Invalid max uses value')
     }
 
-    const invite = this.inviteRepository.create({
+    const newInvite = this.inviteRepository.create({
       code: dto.code,
       role: dto.role,
       maxUses: dto.maxUses,
@@ -155,6 +163,6 @@ export class InviteService {
       assignedTo: assignedTo ?? user,
     })
 
-    return this.inviteRepository.save(invite)
+    return this.inviteRepository.save(newInvite)
   }
 }

@@ -41,7 +41,7 @@ export function useCreateInvite() {
     mutationKey: ['invites', 'create'],
     mutationFn: service.createInvite(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['invites'] })
+      queryClient.refetchQueries({ queryKey: ['invites'] })
     },
   })
 }
