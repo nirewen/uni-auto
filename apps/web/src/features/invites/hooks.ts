@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios'
+
 import { TableQuery } from '@/lib/types'
 import {
   keepPreviousData,
@@ -7,7 +9,6 @@ import {
 } from '@tanstack/react-query'
 
 import { useRefreshToken } from '@/hooks/useAuth'
-import { AxiosError } from 'axios'
 import * as service from './service'
 
 export function useConsumeInvite() {
@@ -38,17 +39,18 @@ export function useCreateInvite() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationKey: ['invites', 'create'],
     mutationFn: service.createInvite(),
     onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: ['invites'] })
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['invites'] })
+      }, 1000)
     },
   })
 }
 
 export function useAllInvites(params: TableQuery) {
   return useQuery({
-    queryKey: ['invites'],
+    queryKey: ['invites', params],
     queryFn: service.getAllInvites(params),
     select: (res) => res.data,
     placeholderData: keepPreviousData,
