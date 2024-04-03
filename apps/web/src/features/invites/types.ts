@@ -19,3 +19,13 @@ export type InviteCode = {
   usableBy: User
   uses: InviteUse[]
 }
+
+export type CreateInviteDto = {
+  code?: string
+  role?: string
+  maxUses?: number
+  active?: boolean
+  assignedTo?: string
+  usableBy?: string
+  createdBy?: string
+}

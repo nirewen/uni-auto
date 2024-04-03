@@ -22,7 +22,18 @@ export function useDeleteCurrentUser() {
   })
 }
 
-export function useAllUsers(params: TableQuery) {
+export function useAllUsers(
+  params: TableQuery = new TableQuery({
+    pagination: { pageIndex: 0, pageSize: 1000 },
+    filter: '',
+    sorting: [
+      {
+        id: 'displayName',
+        desc: false,
+      },
+    ],
+  }),
+) {
   return useQuery({
     queryKey: ['users', params],
     queryFn: service.getAllUsers(params),

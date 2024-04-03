@@ -11,12 +11,37 @@ import {
 import { useAuth } from '@/hooks/useAuth'
 import { cn, getGhostUser, nameToInitials } from '@/lib/utils'
 import { CalendarDaysIcon, QrCodeIcon } from 'lucide-react'
+import React from 'react'
 import { User } from '../types'
 
 type UserCardProps = {
   user: User
   mini?: boolean
 }
+
+export const UserCardTrigger = React.forwardRef<
+  HTMLButtonElement,
+  UserCardProps
+>(({ user, mini, ...props }, ref) => {
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      size="sm"
+      className={cn('justify-start gap-2 truncate', {
+        'p-2 rounded-full': mini,
+      })}
+      ref={ref}
+      {...props}
+    >
+      <Avatar className="h-5 w-5">
+        <AvatarImage className="object-cover" src={user.avatarUrl} />
+        <AvatarFallback>{nameToInitials(user.displayName)}</AvatarFallback>
+      </Avatar>
+      <Show when={!mini}>{user.displayName}</Show>
+    </Button>
+  )
+})
 
 export function UserCard({ user, mini }: UserCardProps) {
   const { user: loggedUser } = useAuth()
@@ -28,19 +53,7 @@ export function UserCard({ user, mini }: UserCardProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className={cn('justify-start gap-2 truncate', {
-            'p-2 rounded-full': mini,
-          })}
-        >
-          <Avatar className="h-5 w-5">
-            <AvatarImage className="object-cover" src={user.avatarUrl} />
-            <AvatarFallback>{nameToInitials(user.displayName)}</AvatarFallback>
-          </Avatar>
-          <Show when={!mini}>{user.displayName}</Show>
-        </Button>
+        <UserCardTrigger user={user} mini={mini} />
       </PopoverTrigger>
       <PopoverContent align="start" className="w-fit">
         <div className="flex items-center space-x-4">

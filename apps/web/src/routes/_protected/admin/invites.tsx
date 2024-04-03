@@ -5,6 +5,7 @@ import { Show } from '@/components/flow/show'
 import { DataTable } from '@/components/ui/data-table'
 import { columns } from '@/features/invites/table/columns'
 
+import { CreateInviteForm } from '@/features/admin/invites/create-invite-form'
 import { useAllInvites } from '@/features/invites/hooks'
 import { useTableFilter } from '@/hooks/table/useTableFilter'
 import { useTablePagination } from '@/hooks/table/useTablePagination'
@@ -25,8 +26,15 @@ function InvitesComponent() {
 
   return (
     <div className="flex h-full w-full flex-col gap-3 p-4">
-      <h1 className="text-2xl font-bold">Convites</h1>
-      <p className="text-gray-500">Convites da plataforma</p>
+      <div className="flex justify-between">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-bold">Convites</h1>
+          <p className="text-gray-500">Convites da plataforma</p>
+        </div>
+        <div className="flex flex-col gap-2">
+          <CreateInviteForm />
+        </div>
+      </div>
       <Show
         when={!query.isLoading && !!query.data}
         fallback={<Loader2Icon className="m-auto h-8 w-8 animate-spin" />}

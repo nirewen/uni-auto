@@ -4,11 +4,12 @@ import {
   IsEnum,
   IsNumber,
   IsOptional,
+  IsString,
   IsUUID,
 } from 'class-validator'
 
 export class CreateInviteDto {
-  @IsUUID()
+  @IsString()
   @IsOptional()
   code: string
 

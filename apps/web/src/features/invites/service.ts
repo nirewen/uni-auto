@@ -1,11 +1,17 @@
 import { useAxios } from '@/lib/api'
 import { Paginated, TableQuery } from '@/lib/types'
-import { InviteCode } from './types'
+import { CreateInviteDto, InviteCode } from './types'
 
 export function consumeInvite() {
   const api = useAxios()
 
   return (code: string) => api.post(`/invites/use/${code}`)
+}
+
+export function createInvite() {
+  const api = useAxios()
+
+  return (dto: CreateInviteDto) => api.post(`/invites`, dto)
 }
 
 export function getAllInvites(params: TableQuery) {

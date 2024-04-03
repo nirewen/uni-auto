@@ -34,9 +34,21 @@ export function useConsumeInvite() {
   })
 }
 
+export function useCreateInvite() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ['invites', 'create'],
+    mutationFn: service.createInvite(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['invites'] })
+    },
+  })
+}
+
 export function useAllInvites(params: TableQuery) {
   return useQuery({
-    queryKey: ['invites', params],
+    queryKey: ['invites'],
     queryFn: service.getAllInvites(params),
     select: (res) => res.data,
     placeholderData: keepPreviousData,
@@ -45,7 +57,7 @@ export function useAllInvites(params: TableQuery) {
 
 export function useMyInvites(params: TableQuery) {
   return useQuery({
-    queryKey: ['invites/@me', params],
+    queryKey: ['invites/@me'],
     queryFn: service.getMyInvites(params),
     select: (res) => res.data,
     placeholderData: keepPreviousData,
