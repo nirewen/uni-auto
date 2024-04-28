@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
@@ -33,6 +37,12 @@ export class UsersService {
     return this.users.create(user)
   }
 
+  isAllowedDomain(email: string) {
+    return this.config
+      .get('auth.google.allowedDomains')
+      .some((domain: string) => email.endsWith(domain))
+  }
+
   async findAll({ pagination, filter, sorting }: TableQueryDto<User>) {
     const filterableFields = ['email', 'displayName']
 
@@ -46,6 +56,13 @@ export class UsersService {
   }
 
   async findOne(email: string) {
+    if (!this.isAllowedDomain(email)) {
+      throw new BadRequestException(
+        'email domain is not allowed',
+        'Esse domínio de email não é permitido. Utilize um email institucional de uma universidade suportada.',
+      )
+    }
+
     const user = await this.users.findOne({
       where: { email },
       relations: {
@@ -57,7 +74,7 @@ export class UsersService {
       user ||
       this.users.create({
         email,
-        active: this.config.get('inviteOnly') ? false : true,
+        active: !this.config.get('inviteOnly'),
       })
     )
   }

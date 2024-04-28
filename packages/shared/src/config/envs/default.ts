@@ -31,6 +31,7 @@ export const config = {
       clientId: process.env['GOOGLE_CLIENT_ID'],
       clientSecret: process.env['GOOGLE_CLIENT_SECRET'],
       redirectUrl: process.env['GOOGLE_REDIRECT_URL'],
+      allowedDomains: JSON.parse(process.env['GOOGLE_ALLOWED_DOMAINS'] ?? '[]'),
     },
   },
   inviteOnly: process.env['INVITE_ONLY'] === 'true',
