@@ -51,6 +51,7 @@ export function Connections() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          id="connections-popover"
           variant="outline"
           role="combobox"
           aria-expanded={open}

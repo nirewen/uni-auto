@@ -1,9 +1,15 @@
+import { Show } from '@/components/flow/show'
 import { Button } from '@/components/ui/button'
-import { MailIcon } from 'lucide-react'
+import { useAuth } from '@/hooks/useAuth'
+import { ArrowUpIcon, LogInIcon } from 'lucide-react'
 
 export function MainHero() {
-  function handleButtonClick() {
-    window.location.href = import.meta.env.VITE_MAILTODEV
+  const { isAuthenticated, loginWithProvider } = useAuth()
+
+  function handleOpenConnections() {
+    ;(
+      document.querySelectorAll('#connections-popover')[0] as HTMLButtonElement
+    ).click()
   }
 
   return (
@@ -19,15 +25,30 @@ export function MainHero() {
         <br />
         agora é só configurar e esquecer.
       </div>
-      <div className="mt-5">
-        <Button onClick={handleButtonClick}>
-          <MailIcon className="mr-2 h-5 w-5" />
-          Pedir um convite
-        </Button>
-      </div>
-      <span className="text-center text-sm text-muted-foreground">
-        Utilize seu email institucional!
-      </span>
+      <Show when={!isAuthenticated}>
+        <div className="mt-5">
+          <Button onClick={() => loginWithProvider('google')}>
+            <LogInIcon className="mr-2 h-5 w-5" />
+            Acessar plataforma
+          </Button>
+        </div>
+        <span className="text-center text-sm text-muted-foreground">
+          Utilize seu email institucional!
+        </span>
+      </Show>
+      <Show when={isAuthenticated}>
+        <div className="mt-5">
+          <Button onClick={handleOpenConnections}>
+            <ArrowUpIcon className="mr-2 h-5 w-5" />
+            Selecionar conexão
+          </Button>
+        </div>
+        <span className="text-center text-sm text-muted-foreground">
+          Selecione ou crie uma
+          <br />
+          conexão para começar
+        </span>
+      </Show>
     </div>
   )
 }

@@ -18,16 +18,12 @@ export type LoggedInUserProps = {
 }
 
 export function LoggedInUser({ className }: LoggedInUserProps) {
-  const { signOut, user, isAuthenticated } = useAuth()
+  const { signOut, user, isAuthenticated, loginWithProvider } = useAuth()
   const navigate = useNavigate()
   const actions = {
     profile: () => navigate({ to: '/profile/' }),
     admin: () => navigate({ to: '/admin/' }),
     signOut,
-  }
-
-  function loginWithProvider(provider: string) {
-    window.location.pathname = `/api/auth/${provider}/login`
   }
 
   if (!isAuthenticated || !user) {

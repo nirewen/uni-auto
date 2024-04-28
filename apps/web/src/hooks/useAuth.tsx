@@ -12,6 +12,7 @@ interface AuthContextProps {
   isLoading: boolean
   isAuthenticated: boolean
   signOut: () => void
+  loginWithProvider: (provider: string) => void
 }
 
 export const AuthContext = React.createContext<AuthContextProps>(null!)
@@ -21,6 +22,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const { mutate: logout } = useLogout()
   const isAuthenticated = query.isSuccess && !query.isError && !query.isLoading
 
+  function loginWithProvider(provider: string) {
+    window.location.pathname = `/api/auth/${provider}/login`
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -28,6 +33,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         isLoading: query.isLoading,
         isAuthenticated,
         signOut: logout,
+        loginWithProvider,
       }}
     >
       {children}
