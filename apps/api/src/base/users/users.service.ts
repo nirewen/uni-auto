@@ -56,19 +56,19 @@ export class UsersService {
   }
 
   async findOne(email: string) {
-    if (!this.isAllowedDomain(email)) {
-      throw new BadRequestException(
-        'email domain is not allowed',
-        'Esse domínio de email não é permitido. Utilize um email institucional de uma universidade suportada.',
-      )
-    }
-
     const user = await this.users.findOne({
       where: { email },
       relations: {
         connections: true,
       },
     })
+
+    if (!user && !this.isAllowedDomain(email)) {
+      throw new BadRequestException(
+        'email domain is not allowed',
+        'Esse domínio de email não é permitido. Utilize um email institucional de uma universidade suportada.',
+      )
+    }
 
     return (
       user ||
