@@ -1,6 +1,6 @@
-import { Module } from '@/lib/services/module.service'
-import { User } from '@/lib/services/user.service'
+import { Module } from '../modules/types'
 import { Provider } from '../provider/types'
+import { User } from '../users/types'
 
 export interface Connection {
   id: string

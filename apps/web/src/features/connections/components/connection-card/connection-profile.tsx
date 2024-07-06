@@ -1,4 +1,5 @@
 import { Copy } from '@/components/copy'
+import { Show } from '@/components/flow/show'
 import { DateSpan } from '@/components/table/date-span'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -9,9 +10,10 @@ import {
 } from '@/components/ui/popover'
 import { useConnectionProfile } from '@/features/connections/hooks'
 import { Connection } from '@/features/connections/types'
-import { nameToInitials } from '@/lib/utils'
+import { cn, nameToInitials } from '@/lib/utils'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { CalendarDaysIcon, QrCodeIcon, SettingsIcon } from 'lucide-react'
+import React from 'react'
 import {
   ConnectionProfileLoader,
   ConnectionProfileWideLoader,
@@ -19,6 +21,7 @@ import {
 
 type ConnectionProfileProps = {
   connection?: Connection
+  mini?: boolean
 }
 
 export function ConnectionProfileWideCard() {
@@ -54,7 +57,40 @@ export function ConnectionProfileWideCard() {
   )
 }
 
-export function ConnectionProfileCard({ connection }: ConnectionProfileProps) {
+export const ConnectionProfileCardTrigger = React.forwardRef<
+  HTMLButtonElement,
+  ConnectionProfileProps
+>(({ connection, mini, ...props }, ref) => {
+  if (!connection) return null
+
+  const { profile } = connection
+
+  if (!profile) return null
+
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      size="sm"
+      className={cn('justify-start gap-2 truncate', {
+        'p-2 rounded-full': mini,
+      })}
+      ref={ref}
+      {...props}
+    >
+      <Avatar className="h-5 w-5">
+        <AvatarImage className="object-cover" src={profile.avatarUrl} />
+        <AvatarFallback>{nameToInitials(profile.displayName)}</AvatarFallback>
+      </Avatar>
+      <Show when={!mini}>{profile.displayName}</Show>
+    </Button>
+  )
+})
+
+export function ConnectionProfileCard({
+  connection,
+  mini,
+}: ConnectionProfileProps) {
   if (!connection) return <ConnectionProfileLoader />
   const { profile } = connection
   if (!profile) return null
@@ -62,15 +98,7 @@ export function ConnectionProfileCard({ connection }: ConnectionProfileProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="justify-start gap-2">
-          <Avatar className="h-5 w-5">
-            <AvatarImage className="object-cover" src={profile.avatarUrl} />
-            <AvatarFallback>
-              {nameToInitials(profile.displayName)}
-            </AvatarFallback>
-          </Avatar>
-          <span className="truncate">{profile.displayName}</span>
-        </Button>
+        <ConnectionProfileCardTrigger connection={connection} mini={mini} />
       </PopoverTrigger>
       <PopoverContent align="start" className="w-fit">
         <div className="flex items-center space-x-4">

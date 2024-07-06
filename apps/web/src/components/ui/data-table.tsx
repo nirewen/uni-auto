@@ -65,7 +65,7 @@ export function DataTable<TData, TValue>({
           <Show when={filter !== undefined}>
             <Input
               type="search"
-              placeholder="Pesquisar..."
+              placeholder={`Pesquisar em ${data.meta.totalItems} itens...`}
               value={filter ?? ''}
               onChange={(e) => setFilter!(e.target.value)}
               className="flex-1"

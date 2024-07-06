@@ -33,7 +33,7 @@ export class QueueService {
 
     return paginate(this.queueRepository, paginationToPaging(pagination), {
       where: filterToWhere(filter, filterableFields),
-      relations: ['connection.user'],
+      relations: ['connection.user', 'connection.profile'],
       order: sortToOrder(sorting),
     })
   }
