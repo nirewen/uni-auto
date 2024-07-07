@@ -5,6 +5,7 @@ import { InviteModule } from './invites/invites.module'
 import { ModulesModule } from './modules/modules.module'
 import { NtfyModule } from './ntfy/ntfy.module'
 import { ProvidersModule } from './providers/providers.module'
+import { StatsModule } from './stats/stats.module'
 import { UsersModule } from './users/users.module'
 
 @Global()
@@ -16,6 +17,7 @@ import { UsersModule } from './users/users.module'
     NtfyModule,
     ProvidersModule,
     UsersModule,
+    StatsModule,
   ],
   exports: [ConnectionsModule, ModulesModule, UsersModule],
 })
