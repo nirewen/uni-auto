@@ -5,14 +5,12 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import type { AxiosRequestConfig } from 'axios'
 
 import { ConfigService } from '@nestjs/config'
-import { NtfyService } from 'src/base/ntfy/ntfy.service'
 import {
   AllowancesOptions,
   GroupedMeal,
   MenuOptions,
   ScheduleResponse,
 } from 'src/interfaces/ru.interface'
-import { formatList, mealNames, p } from 'src/utils/mappings'
 import { CreateConnectionDTO } from '../../dto/create-connection.dto'
 import {
   APIResponse,
@@ -23,8 +21,7 @@ import {
 import { ConnectionProfile } from '@uni-auto/shared/entities/connection-profile.entity'
 import { ConnectionType } from '@uni-auto/shared/entities/connection.entity'
 import { User } from '@uni-auto/shared/entities/user.entity'
-import { differenceInDays, format, parseISO } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { format, parseISO } from 'date-fns'
 import { ProviderProfileOptions } from 'src/base/providers/providers.service'
 import { Carteira } from '../../dto/carteira.dto'
 import { Credentials } from '../../interfaces/credentials.interface'
@@ -34,8 +31,7 @@ export class APIService {
   private deviceIdPrefix: string
   constructor(
     private http: HttpService,
-    private ntfy: NtfyService,
-    config: ConfigService
+    config: ConfigService,
   ) {
     this.deviceIdPrefix = config.get<string>('ufsm.deviceIdPrefix')
   }
@@ -53,10 +49,10 @@ export class APIService {
   private async fetch<T>(
     url: string,
     data = {},
-    config: AxiosRequestConfig<any> = {}
+    config: AxiosRequestConfig<any> = {},
   ) {
     const result = await firstValueFrom(
-      this.http.post<APIResponse<T>>(url, data, config)
+      this.http.post<APIResponse<T>>(url, data, config),
     )
 
     if (
@@ -69,7 +65,7 @@ export class APIService {
           ? (result.data as Array<APIResponse<T>>)
               .map(r => r.mensagem)
               .join('\n')
-          : (result.data as APIResponse<T>).mensagem) ?? 'Unknown error'
+          : (result.data as APIResponse<T>).mensagem) ?? 'Unknown error',
       )
     }
 
@@ -118,9 +114,9 @@ export class APIService {
       {
         headers: this.getHeaders(
           credentials,
-          'application/x-www-form-urlencoded'
+          'application/x-www-form-urlencoded',
         ),
-      }
+      },
     )
 
     return data.map(beneficio => ({
@@ -141,7 +137,7 @@ export class APIService {
         })),
         opcaoVegetariana: options.vegan,
       },
-      { headers: this.getHeaders(credentials) }
+      { headers: this.getHeaders(credentials) },
     )
       .then(r => r.data)
       .then(r => {
@@ -156,24 +152,11 @@ export class APIService {
             r
               .filter(i => i.error)
               .map(i => i.mensagem)
-              .join('\n')
+              .join('\n'),
           )
         }
         return r
       })
-
-    const notifications = this.responseToNtfyPayloads(data)
-
-    Logger.log({
-      identifier: credentials.identifier,
-      notifications,
-    })
-
-    await Promise.all(
-      notifications.map(async notification =>
-        this.ntfy.publish(credentials.identifier, notification)
-      )
-    )
 
     return data
   }
@@ -188,7 +171,7 @@ export class APIService {
           dataFimStr: format(parseISO(options.dateEnd), 'dd/MM/yyyy'),
         },
         headers: this.getHeaders(credentials),
-      }
+      },
     )
 
     return data
@@ -203,7 +186,7 @@ export class APIService {
       {
         params: { buscaFoto: !options.minimal },
         headers: this.getHeaders(credentials),
-      }
+      },
     )
 
     profile.displayName = data.nome
@@ -218,96 +201,9 @@ export class APIService {
       {},
       {
         headers: this.getHeaders(credentials),
-      }
+      },
     )
 
     return data
-  }
-
-  private responseToNtfyPayloads(response: ScheduleResponse[]) {
-    type Item = {
-      dates: string[]
-      meals: string[]
-      message: string
-      success: boolean
-    }
-
-    const isEqual = (a: string[], b: string[]) =>
-      a.every(item => b.includes(item)) && b.every(item => a.includes(item))
-
-    return response
-      .reduce((acc, item) => {
-        const newItem: Item = {
-          dates: [item.dataRefAgendada],
-          meals: [item.tipoRefeicao],
-          message: item.impedimento,
-          success: item.sucesso,
-        }
-
-        let found = acc.find(
-          i =>
-            i.dates.includes(item.dataRefAgendada) &&
-            i.message === item.impedimento
-        )
-
-        if (found) {
-          found.dates = [...new Set([...found.dates, item.dataRefAgendada])]
-          found.meals = [...new Set([...found.meals, item.tipoRefeicao])]
-
-          return acc
-        }
-
-        return [...acc, newItem]
-      }, [] as Item[])
-      .reduce((acc, item) => {
-        const found = acc.find(
-          i =>
-            isEqual(item.meals, i.meals) &&
-            !isEqual(item.dates, i.dates) &&
-            differenceInDays(
-              parseISO(item.dates.at(-1)),
-              parseISO(i.dates.at(-1))
-            ) === 1 &&
-            item.message === i.message
-        )
-
-        if (found) {
-          found.dates.push(...item.dates)
-
-          return acc
-        }
-
-        return [...acc, item]
-      }, [] as Item[])
-      .map(item => {
-        const joining = item.dates.length > 2 ? ' até ' : ' e '
-        let message = ''
-
-        item.meals.sort(
-          (a, b) =>
-            Object.values(mealNames).indexOf(a) -
-            Object.values(mealNames).indexOf(b)
-        )
-        const dates = [item.dates.shift(), item.dates.pop()]
-          .filter(Boolean)
-          .map(d => format(parseISO(d), 'EEEE dd/MM'), { locale: ptBR })
-
-        if (item.success) {
-          message = `${formatList(item.meals)} agendado${p(
-            item.meals.length
-          )} para ${dates.join(joining)}`
-        } else {
-          message = `${formatList(item.meals)} para ${dates.join(joining)}:\n${
-            item.message
-          }`
-        }
-
-        return {
-          title: item.success ? 'RU agendado' : 'Falha ao agendar',
-          message,
-          priority: item.success ? 2 : 5,
-          tags: [item.success ? 'shallow_pan_of_food' : 'warning'],
-        }
-      })
   }
 }
