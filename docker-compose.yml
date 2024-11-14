@@ -1,26 +1,18 @@
 version: '3.4'
 
 services:
-  postgres:
-    image: postgres:latest
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-    stdin_open: true
-    ports:
-      - 5432:5432
-    networks:
-      - uni-auto
-
   api:
     image: uni-auto/api:latest
     restart: always
-    ports:
-      - 8765:3000
     networks:
-      - uni-auto
+      - postgres
+      - proxy
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.api.rule=Host(`uni.nirewen.dev`) && PathPrefix(`/api`)'
+      - 'traefik.http.routers.api.entrypoints=https'
+      - 'traefik.http.routers.api.tls=true'
+      - 'traefik.http.services.api.loadbalancer.server.port=3000'
 
   cron:
     image: uni-auto/cron:latest
@@ -28,27 +20,22 @@ services:
     deploy:
       replicas: 3
     networks:
-      - uni-auto
+      - postgres
 
   web:
     image: uni-auto/web:latest
     restart: always
-    ports:
-      - 8764:3000
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.web.rule=Host(`uni.nirewen.dev`)'
+      - 'traefik.http.routers.web.entrypoints=https'
+      - 'traefik.http.routers.web.tls=true'
+      - 'traefik.http.services.web.loadbalancer.server.port=3000'
     networks:
-      - uni-auto
-
-  dozzle:
-    container_name: dozzle
-    image: amir20/dozzle:latest
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/dozzle/data:/data
-    environment:
-      DOZZLE_AUTH_PROVIDER: simple
-    ports:
-      - 9999:8080
+      - proxy
 
 networks:
-  uni-auto:
-    driver: bridge
+  postgres:
+    external: true
+  proxy:
+    external: true
