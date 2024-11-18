@@ -3,20 +3,21 @@ version: '3.4'
 services:
   api:
     image: uni-auto/api:latest
-    restart: always
+    restart: unless-stopped
     networks:
       - postgres
       - proxy
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.api.rule=Host(`uni.nirewen.dev`) && PathPrefix(`/api`)'
-      - 'traefik.http.routers.api.entrypoints=https'
-      - 'traefik.http.routers.api.tls=true'
-      - 'traefik.http.services.api.loadbalancer.server.port=3000'
+      - traefik.enable=true
+      - traefik.http.routers.uni-auto/api.rule=Host(`uni.nirewen.dev`) && PathPrefix(`/api`)
+      - traefik.http.routers.uni-auto/api.entrypoints=https
+      - traefik.http.routers.uni-auto/api.tls=true
+      - traefik.http.services.uni-auto/api.loadbalancer.server.port=3000
+      - traefik.docker.network=proxy
 
   cron:
     image: uni-auto/cron:latest
-    restart: always
+    restart: unless-stopped
     deploy:
       replicas: 3
     networks:
@@ -24,13 +25,14 @@ services:
 
   web:
     image: uni-auto/web:latest
-    restart: always
+    restart: unless-stopped
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.web.rule=Host(`uni.nirewen.dev`)'
-      - 'traefik.http.routers.web.entrypoints=https'
-      - 'traefik.http.routers.web.tls=true'
-      - 'traefik.http.services.web.loadbalancer.server.port=3000'
+      - traefik.enable=true
+      - traefik.http.routers.uni-auto/web.rule=Host(`uni.nirewen.dev`)
+      - traefik.http.routers.uni-auto/web.entrypoints=https
+      - traefik.http.routers.uni-auto/web.tls=true
+      - traefik.http.services.uni-auto/web.loadbalancer.server.port=3000
+      - traefik.docker.network=proxy
     networks:
       - proxy
 
