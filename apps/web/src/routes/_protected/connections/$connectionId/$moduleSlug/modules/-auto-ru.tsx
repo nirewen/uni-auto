@@ -12,6 +12,7 @@ import {
   SettingsIcon,
 } from 'lucide-react'
 
+import { Show } from '@/components/flow/show'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,6 +43,7 @@ import {
   useToggleModuleForConnection,
 } from '@/features/modules/hooks'
 import useAutosave from '@/hooks/useAutosave'
+import { cn } from '@/lib/utils'
 
 export type Settings = {
   days: Day[]
@@ -117,12 +119,6 @@ export const AutoRU = () => {
     setSettings((settings) => ({ ...settings, ...newSettings }))
   }
 
-  function onChangeVegan(vegan: boolean) {
-    data!.settings.vegan = vegan
-
-    onSave(data!.settings)
-  }
-
   if (isError) {
     return (
       <Navigate to="/connections/$connectionId" params={{ connectionId }} />
@@ -192,9 +188,16 @@ export const AutoRU = () => {
   }
 
   return (
-    <div className="relative flex w-full flex-col gap-2">
+    <div
+      className={cn(
+        'relative flex h-full w-full flex-col gap-2 overflow-hidden',
+        {
+          'overflow-auto': data?.enabled,
+        },
+      )}
+    >
       {!data?.enabled && (
-        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center overflow-hidden rounded-md border border-solid border-neutral-800 bg-neutral-950 bg-opacity-70 backdrop-blur-md">
+        <div className="absolute inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden rounded-md border border-solid border-neutral-800 bg-neutral-950 bg-opacity-70 backdrop-blur-md">
           <h1 className="text-2xl font-bold">Módulo desativado</h1>
           <div className="mt-4 flex max-w-sm flex-col gap-8">
             <Balancer className="text-center">
@@ -278,87 +281,94 @@ export const AutoRU = () => {
           <RUSettings settings={settings} onSave={onSave} />
         </ModuleSection.Body>
       </ModuleSection.Root>
-      <ModuleSection.Root>
-        <ModuleSection.Body>
-          <div className="flex justify-between gap-2">
-            <div className="flex flex-col gap-1">
-              <h4 className="text-lg font-bold text-white">Desativar módulo</h4>
-              <span className="text-sm text-muted-foreground">
-                Ao desativar esse módulo, ele não será mais executado
-              </span>
-            </div>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button className="bg-neutral-700" variant="ghost">
-                  Desativar
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Você tem certeza que deseja desativar esse módulo? <br />
-                    Ao desativar esse módulo, ele não será mais executado
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() => {
-                      toggle({ slug: 'auto-ru', enabled: !data?.enabled })
-                    }}
-                  >
+      <Show when={data?.enabled}>
+        <ModuleSection.Root>
+          <ModuleSection.Body>
+            <div className="flex justify-between gap-2">
+              <div className="flex flex-col gap-1">
+                <h4 className="text-lg font-bold text-white">
+                  Desativar módulo
+                </h4>
+                <span className="text-sm text-muted-foreground">
+                  Ao desativar esse módulo, ele não será mais executado
+                </span>
+              </div>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button className="bg-neutral-700" variant="ghost">
                     Desativar
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-          <div className="flex justify-between">
-            <div className="flex flex-col gap-1">
-              <h4 className="text-lg font-bold text-white">Excluir módulo</h4>
-              <span className="text-sm text-muted-foreground">
-                Ao excluir esse módulo, ele será desassociado de sua conexão e
-                todas as configurações serão apagadas
-              </span>
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Você tem certeza que deseja desativar esse módulo? <br />
+                      Ao desativar esse módulo, ele não será mais executado
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        toggle({ slug: 'auto-ru', enabled: !data?.enabled })
+                      }}
+                    >
+                      Desativar
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button className="bg-red-600 hover:bg-red-700" variant="ghost">
-                  Excluir
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Você tem certeza que deseja excluir esse módulo? <br />
-                    Ao excluir esse módulo, ele será desassociado de sua conexão
-                    e todas as configurações serão apagadas
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() => {
-                      if (!data?.enabled) return
-
-                      deleteModule({ slug: 'auto-ru' })
-
-                      navigate({
-                        to: '/connections/$connectionId',
-                        params: { connectionId },
-                      })
-                    }}
+            <div className="flex justify-between">
+              <div className="flex flex-col gap-1">
+                <h4 className="text-lg font-bold text-white">Excluir módulo</h4>
+                <span className="text-sm text-muted-foreground">
+                  Ao excluir esse módulo, ele será desassociado de sua conexão e
+                  todas as configurações serão apagadas
+                </span>
+              </div>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    className="bg-red-600 hover:bg-red-700"
+                    variant="ghost"
                   >
                     Excluir
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        </ModuleSection.Body>
-      </ModuleSection.Root>
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Você tem certeza que deseja excluir esse módulo? <br />
+                      Ao excluir esse módulo, ele será desassociado de sua
+                      conexão e todas as configurações serão apagadas
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        if (!data?.enabled) return
+
+                        deleteModule({ slug: 'auto-ru' })
+
+                        navigate({
+                          to: '/connections/$connectionId',
+                          params: { connectionId },
+                        })
+                      }}
+                    >
+                      Excluir
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </ModuleSection.Body>
+        </ModuleSection.Root>
+      </Show>
     </div>
   )
 }
