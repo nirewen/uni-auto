@@ -1,3 +1,4 @@
+import { BackgroundShapes } from '@/components/background-shapes'
 import { Show } from '@/components/flow/show'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/useAuth'
@@ -13,10 +14,8 @@ export function MainHero() {
   }
 
   return (
-    <div
-      id="main-hero"
-      className="flex flex-col items-center gap-2 py-16 md:px-48 lg:px-96"
-    >
+    <div className="flex flex-col items-center gap-2 py-16 md:px-48 lg:px-96">
+      <BackgroundShapes />
       <h1 className="text-center text-5xl font-bold">
         Automação para sua Universidade
       </h1>

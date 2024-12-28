@@ -1,0 +1,12 @@
+.bg-shapes-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -10;
+}
+
+.bg-shapes-clip {
+  clip-path: circle(75%);
+  aspect-ratio: 16 / 9;
+  position: absolute;
+  inset: 0;
+}
