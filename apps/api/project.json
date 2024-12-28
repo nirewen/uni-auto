@@ -29,12 +29,12 @@
       ],
       "outputs": [
         "{workspaceRoot}/dist/apps/api",
-        "{workspaceRoot}/dist/packages/shared"
+        "{workspaceRoot}/dist/packages/shared",
+        "{workspaceRoot}/dist/apps/api/src"
       ],
       "options": {
         "command": "nest build -p ./tsconfig.app.json",
         "outputFileName": "main.js",
-        "outputPath": "dist/apps/api/src",
         "args": [],
         "watch": true
       }
@@ -46,9 +46,7 @@
         "command": "typeorm -d dist/packages/shared/src/config/ormconfig.js migration:generate",
         "args": []
       },
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "configurations": {
         "production": {
           "envFile": ".env.production"
@@ -65,9 +63,7 @@
         "command": "typeorm -d dist/packages/shared/src/config/ormconfig.js migration:run",
         "args": []
       },
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "configurations": {
         "production": {
           "envFile": ".env.production"
@@ -84,9 +80,7 @@
         "command": "typeorm -d dist/packages/shared/src/config/ormconfig.js migration:revert",
         "args": []
       },
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "configurations": {
         "production": {
           "envFile": ".env.production"
@@ -98,9 +92,7 @@
     },
     "container": {
       "executor": "@nx-tools/nx-container:build",
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "defaultConfiguration": "local",
       "options": {
         "engine": "docker",
@@ -108,9 +100,7 @@
       },
       "configurations": {
         "local": {
-          "tags": [
-            "uni-auto/api:latest"
-          ],
+          "tags": ["uni-auto/api:latest"],
           "push": false
         }
       }

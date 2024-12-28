@@ -22,20 +22,18 @@
     "build": {
       "executor": "nx:run-commands",
       "outputs": [
-        "{workspaceRoot}/dist/apps/cron"
+        "{workspaceRoot}/dist/apps/cron",
+        "{workspaceRoot}/dist/apps/cron/src"
       ],
       "options": {
         "command": "nest build -p ./tsconfig.app.json",
         "outputFileName": "main.js",
-        "outputPath": "dist/apps/cron/src",
         "args": []
       }
     },
     "container": {
       "executor": "@nx-tools/nx-container:build",
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "defaultConfiguration": "local",
       "options": {
         "engine": "docker",
@@ -43,9 +41,7 @@
       },
       "configurations": {
         "local": {
-          "tags": [
-            "uni-auto/cron:latest"
-          ],
+          "tags": ["uni-auto/cron:latest"],
           "push": false
         }
       }
