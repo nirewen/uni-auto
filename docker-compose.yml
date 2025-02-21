@@ -8,12 +8,16 @@ services:
       - postgres
       - proxy
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.uni-auto/api.rule=Host(`uni.nirewen.dev`) && PathPrefix(`/api`)
-      - traefik.http.routers.uni-auto/api.entrypoints=https
-      - traefik.http.routers.uni-auto/api.tls=true
-      - traefik.http.services.uni-auto/api.loadbalancer.server.port=3000
-      - traefik.docker.network=proxy
+      glance.hide: false
+      glance.name: API
+      glance.parent: uni-auto
+
+      traefik.enable: true
+      traefik.http.routers.uni-auto/api.rule: Host(`uni.nirewen.dev`) && PathPrefix(`/api`)
+      traefik.http.routers.uni-auto/api.entrypoints: https
+      traefik.http.routers.uni-auto/api.tls: true
+      traefik.http.services.uni-auto/api.loadbalancer.server.port: 3000
+      traefik.docker.network: proxy
 
   cron:
     image: uni-auto/cron:latest
@@ -22,17 +26,28 @@ services:
       replicas: 3
     networks:
       - postgres
+    labels:
+      glance.hide: false
+      glance.name: Cron
+      glance.parent: uni-auto
 
   web:
     image: uni-auto/web:latest
     restart: unless-stopped
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.uni-auto/web.rule=Host(`uni.nirewen.dev`)
-      - traefik.http.routers.uni-auto/web.entrypoints=https
-      - traefik.http.routers.uni-auto/web.tls=true
-      - traefik.http.services.uni-auto/web.loadbalancer.server.port=3000
-      - traefik.docker.network=proxy
+      glance.hide: false
+      glance.name: UniAuto
+      glance.icon: https://uni.nirewen.dev/favicon.svg
+      glance.description: University Automation
+      glance.url: https://uni.nirewen.dev
+      glance.id: uni-auto
+
+      traefik.enable: true
+      traefik.http.routers.uni-auto/web.rule: Host(`uni.nirewen.dev`)
+      traefik.http.routers.uni-auto/web.entrypoints: https
+      traefik.http.routers.uni-auto/web.tls: true
+      traefik.http.services.uni-auto/web.loadbalancer.server.port: 3000
+      traefik.docker.network: proxy
     networks:
       - proxy
 
